@@ -427,7 +427,7 @@
     '2026/09/15','2026/09/16','2026/09/17','2026/09/18',
     '2026/09/22','2026/09/23','2026/09/24','2026/09/25'
   ];
-  var PAYMENTS = ['PAYUNi 線上付款', '私訊豆媽好友 LINE PAY（送出後請截圖訂單編號）'];
+  var PAYMENTS = ['PAYUNi 線上付款', '私訊豆媽好友LINEPAY手機轉帳'];
   // 配送方式：key=顯示文字, ship=運費函式(盒數)
   var DELIVERY = [
     { name:'來店自取（免運）', ship:function(q){ return 0; }, isKuro:false },
@@ -682,8 +682,8 @@
     if(res.payUrl){ $('payLink').href=res.payUrl; }
     else{ $('payLink').style.display='none'; }
 
-    // 付款方式選 LINE PAY 時，顯示 LINE 私訊按鈕
-    var isLinePay = (lastPay.indexOf('LINE PAY')>=0);
+    // 付款方式選 LINEPAY 時，顯示 LINE 私訊按鈕
+    var isLinePay = (lastPay.indexOf('LINEPAY')>=0);
     if(LINE_URL && isLinePay){
       $('lineDoneBtn').href=LINE_URL;
       $('lineDoneWrap').style.display='block';
