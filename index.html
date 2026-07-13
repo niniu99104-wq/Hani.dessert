@@ -49,7 +49,14 @@
   .hero .sub{color:var(--muted);font-size:14px;font-family:"Noto Sans TC",sans-serif}
 
   .rule{height:1px;background:var(--line);margin:8px 0 22px}
-
+  /* 讓圖片限制在容器寬度內，並保持比例 */
+img {
+    max-width: 100%;    /* 絕對不會超出手機或欄位寬度 */
+    height: auto;       /* 自動調整高度以保持比例，不會變形 */
+    display: block;     /* 避免圖片下方出現多餘的空隙 */
+    margin: 0 auto;     /* 如果想讓圖片置中可以加上這行 */
+    border-radius: 12px; /* 如果想讓邊角圓潤一點，看起來更精緻 */
+}
   /* 首圖 */
   .hero-img{
     width:100%;max-width:560px;margin:0 auto 4px;display:block;
