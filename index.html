@@ -349,7 +349,7 @@ img {
             <a href="https://www.google.com/maps/search/?api=1&query=%E9%A6%99%E8%8D%89%E7%B1%BD%E7%94%9C%E9%BB%9E+%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E5%A4%A7%E6%99%BA%E8%A1%97141%E8%99%9F"
                target="_blank" rel="noopener"
                style="display:inline-block;margin-top:10px;background:var(--bean);color:#fff;padding:9px 18px;border-radius:9px;text-decoration:none;font-size:13.5px;font-weight:600;">
-              📍 開啟導航（Google Map）
+               開啟導航（Google Map）
             </a>
           </div>
         </div>
@@ -387,7 +387,7 @@ img {
       </div>
 
       <div class="foot-line">
-        <a id="lineAskLink" href="#" target="_blank" rel="noopener">訂購有問題？點我問土豆媽（霓ɴɪɴɪ.💐）</a>
+        <a id="lineAskLink" href="#" target="_blank" rel="noopener">訂購有問題？點我問土豆媽（霓ɴɪɴɪ.）</a>
       </div>
      <p style="text-align:center; font-family:'Noto Sans TC',sans-serif; font-size:12px; color:#96897E; margin:16px 0; letter-spacing:0.03em;">
   ✅ 富邦產品責任保險：0506字第24AML0003140號
@@ -450,12 +450,7 @@ img {
   var MAX_QTY = 10;
   var DAILY_LIMIT = 25;      // 每日名額上限（與後端一致）
   var remainMap = {};        // 各取貨日剩餘名額，載入時向後端抓
-  var PICKUP_DATES = [
-    '2026/09/01','2026/09/02','2026/09/03','2026/09/04','2026/09/05',
-    '2026/09/08','2026/09/09','2026/09/10','2026/09/11','2026/09/12',
-    '2026/09/15','2026/09/16','2026/09/17','2026/09/18',
-    '2026/09/22','2026/09/23','2026/09/24','2026/09/25'
-  ];
+  var PICKUP_DATES = [];   // 不再寫死，載入時向後端抓（見 fetchRemaining）
   var PAYMENTS = ['PAYUNi 線上付款', '私訊豆媽好友LINEPAY手機轉帳'];
   // 配送方式：key=顯示文字, ship=運費函式(盒數)
   var DELIVERY = [
@@ -518,10 +513,11 @@ img {
     fetch(GAS_URL, { method:'GET' })
       .then(function(r){ return r.json(); })
       .then(function(res){
-        if(res && res.ok && res.remaining){
-          remainMap = res.remaining;
+        if(res && res.ok){
+          if(res.dates && res.dates.length){ PICKUP_DATES = res.dates; }
+          if(res.remaining){ remainMap = res.remaining; }
           if(res.dailyLimit){ DAILY_LIMIT = res.dailyLimit; }
-          buildPickupOptions();  // 用最新名額重建下拉
+          buildPickupOptions();  // 用最新日期＋名額重建下拉
         }
       })
       .catch(function(){ /* 抓不到就當全額開放，不擋下單 */ });
