@@ -35,6 +35,30 @@
     padding:44px 20px 28px;
     position:relative;
   }
+  .soldout-banner{
+    background:linear-gradient(90deg,var(--bean-deep),var(--bean));
+    color:#FFF6E9;
+    text-align:center;
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.04em;
+    line-height:1.6;
+    padding:16px 20px;
+    border-bottom:3px solid var(--yolk);
+    box-shadow:0 3px 12px rgba(122,74,58,.25);
+  }
+  .soldout-banner .tag{
+    display:inline-block;
+    background:var(--yolk);
+    color:var(--bean-deep);
+    font-size:12px;
+    font-weight:700;
+    padding:2px 10px;
+    border-radius:20px;
+    margin-right:8px;
+    letter-spacing:.1em;
+  }
   .hero .brand{
     font-size:13px;letter-spacing:.5em;
     color:var(--yolk);text-transform:uppercase;
@@ -239,6 +263,7 @@ img {
 </head>
 <body>
   <div id="formView">
+    <div id="soldOutBanner" class="soldout-banner" style="display:none"></div>
     <div class="hero">
       <div class="brand">hani&nbsp;dessert.</div>
       <h1>經典蛋黃酥 <span class="sun">☻</span> 訂購單</h1>
@@ -443,7 +468,7 @@ img {
   // ===== 設定（與後端 CONFIG 對應）=====
   var PRICE = 520;
   // ★★ 你的 GAS Web App 網址（/exec 結尾）。部署後貼在這裡。★★
-  var GAS_URL = 'https://script.google.com/macros/s/AKfycbxvmQESdXR-uoa2j0LqSB-NXrZ0u-9MSmBAefOs9qOv31mLmN9mZDsGMPlK3c2QFep4/exec';
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbwU8V8tRGPQqbmEfRQB3V-pqnYkjNYj5FZrOI9aaUH1RXQKj0SZDRYz2Utk1JdJWPaz/exec';
   // ★ 貼上你的 LINE 連結（例：https://lin.ee/xxxx）。留空則不顯示 LINE 連結。
   var LINE_URL = 'https://line.me/ti/p/taMX75HZDW';
   var lastPay = '';
@@ -509,6 +534,17 @@ img {
     fetchRemaining();
   })();
 
+  function showBanner(banner){
+    var el=$('soldOutBanner');
+    if(!el) return;
+    if(banner && banner.show && banner.text){
+      el.innerHTML='<span class="tag">完售</span>'+banner.text;
+      el.style.display='block';
+    }else{
+      el.style.display='none';
+    }
+  }
+
   function fetchRemaining(){
     fetch(GAS_URL, { method:'GET' })
       .then(function(r){ return r.json(); })
@@ -517,6 +553,7 @@ img {
           if(res.dates && res.dates.length){ PICKUP_DATES = res.dates; }
           if(res.remaining){ remainMap = res.remaining; }
           if(res.dailyLimit){ DAILY_LIMIT = res.dailyLimit; }
+          if(res.banner){ showBanner(res.banner); }
           buildPickupOptions();  // 用最新日期＋名額重建下拉
         }
       })
