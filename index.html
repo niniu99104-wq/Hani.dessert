@@ -1,106 +1,454 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>網站更新中</title>
-    <!-- 引入高質感的 Google 字體：中文使用 Noto Serif TC，英文使用 Jost -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #FBF9F6; /* 奶油白背景 */
-            color: #5C4D43; /* 深可可色文字 */
-            font-family: 'Noto Serif TC', serif;
-            overflow: hidden;
-            position: relative;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hani. 經典蛋黃酥 · 訂購與查詢</title>
+<!-- 引入字體 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F0E6;      /* 米杏底 */
+    --card: #FFFDF9;
+    --bean: #7A4A3A;       /* 烏豆沙棕 */
+    --bean-deep: #5C3427;  /* 深豆沙 */
+    --yolk: #D98A3D;       /* 鹹蛋黃橘 */
+    --yolk-soft: #E9B679;
+    --ink: #3A2B24;        /* 文字主色 */
+    --muted: #96897E;      /* 次要文字 */
+    --line: #E5D8C6;       /* 分隔線 */
+    --ok: #5B7A4F;
+    --warn: #B4552F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family: "Noto Serif TC", "Songti TC", serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 0 0 120px;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 20px}
 
-        /* 柔和的背景光暈，增加質感 */
-        .glow {
-            position: absolute;
-            width: 40vw;
-            height: 40vw;
-            background: radial-gradient(circle, rgba(235, 227, 213, 0.6) 0%, rgba(251, 249, 246, 0) 70%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: breathe 6s infinite ease-in-out;
-            z-index: 1;
-        }
+  /* ========== 頂部切換頁籤 ========== */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0 10px;
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 10px;
+  }
+  .nav-tabs button {
+    background: none;
+    border: none;
+    font-family: "Noto Sans TC", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 10px 4px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+  }
+  .nav-tabs button.active {
+    color: var(--bean-deep);
+  }
+  .nav-tabs button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--yolk);
+    border-radius: 2px 2px 0 0;
+  }
 
-        .container {
-            text-align: center;
-            z-index: 2;
-            position: relative;
-        }
+  /* ========== Hero & Banner ========== */
+  .hero{
+    text-align:center;
+    padding: 24px 20px 28px;
+    position:relative;
+  }
+  .hero .brand{
+    font-size:13px;letter-spacing:.5em;
+    color:var(--yolk);text-transform:uppercase;
+    font-family:"Noto Sans TC",sans-serif;font-weight:600;
+    padding-left:.5em;
+  }
+  .hero h1{
+    font-size:34px;font-weight:700;color:var(--bean-deep);
+    margin:10px 0 6px;letter-spacing:.04em;
+  }
+  .hero .sun{font-style:normal;color:var(--yolk)}
+  .hero .sub{color:var(--muted);font-size:14px;font-family:"Noto Sans TC",sans-serif}
+  .rule{height:1px;background:var(--line);margin:8px 0 22px}
+  img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
 
-        .title {
-            font-size: 3.5rem;
-            font-weight: 300;
-            letter-spacing: 0.2em;
-            margin-bottom: 1rem;
-            margin-left: 0.2em; /* 補償字距造成的視覺偏移 */
-        }
+  /* ========== 卡片與通用元素 ========== */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 20px;
+    margin-bottom:18px;
+    box-shadow:0 1px 0 #fff inset, 0 6px 22px rgba(122,74,58,.05);
+  }
+  .card h2{
+    font-size:18px;color:var(--bean);
+    margin-bottom:14px;letter-spacing:.03em;
+  }
 
-        .subtitle {
-            font-family: 'Jost', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 0.4em;
-            text-transform: uppercase;
-            color: #8C7B6E; /* 較淺的奶茶色 */
-            margin-bottom: 3.5rem;
-        }
+  /* Notice */
+  .notice{font-family:"Noto Sans TC",sans-serif;font-size:13.5px;color:var(--ink)}
+  .notice p{margin-bottom:8px}
+  .notice .em{color:var(--bean-deep);font-weight:600}
 
-        /* 韓系極簡虛線裝飾圓圈 */
-        .circle-decoration {
-            width: 50px;
-            height: 50px;
-            border: 1px dashed #8C7B6E;
-            border-radius: 50%;
-            margin: 0 auto;
-            animation: rotate 15s linear infinite;
-        }
+  /* Product */
+  .prod{display:flex;gap:14px;align-items:flex-start}
+  .prod .badge{
+    flex:0 0 72px;width:72px;height:72px;border-radius:12px;overflow:hidden;
+    background:radial-gradient(circle at 50% 38%,var(--yolk) 0 30%,var(--bean) 31% 100%);
+  }
+  .prod .pname{font-size:17px;font-weight:700;color:var(--bean-deep)}
+  .prod .pprice{color:var(--yolk);font-weight:700;font-family:"Noto Sans TC",sans-serif}
+  
+  /* 表單元件 */
+  label.field{display:block;margin-top:16px}
+  .field .lab{
+    font-size:13px;color:var(--bean);font-weight:600;
+    font-family:"Noto Sans TC",sans-serif;margin-bottom:6px;display:block;
+  }
+  .field .req{color:var(--warn)}
+  input,select,textarea{
+    width:100%;padding:12px 14px;
+    border:1px solid var(--line);border-radius:10px;
+    background:#fff;color:var(--ink);
+    font-family:"Noto Sans TC",sans-serif;font-size:15px;
+    transition: all 0.2s;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--yolk);
+    box-shadow:0 0 0 3px rgba(217,138,61,.15);
+  }
+  textarea{resize:vertical;min-height:80px}
+  
+  /* 按鈕 */
+  .btn{
+    background:var(--yolk);color:#3A2B24;font-weight:700;
+    border:none;border-radius:10px;padding:13px 22px;
+    font-family:"Noto Sans TC",sans-serif;font-size:15px;cursor:pointer;
+    width: 100%; transition:transform .1s,background .2s;
+  }
+  .btn:hover{background:var(--yolk-soft)}
+  .btn:disabled{background:#CDBFA9;color:#8a7c6d;cursor:not-allowed}
+  .btn-outline{
+    background: transparent; color: var(--bean);
+    border: 1px solid var(--bean);
+  }
+  .btn-outline:hover { background: #FFF6E9; }
 
-        /* 呼吸燈動畫 */
-        @keyframes breathe {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
-        }
+  /* Summary bar */
+  .summary{
+    position:fixed;left:0;right:0;bottom:0;
+    background:var(--bean-deep);color:#fff;
+    padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 20px rgba(92,52,39,.25);
+    z-index:20;
+  }
+  .summary .inner{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .summary .breakdown{flex:1;font-family:"Noto Sans TC",sans-serif;font-size:13px;color:var(--yolk-soft);}
+  .summary .total{font-size:22px;font-weight:700;font-family:"Noto Sans TC",sans-serif}
+  .summary .total small{font-size:13px;font-weight:400;opacity:.8}
 
-        /* 旋轉動畫 */
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+  /* 查詢結果卡片 */
+  .order-card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 20px; margin-top: 20px;
+  }
+  .order-header { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--line); padding-bottom: 10px; margin-bottom: 10px; }
+  .order-no { font-family: "Noto Sans TC", sans-serif; font-size: 14px; font-weight:600; color: var(--muted); }
+  .order-status { font-family: "Noto Sans TC", sans-serif; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: #FFF4E9; color: var(--yolk); }
+  .order-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14.5px; font-family: "Noto Sans TC", sans-serif;}
+  .order-row span:first-child { color: var(--muted); }
 
-        /* 手機版適配 */
-        @media (max-width: 768px) {
-            .title {
-                font-size: 2.2rem;
-            }
-            .subtitle {
-                font-size: 0.8rem;
-            }
-            .glow {
-                width: 80vw;
-                height: 80vw;
-            }
-        }
-    </style>
+  /* Done screen */
+  .done{display:none;text-align:center;padding:40px 20px}
+  .done h2{color:var(--bean-deep);font-size:24px;margin-bottom:10px}
+  .copybox{
+    background:#FBF4E9;border:1px solid var(--yolk-soft);border-radius:12px;
+    padding:16px;margin:20px auto;max-width:340px;
+  }
+  .copyno{ font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:22px;color:var(--bean-deep); margin: 10px 0;}
+  .copybtn{
+    border:1px solid var(--bean);background:#fff;color:var(--bean);
+    font-family:"Noto Sans TC",sans-serif;font-size:14px;font-weight:600;
+    padding:8px 16px;border-radius:8px;cursor:pointer;
+  }
+</style>
 </head>
 <body>
-    <div class="glow"></div>
-    <div class="container">
-        <div class="title">網站更新中</div>
-        <div class="subtitle">Under Maintenance</div>
-        <div class="circle-decoration"></div>
+  
+  <!-- 頂部頁籤切換 -->
+  <div class="nav-tabs">
+    <button id="tabFormBtn" class="active">我要訂購</button>
+    <button id="tabSearchBtn">訂單查詢</button>
+  </div>
+
+  <div class="wrap">
+    
+    <!-- ================= 區塊 A：訂購表單 ================= -->
+    <div id="viewForm">
+      <div class="hero">
+        <div class="brand">hani&nbsp;dessert.</div>
+        <h1>經典蛋黃酥 <span class="sun">☻</span> 訂購單</h1>
+        <div class="sub">每日限量製作 · 預訂制 · 純手工</div>
+      </div>
+
+      <!-- 若有首圖可放在這 -->
+      <!-- <img src="你的圖片網址.jpg" style="border-radius: 12px; margin-bottom: 20px;"> -->
+
+      <div class="card notice">
+        <p class="em">※ 出貨當天現做，不接急單，一律採預訂制。</p>
+        <p class="em">※ 須先完成付款，收到款項才會安排製作、出貨。</p>
+      </div>
+
+      <form id="orderForm">
+        <!-- 商品選擇 -->
+        <div class="card">
+          <h2>選擇數量</h2>
+          <div class="prod">
+            <div class="badge"></div>
+            <div style="flex:1;">
+              <div class="pname">hani 經典蛋黃酥 (6入/盒)</div>
+              <div class="pprice">NT$ 420 / 盒</div>
+              <label class="field" style="margin-top: 10px;">
+                <select name="quantity" id="qtySelect" required>
+                  <option value="1">1 盒</option>
+                  <option value="2">2 盒</option>
+                  <option value="3">3 盒</option>
+                  <option value="4">4 盒</option>
+                  <option value="5">5 盒</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 顧客資料 -->
+        <div class="card">
+          <h2>訂購人資料</h2>
+          <label class="field">
+            <span class="lab">姓名 <span class="req">*</span></span>
+            <input type="text" name="name" required placeholder="請輸入真實姓名">
+          </label>
+          <label class="field">
+            <span class="lab">手機號碼 <span class="req">*</span></span>
+            <input type="tel" name="phone" required placeholder="0912345678">
+          </label>
+          <label class="field">
+            <span class="lab">Line ID</span>
+            <input type="text" name="lineId" placeholder="方便聯繫訂單事宜（選填）">
+          </label>
+        </div>
+
+        <!-- 取貨方式 -->
+        <div class="card">
+          <h2>取貨方式</h2>
+          <label class="field">
+            <span class="lab">取貨/配送方式 <span class="req">*</span></span>
+            <select name="delivery" required>
+              <option value="自取">台南工作室自取</option>
+              <option value="常溫宅配">常溫宅配 (運費 $130)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="lab">備註留言</span>
+            <textarea name="note" placeholder="如有特殊需求請在此備註..."></textarea>
+          </label>
+        </div>
+      </form>
     </div>
+
+    <!-- ================= 區塊 B：訂單查詢 ================= -->
+    <div id="viewSearch" style="display: none; padding-top: 20px;">
+      <div class="card">
+        <h2>查詢訂單</h2>
+        <p class="notice" style="margin-bottom: 16px;">請輸入您訂購時填寫的手機號碼進行查詢。</p>
+        <label class="field">
+          <input type="tel" id="searchPhone" placeholder="例如：0912345678">
+        </label>
+        <button id="searchBtn" class="btn" style="margin-top: 16px;">查詢</button>
+      </div>
+      
+      <!-- 查詢結果顯示區 -->
+      <div id="searchResult"></div>
+    </div>
+
+    <!-- ================= 區塊 C：訂購完成畫面 ================= -->
+    <div id="viewDone" class="done">
+      <h2>🎉 訂購成功！</h2>
+      <p style="color: var(--muted); font-family: 'Noto Sans TC', sans-serif;">感謝您的訂購，請截圖或複製保留訂單編號。</p>
+      
+      <div class="copybox">
+        <div style="font-size: 13px; color: var(--muted);">您的專屬訂單編號</div>
+        <div class="copyno" id="doneOrderNo">HANI-12345678</div>
+        <button type="button" class="copybtn" id="copyBtn">複製編號</button>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <button class="btn btn-outline" onclick="location.reload()">回首頁</button>
+      </div>
+    </div>
+
+  </div> <!-- end wrap -->
+
+  <!-- 底部結帳列 (僅在表單頁顯示) -->
+  <div class="summary" id="summaryBar">
+    <div class="inner">
+      <div class="breakdown" id="summaryText">1 盒</div>
+      <div class="total"><small>NT$ </small><span id="totalPrice">420</span></div>
+      <button class="btn" id="submitBtn" style="width: auto; padding: 12px 30px;">確認結帳</button>
+    </div>
+  </div>
+
+
+  <!-- ================= JavaScript 邏輯區 ================= -->
+  <script>
+    // ★★★★★ 1. 請在這裡填入你的 Google Apps Script 網頁應用程式網址 ★★★★★
+    const GAS_URL = "https://script.google.com/macros/s/你的部署ID/exec"; 
+
+    // DOM 元素抓取
+    const tabFormBtn = document.getElementById("tabFormBtn");
+    const tabSearchBtn = document.getElementById("tabSearchBtn");
+    const viewForm = document.getElementById("viewForm");
+    const viewSearch = document.getElementById("viewSearch");
+    const viewDone = document.getElementById("viewDone");
+    const summaryBar = document.getElementById("summaryBar");
+    
+    const qtySelect = document.getElementById("qtySelect");
+    const summaryText = document.getElementById("summaryText");
+    const totalPrice = document.getElementById("totalPrice");
+    
+    const submitBtn = document.getElementById("submitBtn");
+    const orderForm = document.getElementById("orderForm");
+
+    // 單價設定
+    const PRICE_PER_BOX = 420;
+
+    // --- 頁籤切換邏輯 ---
+    tabFormBtn.addEventListener("click", () => {
+      tabFormBtn.classList.add("active");
+      tabSearchBtn.classList.remove("active");
+      viewForm.style.display = "block";
+      viewSearch.style.display = "none";
+      viewDone.style.display = "none";
+      summaryBar.style.display = "block"; // 顯示底部結帳列
+    });
+
+    tabSearchBtn.addEventListener("click", () => {
+      tabSearchBtn.classList.add("active");
+      tabFormBtn.classList.remove("active");
+      viewForm.style.display = "none";
+      viewSearch.style.display = "block";
+      viewDone.style.display = "none";
+      summaryBar.style.display = "none"; // 隱藏底部結帳列
+    });
+
+    // --- 金額試算邏輯 ---
+    qtySelect.addEventListener("change", () => {
+      const qty = parseInt(qtySelect.value);
+      summaryText.innerText = `${qty} 盒`;
+      totalPrice.innerText = (qty * PRICE_PER_BOX).toLocaleString();
+    });
+
+    // --- 表單送出邏輯 (Fetch API 串接 GAS) ---
+    submitBtn.addEventListener("click", () => {
+      // 觸發 HTML5 原生表單驗證
+      if (!orderForm.checkValidity()) {
+        orderForm.reportValidity();
+        return;
+      }
+
+      // 鎖定按鈕避免重複點擊
+      submitBtn.disabled = true;
+      submitBtn.innerText = "訂單送出中...";
+
+      // 收集表單資料
+      const formData = new FormData(orderForm);
+      // 自動生成一個簡單的訂單編號 (時間戳)
+      const orderNo = "HN" + Date.now().toString().slice(-6);
+      formData.append("orderNo", orderNo);
+      formData.append("totalPrice", parseInt(qtySelect.value) * PRICE_PER_BOX);
+
+      // 發送請求到 GAS
+      fetch(GAS_URL, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(result => {
+        // 成功送出後，切換到完成畫面
+        viewForm.style.display = "none";
+        summaryBar.style.display = "none";
+        document.querySelector(".nav-tabs").style.display = "none"; // 隱藏頁籤
+        
+        document.getElementById("doneOrderNo").innerText = orderNo;
+        viewDone.style.display = "block";
+      })
+      .catch(error => {
+        console.error("Error!", error.message);
+        alert("網路連線異常，請稍後再試！");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "確認結帳";
+      });
+    });
+
+    // --- 複製訂單編號功能 ---
+    document.getElementById("copyBtn").addEventListener("click", function() {
+      const orderNo = document.getElementById("doneOrderNo").innerText;
+      navigator.clipboard.writeText(orderNo).then(() => {
+        this.innerText = "已複製！";
+        this.style.background = "var(--ok)";
+        this.style.borderColor = "var(--ok)";
+        this.style.color = "#fff";
+      });
+    });
+
+    // --- 訂單查詢假資料邏輯 ---
+    document.getElementById("searchBtn").addEventListener("click", () => {
+      const phone = document.getElementById("searchPhone").value;
+      const resultDiv = document.getElementById("searchResult");
+      
+      if(phone.trim() === "") {
+        alert("請輸入手機號碼");
+        return;
+      }
+
+      // 這裡做一個簡單的假資料模擬 (實務上這裡也要用 fetch 去 GAS 抓資料)
+      resultDiv.innerHTML = `
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-no">編號: HN839201</span>
+            <span class="order-status">確認款項中</span>
+          </div>
+          <div class="order-row"><span>訂購姓名</span><span>李**</span></div>
+          <div class="order-row"><span>手機號碼</span><span>${phone}</span></div>
+          <div class="order-row"><span>訂購數量</span><span>2 盒</span></div>
+          <div class="order-row"><span>總金額</span><span style="color:var(--yolk);font-weight:700;">NT$ 840</span></div>
+          <div class="order-row"><span>取貨方式</span><span>台南工作室自取</span></div>
+        </div>
+      `;
+    });
+
+  </script>
 </body>
 </html>
