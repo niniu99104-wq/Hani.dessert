@@ -399,12 +399,58 @@ a { color: inherit; }
 .pay-actions .btn { width: 100%; min-height: 54px; }
 .success__note { margin-top: 18px; color: var(--muted); font-size: 13px; text-align: center; white-space: pre-line; }
 
+/* ---------- 訂單查詢入口 ---------- */
+.lookup-entry {
+  margin-top: 40px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 15px; color: var(--text-sub);
+}
+.lookup-entry__link {
+  flex: none;
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  border: 1px solid var(--accent); border-radius: var(--radius-sm);
+  color: var(--accent); font-weight: 500; text-decoration: none;
+}
+.closed .lookup-entry__link, .success .lookup-entry__link { margin-top: 20px; }
+
+/* ---------- 訂單查詢頁 ---------- */
+.lookup__title { font-family: var(--font-serif); font-size: 26px; letter-spacing: 0.1em; text-align: center; }
+.lookup__lead { margin: 10px 0 24px; text-align: center; color: var(--text-sub); font-size: 15px; }
+.back-link {
+  display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 12px;
+  color: var(--text-sub); font-size: 15px; text-decoration: none;
+}
+.lookup-results { margin-top: 32px; display: grid; gap: 20px; }
+.lookup-results__count { color: var(--text-sub); font-size: 14px; }
+.order-card { display: grid; gap: 16px; }
+.order-card__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.order-card__no { font-family: var(--font-brand); font-size: 24px; font-weight: 600; letter-spacing: 0.04em; }
+.order-card__time { color: var(--muted); font-size: 13px; }
+.order-card__section { padding-top: 14px; border-top: 1px solid var(--line); }
+.order-card__label { margin-bottom: 8px; color: var(--text-sub); font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 4px 12px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--text); font-size: 13px;
+}
+.chip.is-warn { background: var(--danger-soft); color: var(--danger); }
+
+/* ---------- 行事曆與截圖提醒 ---------- */
+.screenshot-tip { margin-top: 14px; color: var(--muted); font-size: 13px; }
+.cal-actions { display: grid; gap: 10px; margin-top: 14px; }
+.cal-actions .btn { width: 100%; min-height: 48px; font-size: 15px; letter-spacing: 0.04em; }
+.cal-hint { color: var(--muted); font-size: 12px; }
+
 /* ---------- 頁尾 ---------- */
 .site-footer { margin-top: 64px; text-align: center; }
 .site-footer__ask {
   display: inline-block; color: var(--text-sub); font-size: 15px; font-weight: 500;
   text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px;
 }
+.site-footer__lookup { display: inline-block; margin-top: 14px; color: var(--muted); font-size: 14px; }
 .site-footer__note { margin-top: 18px; color: var(--muted); font-size: 12px; }
 .site-footer__brand { margin-top: 18px; font-family: var(--font-brand); letter-spacing: 0.2em; color: var(--muted); font-size: 14px; }
 
@@ -473,10 +519,17 @@ a { color: inherit; }
     <section class="closed" id="closedBlock" hidden>
       <p class="closed__title" id="closedText">本次訂購已結束</p>
       <p class="closed__sub">謝謝大家的支持，下次開放訂購時再見。</p>
+      <a class="lookup-entry__link" href="#lookup">訂單查詢</a>
     </section>
 
     <!-- ===== 訂購區 ===== -->
     <main id="orderArea" hidden>
+
+      <!-- 訂單查詢入口 -->
+      <div class="lookup-entry">
+        <span>已經訂購過了嗎？</span>
+        <a class="lookup-entry__link" href="#lookup">訂單查詢</a>
+      </div>
 
       <!-- 商品卡由下方程式依照 Google Sheets「商品設定」自動產生 -->
       <section class="section" aria-labelledby="productsHeading">
@@ -541,6 +594,7 @@ a { color: inherit; }
             <label for="f-date">取貨／出貨日 <span class="req" aria-hidden="true">*</span></label>
             <select id="f-date" disabled><option value="">請先選擇配送方式</option></select>
             <p class="field__hint">一張單限一個日期；若要分天取貨，請分開填單。<br>超商&宅配 出貨日不等於到貨日，實際到貨依物流為主。</p>
+            <p class="field__hint" id="dateBlockHint" hidden>宅配已自動排除週六、週日、國定假日、連假與連假前一天。</p>
             <p class="field__error" data-error-for="date"></p>
           </div>
 
@@ -656,13 +710,43 @@ a { color: inherit; }
         <h3 class="panel__title">取貨資訊</h3>
         <dl class="info-list" id="successDelivery"></dl>
         <a class="btn-sub" id="successMap" href="#" target="_blank" rel="noopener" hidden>開啟 Google Map 導航</a>
+        <div id="successCalendar"></div>
+        <p class="screenshot-tip">建議截圖保存才不會忘記取貨/出貨日喔！</p>
       </div>
 
       <p class="success__note" id="successNote"></p>
+      <p style="text-align:center"><a class="lookup-entry__link" href="#lookup">查詢我的訂單</a></p>
+    </section>
+
+    <!-- ===== 訂單查詢頁（網址加上 #lookup 就會顯示） ===== -->
+    <section class="lookup" id="lookupView" hidden>
+      <a class="back-link" href="#" id="lookupBack">返回訂購頁</a>
+      <h2 class="lookup__title">訂單查詢</h2>
+      <p class="lookup__lead">輸入下單時填寫的訂購人姓名與電話，就能查看訂單狀態。</p>
+
+      <form class="panel panel--form" id="lookupForm" novalidate>
+        <div class="field" data-field="lookupName">
+          <label for="f-lookup-name">訂購人姓名</label>
+          <input id="f-lookup-name" type="text" autocomplete="name" maxlength="30">
+          <p class="field__error" data-error-for="lookupName"></p>
+        </div>
+        <div class="field" data-field="lookupPhone">
+          <label for="f-lookup-phone">訂購人電話</label>
+          <input id="f-lookup-phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="12" placeholder="09xxxxxxxx">
+          <p class="field__error" data-error-for="lookupPhone"></p>
+        </div>
+        <p class="form-error" id="lookupError" role="alert" hidden></p>
+        <button type="submit" class="btn btn--primary" id="lookupBtn" style="width:100%">
+          <span id="lookupLabel">查詢訂單</span>
+        </button>
+      </form>
+
+      <div class="lookup-results" id="lookupResults" aria-live="polite"></div>
     </section>
 
     <footer class="site-footer">
       <a class="site-footer__ask" id="lineAsk" href="#" target="_blank" rel="noopener" hidden></a>
+      <br><a class="site-footer__lookup" href="#lookup">訂單查詢</a>
       <p class="site-footer__note" id="footerNote" hidden></p>
       <p class="site-footer__brand" id="footerName">HANI DESSERT.</p>
     </footer>
@@ -689,7 +773,7 @@ a { color: inherit; }
  * 全部在 Google Sheets 修改，不需要改這裡。
  * ========================================================= */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbwloqDvYsY_M7uWxqch-amzQmP8-bqRY02CEpIgL4YA_lZ1g4Djv28GGScpOLg_a7AIUQ/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycby5RSAX8GUPwnJ3VmbEcnmnGcgZSmUVLjSKo9fQlwVkmdoGV-QQhiIHvgWaEvUS1O8BDQ/exec',
   TIMEOUT_MS: 30000,
   AUTO_REFRESH_MS: 60000,
 };
@@ -704,6 +788,9 @@ const MESSAGES = {
   CHECK_FIELDS: '還有欄位需要確認，請查看標示紅字的地方。',
   GENERIC: '訂單送出失敗，請稍後再試，或透過 LINE 與我們聯繫。',
   NO_DATES: '目前沒有可選的日期',
+  LOOKUP_EMPTY: '查不到符合的訂單，請確認姓名與電話是否與下單時填寫的相同。',
+  LOOKUP_FAIL: '查詢失敗，請稍後再試，或透過 LINE 與我們聯繫。',
+  CAL_HINT: '若在 LINE 內開啟無法加入行事曆，請點右上角改用 Safari 或 Chrome 開啟。',
 };
 
 /* =========================================================
@@ -722,7 +809,9 @@ const state = {
   isSubmitting: false,
   requestId: null,
   lastLoadedAt: 0,
-  view: 'loading',
+  view: 'loading',       // 目前畫面（含訂單查詢）
+  mainView: 'loading',   // 訂購頁本身的畫面：loading | error | closed | order | success
+  lookupBusy: false,
 };
 
 const cardRefs = {};
@@ -740,6 +829,8 @@ const FIELD_IDS = {
   payment: 'paymentOptions',
   social: 'f-social',
   note: 'f-note',
+  lookupName: 'f-lookup-name',
+  lookupPhone: 'f-lookup-phone',
 };
 
 /* ---------- 小工具 ---------- */
@@ -799,15 +890,24 @@ function apiPost(payload) {
   });
 }
 
-/* ---------- 畫面切換 ---------- */
+/* ---------- 畫面切換 ----------
+ * 網址是 #lookup 時顯示「訂單查詢」，其餘顯示訂購頁
+ */
 function setView(view) {
+  state.mainView = view;
+  renderRoute();
+}
+
+function renderRoute() {
+  const view = location.hash === '#lookup' ? 'lookup' : state.mainView;
   state.view = view;
   $('loadingBlock').hidden = view !== 'loading';
   $('errorBlock').hidden = view !== 'error';
   $('closedBlock').hidden = view !== 'closed';
   $('orderArea').hidden = view !== 'order';
   $('successView').hidden = view !== 'success';
-  $('intro').hidden = view === 'success';
+  $('lookupView').hidden = view !== 'lookup';
+  $('intro').hidden = view === 'success' || view === 'lookup';
   updateStickyBar();
 }
 function showLoadError(message) { $('errorText').textContent = message || MESSAGES.LOAD_FAIL; setView('error'); }
@@ -1190,11 +1290,14 @@ function renderDateOptions() {
   sel.innerHTML = '';
 
   if (!opt) {
+    $('dateBlockHint').hidden = true;
     addOption(sel, '', '請先選擇配送方式', { selected: true });
     sel.disabled = true;
     return;
   }
-  const list = state.dates.filter((d) => !(opt.noWeekend && d.weekend));
+  // 宅配：排除週末、宅配停止日（國定假日、補假）與連假前最後一個出貨日
+  const list = state.dates.filter((d) => !(opt.noWeekend && d.weekend) && !(opt.blockHolidays && d.holidayBlocked));
+  $('dateBlockHint').hidden = !(opt.noWeekend || opt.blockHolidays);
   sel.disabled = !list.length;
   addOption(sel, '', list.length ? '請選擇日期' : MESSAGES.NO_DATES, { disabled: true, selected: true });
   list.forEach((d) => addOption(sel, d.date, `${d.date}（${d.weekday}）`));
@@ -1499,11 +1602,321 @@ function showSuccess(res) {
   map.hidden = !(d.id === 'PICKUP' && d.mapUrl);
   if (!map.hidden) map.href = d.mapUrl;
 
+  const cal = $('successCalendar');
+  cal.innerHTML = '';
+  const ev = buildCalendarEvent(res.orderNumber, d, res.items, res.total);
+  if (ev) cal.appendChild(buildCalendarActions(ev));
+
   $('successNote').textContent = res.paymentText || '';
 
   setSubmitting(false);
   setView('success');
   window.scrollTo(0, 0);
+}
+
+/* =========================================================
+ * 加入行事曆
+ * - Google 行事曆：開啟新增活動頁面
+ * - iPhone／其他行事曆：下載 .ics 檔
+ * - 來店自取：依取貨時段建立有時間的行程；寄送：建立全天的出貨日行程
+ * ========================================================= */
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+function parseSlot(slot) {
+  const m = String(slot || '').match(/(\d{1,2}):(\d{2})\s*[-–~～]\s*(\d{1,2}):(\d{2})/);
+  return m ? { sh: +m[1], sm: +m[2], eh: +m[3], em: +m[4] } : null;
+}
+
+/* 台灣時間 → UTC 時間字串（台灣固定 UTC+8，沒有日光節約） */
+function utcStamp(ds, h, mi) {
+  const p = ds.split('/').map(Number);
+  const t = new Date(Date.UTC(p[0], p[1] - 1, p[2], h - 8, mi));
+  return `${t.getUTCFullYear()}${pad2(t.getUTCMonth() + 1)}${pad2(t.getUTCDate())}T${pad2(t.getUTCHours())}${pad2(t.getUTCMinutes())}00Z`;
+}
+function dayStamp(ds, addDays) {
+  const p = ds.split('/').map(Number);
+  const t = new Date(Date.UTC(p[0], p[1] - 1, p[2] + (addDays || 0)));
+  return `${t.getUTCFullYear()}${pad2(t.getUTCMonth() + 1)}${pad2(t.getUTCDate())}`;
+}
+
+function buildCalendarEvent(orderNumber, d, items, total) {
+  if (!d || !/^\d{4}\/\d{2}\/\d{2}$/.test(d.date || '')) return null;
+  const store = state.settings.storeName || 'HANI DESSERT.';
+  const isPickup = d.id === 'PICKUP';
+  const slot = isPickup ? parseSlot(d.slot) : null;
+
+  const lines = [`訂單編號：${orderNumber}`];
+  (items || []).forEach((it) => lines.push(`${it.spec ? it.name + '｜' + it.spec : it.name} × ${it.quantity}`));
+  lines.push(`應付金額：${money(total)}`);
+  lines.push(`配送方式：${d.label || ''}`);
+  if (d.slot) lines.push(`取貨時段：${d.slot}`);
+  if (d.storeInfo) lines.push(`超商門市：${d.storeInfo}`);
+  if (isPickup && d.mapUrl) lines.push(`導航：${d.mapUrl}`);
+
+  const ev = {
+    uid: `${orderNumber}@hani-dessert`,
+    title: `${store} ${isPickup ? '取貨' : '出貨日'}（${orderNumber}）`,
+    details: lines.join('\n'),
+    location: isPickup ? (d.pickupAddress || '') : '',
+    allDay: !slot,
+  };
+  if (slot) {
+    ev.start = utcStamp(d.date, slot.sh, slot.sm);
+    ev.end = utcStamp(d.date, slot.eh, slot.em);
+  } else {
+    ev.start = dayStamp(d.date, 0);
+    ev.end = dayStamp(d.date, 1);
+  }
+  return ev;
+}
+
+function googleCalendarUrl(ev) {
+  const q = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: ev.title,
+    dates: `${ev.start}/${ev.end}`,
+    details: ev.details,
+    location: ev.location,
+    ctz: 'Asia/Taipei',
+  });
+  return 'https://calendar.google.com/calendar/render?' + q.toString();
+}
+
+function icsEscape(s) {
+  return String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+}
+
+/* .ics 規定每行最多 75 bytes，超過要折行 */
+function icsFold(line) {
+  const byteLen = (ch) => { const c = ch.codePointAt(0); return c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4; };
+  const out = [];
+  let cur = '';
+  let bytes = 0;
+  for (const ch of line) {
+    const b = byteLen(ch);
+    if (bytes + b > (out.length ? 73 : 74)) { out.push(cur); cur = ''; bytes = 0; }
+    cur += ch;
+    bytes += b;
+  }
+  out.push(cur);
+  return out.join('\r\n ');
+}
+
+function buildIcs(ev) {
+  const now = new Date();
+  const stamp = `${now.getUTCFullYear()}${pad2(now.getUTCMonth() + 1)}${pad2(now.getUTCDate())}T${pad2(now.getUTCHours())}${pad2(now.getUTCMinutes())}${pad2(now.getUTCSeconds())}Z`;
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//HANI DESSERT//Order//ZH-TW',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${ev.uid}`,
+    `DTSTAMP:${stamp}`,
+    ev.allDay ? `DTSTART;VALUE=DATE:${ev.start}` : `DTSTART:${ev.start}`,
+    ev.allDay ? `DTEND;VALUE=DATE:${ev.end}` : `DTEND:${ev.end}`,
+    `SUMMARY:${icsEscape(ev.title)}`,
+    `DESCRIPTION:${icsEscape(ev.details)}`,
+  ];
+  if (ev.location) lines.push(`LOCATION:${icsEscape(ev.location)}`);
+  // 提醒：有時段的行程前 2 小時；全天行程前一天早上 9 點
+  lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(ev.title)}`,
+    ev.allDay ? 'TRIGGER:-PT15H' : 'TRIGGER:-PT2H', 'END:VALARM');
+  lines.push('END:VEVENT', 'END:VCALENDAR');
+  return lines.map(icsFold).join('\r\n') + '\r\n';
+}
+
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function downloadIcs(ev) {
+  const ics = buildIcs(ev);
+  if (isIOS()) {
+    // iPhone Safari：直接開啟後會詢問「加入行事曆」
+    window.location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    return;
+  }
+  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = ev.uid.split('@')[0] + '.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+function buildCalendarActions(ev) {
+  const wrap = el('div', 'cal-actions');
+  const g = el('a', 'btn btn--ghost', '加入 Google 行事曆');
+  g.href = googleCalendarUrl(ev);
+  g.target = '_blank';
+  g.rel = 'noopener';
+  const i = el('button', 'btn btn--ghost', '加入 iPhone／其他行事曆');
+  i.type = 'button';
+  i.addEventListener('click', () => downloadIcs(ev));
+  wrap.append(g, i, el('p', 'cal-hint', MESSAGES.CAL_HINT));
+  return wrap;
+}
+
+/* =========================================================
+ * 訂單查詢
+ * ========================================================= */
+function setLookupBusy(on) {
+  state.lookupBusy = on;
+  const btn = $('lookupBtn');
+  btn.disabled = on;
+  btn.classList.toggle('is-loading', on);
+  $('lookupLabel').textContent = on ? '查詢中…' : '查詢訂單';
+}
+
+function showLookupError(message) {
+  const b = $('lookupError');
+  b.textContent = message || '';
+  b.hidden = !message;
+}
+
+async function onLookup(e) {
+  e.preventDefault();
+  if (state.lookupBusy) return;
+  showLookupError('');
+  setFieldError('lookupName', '');
+  setFieldError('lookupPhone', '');
+
+  const name = ($('f-lookup-name').value || '').trim();
+  const phone = normalizePhone($('f-lookup-phone').value || '');
+  let bad = false;
+  if (!name) { setFieldError('lookupName', '請填寫訂購人姓名'); bad = true; }
+  if (!isValidPhone(phone)) { setFieldError('lookupPhone', '請輸入 09 開頭的 10 碼手機號碼'); bad = true; }
+  if (bad) return;
+
+  if (!CONFIG.API_URL || CONFIG.API_URL.indexOf('PASTE_YOUR') === 0) { showLookupError(MESSAGES.NO_API); return; }
+
+  setLookupBusy(true);
+  $('lookupResults').innerHTML = '';
+  let res;
+  try {
+    res = await apiPost({ action: 'lookupOrder', name, phone });
+  } catch (err) {
+    console.error(err);
+    setLookupBusy(false);
+    showLookupError(MESSAGES.LOOKUP_FAIL);
+    return;
+  }
+  setLookupBusy(false);
+
+  if (!res || !res.success) {
+    if (res && res.code === 'VALIDATION_ERROR' && FIELD_IDS[res.field]) setFieldError(res.field, res.message);
+    else showLookupError((res && res.message) || MESSAGES.LOOKUP_FAIL);
+    return;
+  }
+  renderLookupResults(res.orders || []);
+}
+
+function renderLookupResults(orders) {
+  const box = $('lookupResults');
+  box.innerHTML = '';
+  if (!orders.length) {
+    box.appendChild(el('p', 'summary__empty', MESSAGES.LOOKUP_EMPTY));
+    return;
+  }
+  box.appendChild(el('p', 'lookup-results__count', `共找到 ${orders.length} 筆訂單（由新到舊）`));
+  orders.forEach((o) => box.appendChild(buildOrderCard(o)));
+  scrollToEl(box);
+}
+
+function buildOrderCard(o) {
+  const card = el('article', 'panel order-card');
+
+  const head = el('div', 'order-card__head');
+  head.append(el('span', 'order-card__no', o.orderNumber), el('span', 'order-card__time', o.createdAt ? `下單時間 ${o.createdAt}` : ''));
+  card.appendChild(head);
+
+  // 狀態
+  const chips = el('div', 'chips');
+  const st = o.status || {};
+  const shipWord = (o.delivery || {}).id === 'PICKUP' ? '取貨' : '出貨';
+  [['付款', st.payment, st.payment === '未付款'], [shipWord, st.pickup, false]].forEach(([k, v, warn]) => {
+    if (!v) return;
+    const c = el('span', 'chip' + (warn ? ' is-warn' : ''), `${k}：${v}`);
+    chips.appendChild(c);
+  });
+  card.appendChild(chips);
+
+  // 訂購內容
+  const itemsSec = el('div', 'order-card__section');
+  itemsSec.appendChild(el('p', 'order-card__label', '訂購內容'));
+  const ul = el('ul', 'success__items');
+  (o.items || []).forEach((it) => {
+    const li = el('li', 'success__item');
+    li.append(el('span', '', `${it.spec ? it.name + '｜' + it.spec : it.name} × ${it.quantity}`), el('span', '', dollar(it.subtotal)));
+    ul.appendChild(li);
+  });
+  itemsSec.appendChild(ul);
+  const totals = el('dl', 'totals totals--plain');
+  [['商品小計', o.subtotal], ['運費', o.shipping]].forEach(([k, v]) => {
+    const r = el('div', 'totals__row');
+    r.append(el('dt', '', k), el('dd', '', money(v)));
+    totals.appendChild(r);
+  });
+  const g = el('div', 'totals__row totals__row--grand');
+  g.append(el('dt', '', '應付金額'), el('dd', '', money(o.total)));
+  totals.appendChild(g);
+  itemsSec.appendChild(totals);
+  card.appendChild(itemsSec);
+
+  // 取貨資訊
+  const d = o.delivery || {};
+  const dSec = el('div', 'order-card__section');
+  dSec.appendChild(el('p', 'order-card__label', '取貨資訊'));
+  const dl = el('dl', 'info-list');
+  addInfo(dl, '收件人', o.receiverName);
+  addInfo(dl, '收件人電話', o.receiverPhone);
+  addInfo(dl, '配送方式', d.label);
+  addInfo(dl, '取貨／出貨日', d.date ? `${d.date}（${d.weekday}）` : '');
+  addInfo(dl, '取貨時段', d.slot);
+  if (d.id === 'PICKUP' && d.pickupAddress) addInfo(dl, '自取地址', d.pickupAddress + (d.pickupAddressNote ? `（${d.pickupAddressNote}）` : ''));
+  addInfo(dl, '超商門市', d.storeInfo);
+  addInfo(dl, '宅配地址', d.address);
+  dSec.appendChild(dl);
+  if (d.id === 'PICKUP' && d.mapUrl) {
+    const m = el('a', 'btn-sub', '開啟 Google Map 導航');
+    m.href = d.mapUrl;
+    m.target = '_blank';
+    m.rel = 'noopener';
+    dSec.appendChild(m);
+  }
+  const ev = buildCalendarEvent(o.orderNumber, d, o.items, o.total);
+  if (ev) dSec.appendChild(buildCalendarActions(ev));
+  dSec.appendChild(el('p', 'screenshot-tip', '建議截圖保存才不會忘記取貨/出貨日喔！'));
+  card.appendChild(dSec);
+
+  // 付款（尚未付款才顯示付款提示與按鈕）
+  const pay = o.payment || {};
+  const pSec = el('div', 'order-card__section');
+  pSec.appendChild(el('p', 'order-card__label', `付款方式｜${pay.label || ''}`));
+  if (pay.unpaid) {
+    if (pay.hint) pSec.appendChild(el('p', 'pay-hint', pay.hint));
+    const actions = el('div', 'pay-actions');
+    if (pay.id === 'PAYUNI' && pay.url) {
+      const a = el('a', 'btn btn--primary', '前往 PAYUNi 付款');
+      a.href = pay.url; a.target = '_blank'; a.rel = 'noopener';
+      actions.appendChild(a);
+    }
+    if (pay.id === 'LINEPAY' && o.lineUrl) {
+      const a = el('a', 'btn btn--line', 'LINE 私訊土豆媽（附上訂單編號）');
+      a.href = o.lineUrl; a.target = '_blank'; a.rel = 'noopener';
+      actions.appendChild(a);
+    }
+    if (actions.children.length) pSec.appendChild(actions);
+  } else if (st.payment) {
+    pSec.appendChild(el('p', 'success__text', `付款狀態：${st.payment}`));
+  }
+  card.appendChild(pSec);
+
+  return card;
 }
 
 function copyOrderNumber() {
@@ -1536,6 +1949,16 @@ function bindEvents() {
   $('retryLoad').addEventListener('click', loadInitData);
   $('stickyBtn').addEventListener('click', () => scrollToEl($('summary')));
   $('copyBtn').addEventListener('click', copyOrderNumber);
+
+  // 訂單查詢
+  $('lookupForm').addEventListener('submit', onLookup);
+  $('lookupBack').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
+    renderRoute();
+    window.scrollTo(0, 0);
+  });
+  window.addEventListener('hashchange', () => { renderRoute(); window.scrollTo(0, 0); });
 
   $('f-same').addEventListener('change', syncReceiver);
   $('f-name').addEventListener('input', () => { if ($('f-same').checked) $('f-rname').value = $('f-name').value; });
