@@ -9,6 +9,14 @@
   <meta name="format-detection" content="telephone=no">
 
   <!-- 字體：Noto Serif TC（標題）、Noto Sans TC（內文）、Cormorant Garamond（品牌英文字） -->
+  <!-- 加速：提早連線到 Google Apps Script，讀取商品資料更快 -->
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
+
+  <!-- 加速：商品照片在讀取商品資料的同時就開始下載（換照片時，這裡的檔名也要一起改） -->
+  <link rel="preload" as="image" href="IMG2383nini.PNG" fetchpriority="high">
+  <link rel="preload" as="image" href="B7D7D40D-19BF-4A43-8206-E98A9C377EA2.PNG">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" rel="stylesheet">
@@ -870,17 +878,18 @@ function applySettings(s) {
 
 /* ---------- 商品卡 ---------- */
 function renderProducts() {
+  let index = 0;
   const list = $('productList');
   list.innerHTML = '';
   Object.keys(cardRefs).forEach((k) => delete cardRefs[k]);
   if (!state.products.length) { list.appendChild(el('p', 'summary__empty', '目前沒有開放訂購的商品。')); return; }
   state.products.forEach((p) => {
     if (!(p.id in state.cart)) state.cart[p.id] = 0;
-    list.appendChild(buildProductCard(p));
+    list.appendChild(buildProductCard(p, index++));
   });
 }
 
-function buildProductCard(p) {
+function buildProductCard(p, index) {
   const card = el('article', 'product');
   card.dataset.id = p.id;
 
@@ -889,7 +898,8 @@ function buildProductCard(p) {
     const img = el('img');
     img.src = p.image;
     img.alt = productTitle(p);
-    img.loading = 'lazy';
+    // 前兩張商品照片立即載入，之後的商品才延遲載入
+    img.loading = index < 2 ? 'eager' : 'lazy';
     img.decoding = 'async';
     img.onerror = () => { media.innerHTML = ''; media.appendChild(placeholder('商品照片')); };
     media.appendChild(img);
