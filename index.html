@@ -90,6 +90,15 @@ a { color: inherit; }
   padding: calc(28px + env(safe-area-inset-top, 0px)) 20px 32px;
 }
 .pre-line { white-space: pre-line; }
+
+/* 手機換行：一個「詞組」盡量不拆開，只在標點或詞組之間換行 */
+.phrase { display: inline-block; max-width: 100%; }
+.field__hint, .ship-notice__text, .ship-notice__estimate, .delivery-info, .announcement,
+.limit-hint, .pay-hint, .cal-hint, .cal-pending, .screenshot-tip, .submit-hint,
+.success__text, .success__remind, .success__note, .lookup__lead, .closed__sub, .product__note {
+  line-break: strict;           /* 標點符號不放在行首 */
+  text-wrap: pretty;            /* 避免最後一行只剩一兩個字 */
+}
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ---------- 頁首與主視覺 ---------- */
@@ -635,8 +644,7 @@ a { color: inherit; }
           <div class="field" data-field="slot" id="slotField" hidden>
             <label for="f-slot"><span id="slotLabel">取貨時段</span> <span class="req" aria-hidden="true">*</span></label>
             <select id="f-slot"></select>
-            <p class="field__hint" id="slotHint" hidden>實際取貨日期會在排單後以 LINE 通知，這裡先選你方便的時段。</p>
-            <p class="field__hint" id="slotHint" hidden>要記得完成結帳後私訊土豆媽才能與你聯絡通知取貨日喔！</p>
+            <p class="field__hint" id="slotHint" hidden><span class="phrase">要記得完成結帳後私訊土豆媽</span><span class="phrase">才能與你聯絡通知取貨日喔！</span></p>
             <p class="field__error" data-error-for="slot"></p>
           </div>
           <div class="pickup-box" id="pickupBox" hidden>
@@ -675,7 +683,7 @@ a { color: inherit; }
           <div class="field" data-field="social">
             <label for="f-social">LINE 名字或 Instagram 帳號 <span class="opt">選填</span></label>
             <input id="f-social" type="text" autocomplete="off" maxlength="60" placeholder="例：土豆寶寶 / @_hani.iiii_">
-            <p class="field__hint">新朋友要加入群組記得填唷！土豆爸會核對。</p>
+            <p class="field__hint"><span class="phrase">新朋友要加入群組記得填唷！</span><span class="phrase">土豆爸會核對。</span><br><span class="phrase">自取的朋友也要記得填寫</span><span class="phrase">土豆媽才能找到你～</span></p>
             <p class="field__error" data-error-for="social"></p>
           </div>
           <div class="field" data-field="note">
@@ -1028,7 +1036,7 @@ function applySettings(s) {
   }
 
   const ann = $('announcement');
-  ann.textContent = s.announcement || '';
+  setPhraseText(ann, s.announcement || '');
   ann.hidden = !s.announcement;
 
   const ask = $('lineAsk');
@@ -1040,8 +1048,8 @@ function applySettings(s) {
   $('noteDateHint').hidden = dateOn;
   $('slotLabel').textContent = dateOn ? '取貨時段' : '偏好取貨時段';
   $('slotHint').hidden = dateOn;
-  $('shipNoticeText').textContent = s.shipNotice || '';
-  $('shipEstimateText').textContent = !dateOn && s.shipEstimate ? `今天下單，預計出貨：${s.shipEstimate.text}` : '';
+  setPhraseText($('shipNoticeText'), s.shipNotice || '');
+  setPhraseText($('shipEstimateText'), !dateOn && s.shipEstimate ? `今天下單，預計出貨：${s.shipEstimate.text}` : '');
   if (!dateOn) $('f-note').placeholder = '其他需求，或無法收件的日期';
 
   const note = $('footerNote');
@@ -1115,6 +1123,24 @@ function buildProductCard(p, index) {
  *   - 去掉每行前後多餘空白、連續空行
  *   - 以「・」「-」「•」「*」開頭的行，排成整齊的條列（換行後會縮排對齊）
  *   - 每一行最後 4 個字（含句尾標點）不拆開，避免最後一行只剩「裝。」這種情況 */
+/* 把一段文字切成「詞組」：在 ，。！？；：～ 等標點後面分段，
+ * 每段用 inline-block 包起來，手機上就只會在標點之間換行，不會把「7–14 個工作日」這種詞拆開。
+ * 文字裡的換行（試算表 Alt+Enter）會保留。 */
+function phraseNodes(text) {
+  const frag = document.createDocumentFragment();
+  String(text || '').replace(/\r/g, '').split('\n').forEach((line, i) => {
+    if (i) frag.appendChild(document.createElement('br'));
+    // 頓號「、」是列舉，不當作換行點（避免「製作、」「出貨。」被拆成兩行）
+    const parts = line.match(/[^，。！？；：～,!?;:]+[，。！？；：～,!?;:）」』]*|[，。！？；：～,!?;:）」』]+/g) || [];
+    parts.forEach((part) => frag.appendChild(el('span', 'phrase', part)));
+  });
+  return frag;
+}
+function setPhraseText(node, text) {
+  node.textContent = '';
+  node.appendChild(phraseNodes(text));
+}
+
 function renderNote(node, text) {
   node.innerHTML = '';
   const lines = String(text || '').replace(/\r/g, '').split('\n').map((l) => l.replace(/[ \u3000\t]+/g, ' ').trim());
@@ -1126,10 +1152,7 @@ function renderNote(node, text) {
     if (!bullet) list = null;
     const content = bullet ? bullet[1] : line;
     const item = el(bullet ? 'li' : 'p');
-    const chars = Array.from(content);
-    const tailLen = chars.length > 8 ? 4 : 0;
-    item.append(document.createTextNode(chars.slice(0, chars.length - tailLen).join('')));
-    if (tailLen) item.appendChild(el('span', 'nowrap', chars.slice(-tailLen).join('')));
+    item.appendChild(phraseNodes(content));
     target.appendChild(item);
   });
 }
@@ -1281,7 +1304,7 @@ function renderLimitHint() {
     text = `單筆最多 ${s.maxBoxes} 盒。${s.maxBoxesMessage || ''}`;
     warn = boxes >= s.maxBoxes;
   }
-  hint.textContent = text;
+  setPhraseText(hint, text);
   hint.hidden = !text;
   hint.classList.toggle('is-warn', warn);
 }
@@ -1361,7 +1384,7 @@ function updateDeliveryUI() {
   const need = opt ? opt.need : '';
 
   const info = $('deliveryInfo');
-  info.textContent = (opt && opt.info) || '';
+  setPhraseText(info, (opt && opt.info) || '');
   info.hidden = !info.textContent;
 
   $('slotField').hidden = need !== 'slot';
@@ -1662,7 +1685,7 @@ function showSuccess(res) {
   const pay = res.payment || {};
   $('successPayLabel').textContent = pay.label || '';
   const hint = $('successPayHint');
-  hint.textContent = pay.hint || '';
+  setPhraseText(hint, pay.hint || '');
   hint.hidden = !pay.hint;
   const payuni = $('payuniBtn');
   payuni.hidden = !(pay.id === 'PAYUNI' && pay.url);
@@ -1858,7 +1881,9 @@ function buildCalendarActions(ev) {
   const i = el('button', 'btn btn--ghost', '加入 iPhone／其他行事曆');
   i.type = 'button';
   i.addEventListener('click', () => downloadIcs(ev));
-  wrap.append(g, i, el('p', 'cal-hint', MESSAGES.CAL_HINT));
+  const calHint = el('p', 'cal-hint');
+  setPhraseText(calHint, MESSAGES.CAL_HINT);
+  wrap.append(g, i, calHint);
   return wrap;
 }
 
@@ -2001,7 +2026,7 @@ function buildOrderCard(o) {
   const pSec = el('div', 'order-card__section');
   pSec.appendChild(el('p', 'order-card__label', `付款方式｜${pay.label || ''}`));
   if (pay.unpaid) {
-    if (pay.hint) pSec.appendChild(el('p', 'pay-hint', pay.hint));
+    if (pay.hint) { const ph = el('p', 'pay-hint'); setPhraseText(ph, pay.hint); pSec.appendChild(ph); }
     const actions = el('div', 'pay-actions');
     if (pay.id === 'PAYUNI' && pay.url) {
       const a = el('a', 'btn btn--primary', '前往 PAYUNi 付款');
@@ -2047,7 +2072,14 @@ function copyOrderNumber() {
 }
 
 /* ---------- 事件綁定 ---------- */
+/* 頁面上固定寫好的提示文字（沒有自己排好詞組的）也套用詞組換行 */
+function applyPhraseWrapToStaticText() {
+  document.querySelectorAll('.field__hint, .submit-hint, .lookup__lead, .success__text, .success__remind, .cal-pending, .screenshot-tip, .closed__sub, .success__lead')
+    .forEach((n) => { if (!n.children.length && n.textContent.trim()) setPhraseText(n, n.textContent.trim()); });
+}
+
 function bindEvents() {
+  applyPhraseWrapToStaticText();
   $('orderForm').addEventListener('submit', onSubmit);
   $('retryLoad').addEventListener('click', loadInitData);
   $('stickyBtn').addEventListener('click', () => scrollToEl($('summary')));
