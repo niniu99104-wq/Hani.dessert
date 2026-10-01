@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HANI DESSERT.｜線上訂購</title>
+  <meta name="description" content="HANI DESSERT. 手作甜點線上訂購">
+  <meta name="theme-color" content="#F5F1EA">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- 字體：Noto Serif TC（標題）、Noto Sans TC（內文）、Cormorant Garamond（品牌英文字） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+/* =========================================================
+ * HANI DESSERT. 線上訂購｜樣式
+ *
+ * 想調整顏色：只要修改下方 :root 裡的色票即可，
+ * 其他地方都會自動套用。
+ * ========================================================= */
+
+:root {
+  /* 色票：米白、奶油、暖灰，低飽和 */
+  --bg: #F5F1EA;            /* 頁面底色（米白） */
+  --surface: #FCFAF6;       /* 區塊底色（奶油白） */
+  --surface-soft: #ECE5DA;  /* 圖片預留區、淺底 */
+  --line: #E2D9CC;          /* 細線 */
+  --text: #3A3430;          /* 主要文字（暖深灰） */
+  --text-sub: #6B625A;      /* 次要文字 */
+  --muted: #9B9187;         /* 提示文字 */
+  --accent: #5B524A;        /* 主要按鈕（暖灰褐） */
+  --accent-press: #473F38;
+  --accent-soft: #E8E0D4;
+  --danger: #9E5A4C;        /* 錯誤提示（低飽和磚紅） */
+  --danger-soft: #F4E8E3;
+
+  --radius-lg: 18px;        /* 照片 */
+  --radius: 12px;           /* 區塊 */
+  --radius-sm: 10px;        /* 按鈕、輸入框 */
+
+  --font-sans: "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+  --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --font-brand: "Cormorant Garamond", "Noto Serif TC", Georgia, serif;
+
+  --page-max: 560px;
+  --sticky-h: 60px;
+
+  color-scheme: light;
+}
+
+/* ---------- 基礎 ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 20px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.has-sticky {
+  padding-bottom: calc(var(--sticky-h) + 24px + env(safe-area-inset-bottom, 0px));
+}
+
+img { display: block; max-width: 100%; }
+button, input, textarea { font: inherit; color: inherit; }
+p { margin: 0; }
+h1, h2, h3 { margin: 0; font-weight: 500; }
+
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: calc(28px + env(safe-area-inset-top, 0px)) 20px 32px;
+}
+
+.pre-line { white-space: pre-line; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- 頁首 ---------- */
+.site-header { text-align: center; margin-bottom: 36px; }
+
+.brand {
+  font-family: var(--font-brand);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--text);
+}
+
+/* ---------- 主視覺 ---------- */
+.hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 7.4vw, 34px);
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.hero__subtitle {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 16px;
+  line-height: 1.95;
+  white-space: pre-line;
+}
+
+.hero__media {
+  margin: 32px 0 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-soft);
+  aspect-ratio: 4 / 5;
+}
+
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  background: var(--surface-soft);
+}
+
+.announcement {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--text-sub);
+  font-size: 15px;
+  white-space: pre-line;
+}
+
+/* ---------- 狀態區塊 ---------- */
+.status-block {
+  margin: 40px 0;
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 15px;
+}
+
+.status-block__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  vertical-align: middle;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.status-block--error p { margin-bottom: 16px; color: var(--danger); }
+
+.closed {
+  margin: 48px 0;
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.closed__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  letter-spacing: 0.08em;
+}
+
+.closed__sub { margin-top: 10px; color: var(--text-sub); font-size: 15px; }
+
+/* ---------- 區段 ---------- */
+.section { margin-top: 56px; }
+
+.section__title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  letter-spacing: 0.08em;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* 表單裡有多個標題，彼此之間要留距離 */
+#orderForm .section__title:not(:first-child) { margin-top: 44px; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.panel + .panel { margin-top: 14px; }
+
+.panel__title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+/* ---------- 商品卡 ---------- */
+.product-list { display: grid; gap: 28px; }
+
+.product {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.product.is-selected { border-color: var(--accent); }
+
+.product__media {
+  aspect-ratio: 1 / 1;
+  background: var(--surface-soft);
+}
+
+.product__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product.is-soldout .product__media img { filter: grayscale(0.6); opacity: 0.7; }
+
+.product__body { padding: 20px 20px 22px; }
+
+.product__name {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  word-break: break-word;
+}
+
+.product__price {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.product__price-unit { color: var(--text-sub); font-size: 15px; font-weight: 400; }
+
+.product__desc {
+  margin-top: 10px;
+  color: var(--text-sub);
+  font-size: 15px;
+  white-space: pre-line;
+}
+
+.product__stock {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+.product__stock.is-soldout { color: var(--danger); font-weight: 500; }
+
+.product__action {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.product__line-total { color: var(--text-sub); font-size: 15px; }
+
+.product__note {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+/* ---------- 數量選擇器 ---------- */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.stepper__btn {
+  width: 52px;
+  height: 52px;
+  border: 0;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  border-radius: var(--radius-sm);
+}
+
+.stepper__btn:active:not(:disabled) { background: var(--accent-soft); }
+.stepper__btn:disabled { color: var(--line); cursor: not-allowed; }
+
+.stepper__qty {
+  min-width: 48px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 訂購內容 ---------- */
+.summary__empty { color: var(--muted); font-size: 15px; text-align: center; padding: 6px 0; }
+
+.summary__item + .summary__item {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.summary__name { font-size: 15px; font-weight: 500; }
+
+.summary__row {
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-sub);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary__row span:last-child { color: var(--text); }
+
+.summary__subtotal {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--text);
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.notice {
+  margin-bottom: 14px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 15px;
+}
+
+/* ---------- 表單 ---------- */
+.panel--form { display: grid; gap: 20px; }
+.panel--form + .totals, #shippingFields { margin-top: 14px; }
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.req { color: var(--danger); margin-left: 2px; }
+.opt { color: var(--muted); font-size: 13px; font-weight: 400; margin-left: 4px; }
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-size: 16px;            /* 16px 以上，iPhone 點擊時才不會自動放大 */
+  line-height: 1.5;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field textarea { resize: vertical; min-height: 92px; }
+
+.field input::placeholder,
+.field textarea::placeholder { color: #BDB4A9; }
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field.is-invalid input,
+.field.is-invalid textarea { border-color: var(--danger); }
+
+.field__hint { margin-top: 6px; color: var(--muted); font-size: 13px; }
+
+.field__error {
+  margin-top: 6px;
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.field__error:empty { display: none; }
+
+/* ---------- 取貨方式 ---------- */
+.delivery-options { display: grid; gap: 10px; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.option.is-checked { border-color: var(--accent); background: #fff; }
+
+.option input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--accent);
+}
+
+.option__text {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.option__name { font-weight: 500; }
+.option__fee { color: var(--text-sub); font-size: 15px; }
+
+.field--group.is-invalid .option { border-color: var(--danger); }
+
+.delivery-info {
+  margin-top: 12px;
+  color: var(--text-sub);
+  font-size: 14px;
+  white-space: pre-line;
+}
+
+/* ---------- 金額 ---------- */
+.totals { margin: 0; }
+
+.totals__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals__row dt { color: var(--text-sub); }
+.totals__row dd { margin: 0; text-align: right; }
+
+.totals__row--grand {
+  margin-top: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--text);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.totals__row--grand dt { color: var(--text); font-weight: 500; font-size: 16px; align-self: center; }
+
+.totals--plain { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+
+/* ---------- 按鈕 ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 22px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.btn--primary { background: var(--accent); color: #fff; }
+.btn--primary:active:not(:disabled) { background: var(--accent-press); }
+.btn--primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn--ghost { background: transparent; border-color: var(--accent); color: var(--accent); }
+
+.btn--block { width: 100%; min-height: 56px; margin-top: 28px; }
+
+.btn.is-loading::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.submit-hint { margin-top: 12px; text-align: center; color: var(--muted); font-size: 13px; }
+
+.form-error {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 15px;
+}
+
+/* 送單中：鎖住整個訂購區，避免客人在送出時又改數量 */
+#orderArea.is-busy .product,
+#orderArea.is-busy .panel--form,
+#orderArea.is-busy .delivery-options { pointer-events: none; opacity: 0.6; }
+
+/* ---------- 成功畫面 ---------- */
+.success { margin-top: 8px; }
+
+.success__title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.success__lead { margin: 10px 0 28px; text-align: center; color: var(--text-sub); }
+
+.success__number-box { text-align: center; padding: 26px 20px; }
+
+.success__label { color: var(--text-sub); font-size: 14px; }
+
+.success__number {
+  margin-top: 6px;
+  font-family: var(--font-brand);
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+
+.success__remind {
+  margin-top: 12px;
+  color: var(--danger);
+  font-size: 14px;
+}
+
+.success__items { list-style: none; margin: 0; padding: 0; }
+
+.success__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.success__item-name { display: block; color: var(--muted); font-size: 13px; }
+.success__text { color: var(--text-sub); font-size: 15px; }
+
+.panel--payment { border-color: var(--accent); }
+
+/* ---------- 頁尾 ---------- */
+.site-footer {
+  margin-top: 64px;
+  text-align: center;
+  font-family: var(--font-brand);
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ---------- 手機底部訂單列 ---------- */
+.sticky-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(252, 250, 246, 0.96);
+  border-top: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.sticky-bar__btn {
+  width: 100%;
+  max-width: calc(var(--page-max) - 40px);
+  min-height: var(--sticky-h);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+  font-variant-numeric: tabular-nums;
+}
+
+.sticky-bar__cta { font-weight: 500; letter-spacing: 0.08em; white-space: nowrap; }
+
+/* ---------- 動畫（僅 loading 使用） ---------- */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ---------- 較寬螢幕 ---------- */
+@media (min-width: 640px) {
+  .page { padding-top: 48px; }
+  .hero__media { aspect-ratio: 1 / 1; }
+}
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ===== 頁首（文字會被 Google Sheets「系統設定」覆蓋） ===== -->
+    <header class="site-header">
+      <p class="brand" id="storeName">HANI DESSERT.</p>
+    </header>
+
+    <!-- ===== 主視覺區（訂購成功後會隱藏） ===== -->
+    <section class="intro" id="intro">
+      <h1 class="hero__title" id="pageTitle">秋後算帳前的「臨時加班」</h1>
+      <p class="hero__subtitle" id="pageSubtitle">中秋結束了，
+但烏豆沙蛋黃酥再加個班。</p>
+
+      <!-- 主視覺圖片：預設使用與 index.html 同一層的 IMG2383nini.PNG
+           若 Google Sheets「系統設定」的 HERO_IMAGE 有填網址，會改用該網址 -->
+      <figure class="hero__media" id="heroMedia">
+        <img src="IMG2383nini.PNG" alt="烏豆沙蛋黃酥" decoding="async" fetchpriority="high"
+             onerror="this.parentNode.innerHTML='&lt;div class=&quot;media-placeholder&quot;&gt;商品主視覺&lt;/div&gt;'">
+      </figure>
+
+      <p class="announcement" id="announcement" hidden></p>
+    </section>
+
+    <!-- ===== 載入中 ===== -->
+    <div class="status-block" id="loadingBlock" role="status">
+      <span class="status-block__dot" aria-hidden="true"></span>
+      商品資料載入中…
+    </div>
+
+    <!-- ===== 載入失敗 ===== -->
+    <div class="status-block status-block--error" id="errorBlock" hidden>
+      <p id="errorText">目前無法載入商品資料，請稍後重新整理頁面。</p>
+      <button type="button" class="btn btn--ghost" id="retryLoad">重新載入</button>
+    </div>
+
+    <!-- ===== 訂購結束（ORDER_OPEN = FALSE 時顯示） ===== -->
+    <section class="closed" id="closedBlock" hidden>
+      <p class="closed__title" id="closedText">本次訂購已結束</p>
+      <p class="closed__sub">謝謝大家的支持，下次開放訂購時再見。</p>
+    </section>
+
+    <!-- ===== 訂購區 ===== -->
+    <main id="orderArea" hidden>
+
+      <!-- 商品卡會由下方程式依照 Google Sheets「商品設定」自動產生 -->
+      <section class="section" aria-labelledby="productsHeading">
+        <h2 class="section__title" id="productsHeading">選擇商品</h2>
+        <div class="product-list" id="productList"></div>
+      </section>
+
+      <!-- 訂購內容 -->
+      <section class="section" id="summary" aria-labelledby="summaryHeading">
+        <h2 class="section__title" id="summaryHeading">訂購內容</h2>
+        <p class="notice" id="summaryNotice" role="alert" hidden></p>
+        <div class="panel" id="summaryList">
+          <p class="summary__empty">尚未選擇商品</p>
+        </div>
+      </section>
+
+      <form class="section" id="orderForm" novalidate>
+
+        <!-- 訂購人資料 -->
+        <h2 class="section__title">訂購人資料</h2>
+        <div class="panel panel--form">
+          <div class="field" data-field="name">
+            <label for="f-name">姓名 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-name" type="text" autocomplete="name" maxlength="30" required>
+            <p class="field__error" data-error-for="name"></p>
+          </div>
+
+          <div class="field" data-field="lineName">
+            <label for="f-line">LINE 顯示名稱 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-line" type="text" autocomplete="off" maxlength="40" required>
+            <p class="field__hint">方便我們在 LINE 上找到你</p>
+            <p class="field__error" data-error-for="lineName"></p>
+          </div>
+
+          <div class="field" data-field="phone">
+            <label for="f-phone">手機號碼 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="12" placeholder="0912345678" required>
+            <p class="field__error" data-error-for="phone"></p>
+          </div>
+
+          <div class="field" data-field="email">
+            <label for="f-email">Email <span class="opt">選填</span></label>
+            <input id="f-email" type="email" inputmode="email" autocomplete="email" maxlength="100">
+            <p class="field__error" data-error-for="email"></p>
+          </div>
+
+          <div class="field" data-field="note">
+            <label for="f-note">備註 <span class="opt">選填</span></label>
+            <textarea id="f-note" rows="3" maxlength="300" placeholder="例：希望取貨日期、其他需求"></textarea>
+            <p class="field__error" data-error-for="note"></p>
+          </div>
+        </div>
+
+        <!-- 取貨方式（選項由 Google Sheets「系統設定」控制） -->
+        <h2 class="section__title">取貨方式</h2>
+        <div class="field field--group" data-field="delivery">
+          <div class="delivery-options" id="deliveryOptions" role="radiogroup" aria-label="取貨方式"></div>
+          <p class="field__error" data-error-for="delivery"></p>
+          <p class="delivery-info" id="deliveryInfo" hidden></p>
+        </div>
+
+        <!-- 選擇「超商寄送」才會出現 -->
+        <div class="panel panel--form" id="shippingFields" hidden>
+          <div class="field" data-field="recipientName">
+            <label for="f-recipient">收件人姓名 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-recipient" type="text" autocomplete="off" maxlength="30">
+            <p class="field__hint">需與證件姓名相同，才能順利取件</p>
+            <p class="field__error" data-error-for="recipientName"></p>
+          </div>
+
+          <div class="field" data-field="recipientPhone">
+            <label for="f-recipient-phone">收件人手機 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-recipient-phone" type="tel" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="0912345678">
+            <p class="field__error" data-error-for="recipientPhone"></p>
+          </div>
+
+          <div class="field" data-field="storeInfo">
+            <label for="f-store">超商／門市資訊 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-store" type="text" autocomplete="off" maxlength="100" placeholder="例：7-11 中華門市（店號 123456）">
+            <p class="field__error" data-error-for="storeInfo"></p>
+          </div>
+        </div>
+
+        <!-- 結帳金額 -->
+        <h2 class="section__title">結帳金額</h2>
+        <dl class="panel totals">
+          <div class="totals__row"><dt>商品小計</dt><dd id="totalSubtotal">NT$0</dd></div>
+          <div class="totals__row"><dt>運費</dt><dd id="totalShipping">請選擇取貨方式</dd></div>
+          <div class="totals__row totals__row--grand"><dt>訂單總額</dt><dd id="totalAmount">NT$0</dd></div>
+        </dl>
+
+        <p class="form-error" id="formError" role="alert" hidden></p>
+
+        <button type="submit" class="btn btn--primary btn--block" id="submitBtn">
+          <span class="btn__label" id="submitLabel">確認送出訂單</span>
+        </button>
+        <p class="submit-hint">送出前請再次確認數量與聯絡資料</p>
+      </form>
+    </main>
+
+    <!-- ===== 訂購成功畫面 ===== -->
+    <section class="success" id="successView" hidden aria-live="polite">
+      <h2 class="success__title">訂購完成</h2>
+      <p class="success__lead">謝謝你的訂購，我們收到了。</p>
+
+      <div class="panel success__number-box">
+        <p class="success__label">訂單編號</p>
+        <p class="success__number" id="successNumber"></p>
+        <p class="success__remind">請記得截圖或記下訂單編號。</p>
+      </div>
+
+      <div class="panel">
+        <h3 class="panel__title">訂購內容</h3>
+        <ul class="success__items" id="successItems"></ul>
+        <dl class="totals totals--plain">
+          <div class="totals__row"><dt>商品小計</dt><dd id="successSubtotal"></dd></div>
+          <div class="totals__row"><dt>運費</dt><dd id="successShipping"></dd></div>
+          <div class="totals__row totals__row--grand"><dt>訂單總額</dt><dd id="successTotal"></dd></div>
+        </dl>
+      </div>
+
+      <div class="panel">
+        <h3 class="panel__title">取貨方式</h3>
+        <p class="success__text" id="successDelivery"></p>
+      </div>
+
+      <!-- 付款資訊：由 Google Sheets「系統設定」的 PAYMENT_TEXT 讀取 -->
+      <div class="panel panel--payment" id="paymentCard" hidden>
+        <h3 class="panel__title">付款資訊</h3>
+        <p class="success__text pre-line" id="paymentText"></p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p id="footerName">HANI DESSERT.</p>
+    </footer>
+  </div>
+
+  <!-- ===== 手機底部訂單列 ===== -->
+  <div class="sticky-bar" id="stickyBar" hidden>
+    <button type="button" class="sticky-bar__btn" id="stickyBtn">
+      <span class="sticky-bar__info">共 <span id="stickyCount">0</span> 件｜<span id="stickyTotal">NT$0</span></span>
+      <span class="sticky-bar__cta">查看訂單</span>
+    </button>
+  </div>
+
+  <!-- ★ 要修改的地方：下方 CONFIG 裡的 API_URL -->
+  <script>
+'use strict';
+
+/* =========================================================
+ * HANI DESSERT. 線上訂購系統｜前端程式
+ *
+ * ★ 你唯一「必須」修改的地方：下面的 API_URL
+ *   把 Google Apps Script 部署後拿到的「網頁應用程式網址」貼進來
+ *   （網址結尾是 /exec）。
+ *
+ * 商品、價格、庫存、運費、取貨方式、付款資訊，全部在 Google Sheets 修改，
+ * 不需要改這個檔案。
+ * ========================================================= */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbw907cQSdSmowSMNgAng6FKNSPsXKGdKaPwW2_4j9wec5cnQWmF0yvstkW0FIKYjg3_/exec',
+  TIMEOUT_MS: 30000,       // 等待伺服器回應的最長時間（毫秒）
+  AUTO_REFRESH_MS: 60000,  // 客人切回此頁面時，若距離上次讀取超過此時間，自動更新庫存
+};
+
+/* 給客人看的訊息，可以自行修改文字 */
+const MESSAGES = {
+  OUT_OF_STOCK: '剛剛有人比你早一步完成訂購，目前庫存不足，請重新確認數量。',
+  NETWORK: '網路連線不穩定，訂單可能尚未送出。請確認網路後再按一次「確認送出訂單」，系統不會重複建立訂單。',
+  LOAD_FAIL: '目前無法載入商品資料，請稍後重新整理頁面。',
+  NO_API: '尚未設定 API 網址：請在 index.html 下方程式的 API_URL 貼上 Google Apps Script 網頁應用程式網址。',
+  EMPTY_CART: '請至少選擇一項商品。',
+  CHECK_FIELDS: '還有欄位需要確認，請查看標示紅字的地方。',
+  GENERIC: '訂單送出失敗，請稍後再試，或透過 LINE 與我們聯繫。',
+};
+
+/* =========================================================
+ * 以下為程式邏輯，一般不需要修改
+ * ========================================================= */
+
+const state = {
+  settings: {},
+  products: [],
+  deliveryOptions: [],
+  cart: {},             // { 商品ID: 數量 }
+  deliveryMethod: '',
+  isSubmitting: false,
+  requestId: null,      // 防止重複送單的請求編號
+  lastLoadedAt: 0,
+  view: 'loading',      // loading | error | closed | order | success
+};
+
+const cardRefs = {};    // 每張商品卡的元素參照
+
+/* 表單欄位對照：程式用名稱 → HTML id */
+const FIELD_IDS = {
+  name: 'f-name',
+  lineName: 'f-line',
+  phone: 'f-phone',
+  email: 'f-email',
+  note: 'f-note',
+  recipientName: 'f-recipient',
+  recipientPhone: 'f-recipient-phone',
+  storeInfo: 'f-store',
+  delivery: 'deliveryOptions',
+};
+
+/* ---------- 小工具 ---------- */
+const $ = (id) => document.getElementById(id);
+
+function formatNumber(n) {
+  return Math.round(Number(n) || 0).toLocaleString('en-US');
+}
+function money(n) { return 'NT$' + formatNumber(n); }
+function dollar(n) { return '$' + formatNumber(n); }
+
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined && text !== null) node.textContent = String(text);
+  return node;
+}
+
+function placeholder(text) {
+  return el('div', 'media-placeholder', text);
+}
+
+function productTitle(p) {
+  return p.spec ? `${p.name}｜${p.spec}` : p.name;
+}
+
+function toHalfWidth(s) {
+  return String(s || '').replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
+}
+function normalizePhone(s) {
+  return toHalfWidth(s).replace(/[\s\-()]/g, '');
+}
+function isValidPhone(s) { return /^09\d{8}$/.test(s); }
+function isValidEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+
+function makeRequestId() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID();
+  }
+  return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function scrollToEl(node, block) {
+  if (!node) return;
+  node.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: block || 'start' });
+}
+
+/* ---------- 與 Google Apps Script 溝通 ---------- */
+async function fetchJSON(url, options) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CONFIG.TIMEOUT_MS);
+  try {
+    const res = await fetch(url, Object.assign({}, options, { signal: controller.signal, redirect: 'follow' }));
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function apiGet(action) {
+  const url = `${CONFIG.API_URL}?action=${encodeURIComponent(action)}&_=${Date.now()}`;
+  return fetchJSON(url, { method: 'GET' });
+}
+
+function apiPost(payload) {
+  // 使用 text/plain 是為了避開瀏覽器的 CORS 預檢，GAS 才能正常接收
+  return fetchJSON(CONFIG.API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+}
+
+/* ---------- 畫面切換 ---------- */
+function setView(view) {
+  state.view = view;
+  $('loadingBlock').hidden = view !== 'loading';
+  $('errorBlock').hidden = view !== 'error';
+  $('closedBlock').hidden = view !== 'closed';
+  $('orderArea').hidden = view !== 'order';
+  $('successView').hidden = view !== 'success';
+  $('intro').hidden = view === 'success';
+  updateStickyBar();
+}
+
+function showLoadError(message) {
+  $('errorText').textContent = message || MESSAGES.LOAD_FAIL;
+  setView('error');
+}
+
+function showClosed(message) {
+  $('closedText').textContent = message || '本次訂購已結束';
+  setView('closed');
+}
+
+/* ---------- 啟動 ---------- */
+async function init() {
+  bindEvents();
+  if (!CONFIG.API_URL || CONFIG.API_URL.indexOf('PASTE_YOUR') === 0) {
+    showLoadError(MESSAGES.NO_API);
+    return;
+  }
+  await loadInitData();
+}
+
+async function loadInitData() {
+  setView('loading');
+  try {
+    const data = await apiGet('init');
+    if (!data || !data.success) throw new Error((data && data.message) || 'init failed');
+
+    applySettings(data.settings || {});
+
+    if (!data.settings.orderOpen) {
+      showClosed(data.settings.closedMessage);
+      return;
+    }
+
+    state.products = Array.isArray(data.products) ? data.products : [];
+    state.deliveryOptions = Array.isArray(data.deliveryOptions) ? data.deliveryOptions : [];
+    state.lastLoadedAt = Date.now();
+
+    clampCart();
+    renderProducts();
+    renderDeliveryOptions();
+    setView('order');
+    updateAll();
+  } catch (err) {
+    console.error(err);
+    showLoadError(MESSAGES.LOAD_FAIL);
+  }
+}
+
+function applySettings(s) {
+  state.settings = s;
+
+  if (s.storeName) {
+    $('storeName').textContent = s.storeName;
+    $('footerName').textContent = s.storeName;
+  }
+  if (s.pageTitle) $('pageTitle').textContent = s.pageTitle;
+  if (s.pageSubtitle) $('pageSubtitle').textContent = s.pageSubtitle;
+  document.title = `${s.storeName || 'HANI DESSERT.'}｜${s.pageTitle || '線上訂購'}`;
+
+  const media = $('heroMedia');
+  if (s.heroImage) {
+    const img = el('img');
+    img.src = s.heroImage;
+    img.alt = s.pageTitle || '商品主視覺';
+    img.decoding = 'async';
+    img.onerror = () => { media.innerHTML = ''; media.appendChild(placeholder('商品主視覺')); };
+    media.innerHTML = '';
+    media.appendChild(img);
+  }
+
+  const ann = $('announcement');
+  ann.textContent = s.announcement || '';
+  ann.hidden = !s.announcement;
+}
+
+/* ---------- 商品卡 ---------- */
+function renderProducts() {
+  const list = $('productList');
+  list.innerHTML = '';
+  Object.keys(cardRefs).forEach((k) => delete cardRefs[k]);
+
+  if (!state.products.length) {
+    list.appendChild(el('p', 'summary__empty', '目前沒有開放訂購的商品。'));
+    return;
+  }
+  state.products.forEach((p) => {
+    if (!(p.id in state.cart)) state.cart[p.id] = 0;
+    list.appendChild(buildProductCard(p));
+  });
+}
+
+function buildProductCard(p) {
+  const card = el('article', 'product');
+  card.dataset.id = p.id;
+
+  // 商品照片
+  const media = el('div', 'product__media');
+  if (p.image) {
+    const img = el('img');
+    img.src = p.image;
+    img.alt = productTitle(p);
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.onerror = () => { media.innerHTML = ''; media.appendChild(placeholder('商品照片')); };
+    media.appendChild(img);
+  } else {
+    media.appendChild(placeholder('商品照片'));
+  }
+
+  // 文字
+  const body = el('div', 'product__body');
+  const name = el('h3', 'product__name', productTitle(p));
+
+  const price = el('p', 'product__price');
+  price.append(el('span', '', money(p.price)), el('span', 'product__price-unit', '／' + p.unit));
+
+  const desc = el('p', 'product__desc');
+  const stock = el('p', 'product__stock');
+
+  // 數量選擇器
+  const action = el('div', 'product__action');
+  const stepper = el('div', 'stepper');
+  const minus = el('button', 'stepper__btn', '－');
+  minus.type = 'button';
+  minus.setAttribute('aria-label', `減少「${productTitle(p)}」數量`);
+  const qty = el('output', 'stepper__qty', '0');
+  qty.setAttribute('aria-live', 'polite');
+  const plus = el('button', 'stepper__btn', '＋');
+  plus.type = 'button';
+  plus.setAttribute('aria-label', `增加「${productTitle(p)}」數量`);
+  stepper.append(minus, qty, plus);
+
+  const lineTotal = el('span', 'product__line-total');
+  action.append(stepper, lineTotal);
+
+  minus.addEventListener('click', () => changeQty(p.id, -1));
+  plus.addEventListener('click', () => changeQty(p.id, +1));
+
+  body.append(name, price, desc, stock, action);
+
+  // 最低訂購量提示（例：無盒裝 6 顆起訂，可自由增加數量。）
+  if (p.minQty > 1) {
+    body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。`));
+  }
+
+  card.append(media, body);
+  cardRefs[p.id] = { card, minus, plus, qty, desc, stock, lineTotal };
+  return card;
+}
+
+function updateProductCard(p) {
+  const r = cardRefs[p.id];
+  if (!r) return;
+  const q = state.cart[p.id] || 0;
+  const limited = p.stockMode === 'LIMITED';
+
+  r.qty.textContent = q;
+  r.lineTotal.textContent = q > 0 ? `小計 ${dollar(p.price * q)}` : '';
+
+  // 商品說明：可在 Google Sheets 寫 {stock}，會自動換成目前庫存數字
+  const hasStockTag = /\{stock\}/.test(p.description || '');
+  const descText = (p.description || '').replace(/\{stock\}/g, limited ? String(p.stock) : '');
+  r.desc.textContent = descText;
+  r.desc.hidden = !descText || (p.soldOut && hasStockTag);
+
+  // 庫存提示
+  if (limited) {
+    r.stock.hidden = false;
+    r.stock.textContent = p.soldOut ? `${p.spec || p.name}已售完` : `目前剩 ${p.stock} ${p.unit}`;
+    r.stock.classList.toggle('is-soldout', p.soldOut);
+  } else {
+    r.stock.hidden = true;
+  }
+
+  r.card.classList.toggle('is-soldout', p.soldOut);
+  r.card.classList.toggle('is-selected', q > 0);
+  r.minus.disabled = q <= 0;
+  r.plus.disabled = p.soldOut || stepUp(p, q) === q;
+}
+
+/* ---------- 數量規則 ----------
+ * 加：0 → 最低訂購量（例如 6），之後每次 +1，不可超過可訂購上限
+ * 減：大於最低量時每次 -1；等於最低量時直接回到 0
+ * 所以無盒裝永遠不會出現 1～5 顆
+ */
+function stepUp(p, q) {
+  if (p.soldOut || p.maxQty < p.minQty) return q;
+  const next = q === 0 ? p.minQty : q + 1;
+  return next > p.maxQty ? q : next;
+}
+
+function stepDown(p, q) {
+  if (q <= 0) return 0;
+  return q <= p.minQty ? 0 : q - 1;
+}
+
+function changeQty(id, dir) {
+  if (state.isSubmitting) return;
+  const p = state.products.find((x) => x.id === id);
+  if (!p) return;
+  const q = state.cart[id] || 0;
+  state.cart[id] = dir > 0 ? stepUp(p, q) : stepDown(p, q);
+  hideNotices();
+  updateAll();
+}
+
+/* 依照最新庫存修正購物車數量 */
+function clampCart() {
+  Object.keys(state.cart).forEach((id) => {
+    const p = state.products.find((x) => x.id === id);
+    if (!p) { delete state.cart[id]; return; }
+    let q = state.cart[id] || 0;
+    if (q > p.maxQty) q = p.maxQty;
+    if (q > 0 && q < p.minQty) q = 0;
+    state.cart[id] = Math.max(0, q);
+  });
+}
+
+/* ---------- 金額計算（僅供顯示，實際金額以伺服器計算為準） ---------- */
+function currentDelivery() {
+  return state.deliveryOptions.find((o) => o.id === state.deliveryMethod) || null;
+}
+
+function calcTotals() {
+  const lines = state.products
+    .filter((p) => (state.cart[p.id] || 0) > 0)
+    .map((p) => ({ p, qty: state.cart[p.id], sub: p.price * state.cart[p.id] }));
+  const subtotal = lines.reduce((s, l) => s + l.sub, 0);
+  const count = lines.reduce((s, l) => s + l.qty, 0);
+  const opt = currentDelivery();
+  const shipping = opt && lines.length ? opt.fee : 0;
+  return { lines, subtotal, count, opt, shipping, total: subtotal + shipping };
+}
+
+function updateAll() {
+  state.products.forEach(updateProductCard);
+  renderSummary();
+  renderTotals();
+  updateStickyBar();
+}
+
+function renderSummary() {
+  const box = $('summaryList');
+  const t = calcTotals();
+  box.innerHTML = '';
+
+  if (!t.lines.length) {
+    box.appendChild(el('p', 'summary__empty', '尚未選擇商品'));
+    return;
+  }
+
+  t.lines.forEach((l) => {
+    const item = el('div', 'summary__item');
+    const row = el('div', 'summary__row');
+    row.append(
+      el('span', '', `${l.qty} ${l.p.unit} × ${dollar(l.p.price)}`),
+      el('span', '', dollar(l.sub))
+    );
+    item.append(el('p', 'summary__name', productTitle(l.p)), row);
+    box.appendChild(item);
+  });
+
+  const sub = el('div', 'summary__subtotal');
+  sub.append(el('span', '', '商品小計'), el('span', '', money(t.subtotal)));
+  box.appendChild(sub);
+}
+
+function renderTotals() {
+  const t = calcTotals();
+  $('totalSubtotal').textContent = money(t.subtotal);
+  $('totalShipping').textContent = t.opt ? money(t.shipping) : '請選擇取貨方式';
+  $('totalAmount').textContent = money(t.total);
+}
+
+function updateStickyBar() {
+  const bar = $('stickyBar');
+  const t = state.view === 'order' ? calcTotals() : null;
+  const show = !!(t && t.count > 0);
+  bar.hidden = !show;
+  document.body.classList.toggle('has-sticky', show);
+  if (show) {
+    $('stickyCount').textContent = t.count;
+    $('stickyTotal').textContent = money(t.total);
+  }
+}
+
+/* ---------- 取貨方式 ---------- */
+function renderDeliveryOptions() {
+  const wrap = $('deliveryOptions');
+  wrap.innerHTML = '';
+  const opts = state.deliveryOptions;
+
+  if (!opts.length) {
+    wrap.appendChild(el('p', 'summary__empty', '目前尚未開放取貨方式，請透過 LINE 與我們聯繫。'));
+    $('submitBtn').disabled = true;
+    return;
+  }
+
+  if (!opts.some((o) => o.id === state.deliveryMethod)) {
+    state.deliveryMethod = opts.length === 1 ? opts[0].id : '';
+  }
+
+  opts.forEach((o) => {
+    const label = el('label', 'option');
+    const input = el('input');
+    input.type = 'radio';
+    input.name = 'delivery';
+    input.value = o.id;
+    input.checked = o.id === state.deliveryMethod;
+    input.addEventListener('change', () => {
+      state.deliveryMethod = o.id;
+      setFieldError('delivery', '');
+      updateDeliveryUI();
+      updateAll();
+    });
+
+    let feeText = '';
+    if (o.fee > 0) feeText = `運費 ${money(o.fee)}`;
+    else if (o.requiresAddress) feeText = '免運費';
+
+    const text = el('span', 'option__text');
+    text.append(el('span', 'option__name', o.label), el('span', 'option__fee', feeText));
+    label.append(input, text);
+    wrap.appendChild(label);
+  });
+
+  updateDeliveryUI();
+}
+
+function updateDeliveryUI() {
+  const opt = currentDelivery();
+  $('shippingFields').hidden = !(opt && opt.requiresAddress);
+
+  const info = $('deliveryInfo');
+  info.textContent = (opt && opt.info) || '';
+  info.hidden = !info.textContent;
+
+  document.querySelectorAll('#deliveryOptions .option').forEach((label) => {
+    const input = label.querySelector('input');
+    label.classList.toggle('is-checked', !!(input && input.checked));
+  });
+}
+
+/* ---------- 表單驗證 ---------- */
+function getFormValues() {
+  const v = (id) => ($(id).value || '').trim();
+  return {
+    name: v('f-name'),
+    lineName: v('f-line'),
+    phone: normalizePhone(v('f-phone')),
+    email: v('f-email'),
+    note: v('f-note'),
+    recipientName: v('f-recipient'),
+    recipientPhone: normalizePhone(v('f-recipient-phone')),
+    storeInfo: v('f-store'),
+  };
+}
+
+function setFieldError(key, message) {
+  const field = document.querySelector(`[data-field="${key}"]`);
+  const err = document.querySelector(`[data-error-for="${key}"]`);
+  if (err) err.textContent = message || '';
+  if (field) field.classList.toggle('is-invalid', !!message);
+  const input = $(FIELD_IDS[key]);
+  if (input && input.tagName !== 'DIV') {
+    if (message) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  }
+}
+
+function clearFieldErrors() {
+  Object.keys(FIELD_IDS).forEach((k) => setFieldError(k, ''));
+}
+
+function focusField(key) {
+  const node = key === 'delivery'
+    ? document.querySelector('#deliveryOptions input')
+    : $(FIELD_IDS[key]);
+  if (!node) return;
+  scrollToEl(node, 'center');
+  try { node.focus({ preventScroll: true }); } catch (e) { node.focus(); }
+}
+
+function validateForm() {
+  const v = getFormValues();
+  const errors = [];
+
+  if (!v.name) errors.push(['name', '請填寫姓名']);
+  if (!v.lineName) errors.push(['lineName', '請填寫 LINE 顯示名稱']);
+  if (!v.phone) errors.push(['phone', '請填寫手機號碼']);
+  else if (!isValidPhone(v.phone)) errors.push(['phone', '請輸入 09 開頭的 10 碼手機號碼']);
+  if (v.email && !isValidEmail(v.email)) errors.push(['email', 'Email 格式不正確']);
+
+  const opt = currentDelivery();
+  if (!opt) {
+    errors.push(['delivery', '請選擇取貨方式']);
+  } else if (opt.requiresAddress) {
+    if (!v.recipientName) errors.push(['recipientName', '請填寫收件人姓名']);
+    if (!v.recipientPhone) errors.push(['recipientPhone', '請填寫收件人手機']);
+    else if (!isValidPhone(v.recipientPhone)) errors.push(['recipientPhone', '請輸入 09 開頭的 10 碼手機號碼']);
+    if (!v.storeInfo) errors.push(['storeInfo', '請填寫超商／門市資訊']);
+  }
+
+  clearFieldErrors();
+  errors.forEach(([k, m]) => setFieldError(k, m));
+  return { values: v, errors };
+}
+
+/* ---------- 錯誤提示 ---------- */
+function showFormError(message) {
+  const box = $('formError');
+  box.textContent = message;
+  box.hidden = !message;
+}
+
+function showSummaryNotice(message) {
+  const box = $('summaryNotice');
+  box.textContent = message;
+  box.hidden = !message;
+}
+
+function hideNotices() {
+  showFormError('');
+  showSummaryNotice('');
+}
+
+/* ---------- 送出訂單 ---------- */
+function setSubmitting(on) {
+  state.isSubmitting = on;
+  const btn = $('submitBtn');
+  btn.disabled = on;
+  btn.classList.toggle('is-loading', on);
+  btn.setAttribute('aria-busy', on ? 'true' : 'false');
+  $('submitLabel').textContent = on ? '訂單送出中，請稍候…' : '確認送出訂單';
+  $('orderArea').classList.toggle('is-busy', on);
+}
+
+async function onSubmit(e) {
+  e.preventDefault();
+  if (state.isSubmitting) return;   // 防止連點
+  hideNotices();
+
+  const t = calcTotals();
+  if (!t.lines.length) {
+    showSummaryNotice(MESSAGES.EMPTY_CART);
+    scrollToEl($('summary'));
+    return;
+  }
+
+  const { values, errors } = validateForm();
+  if (errors.length) {
+    showFormError(MESSAGES.CHECK_FIELDS);
+    focusField(errors[0][0]);
+    return;
+  }
+
+  // 同一次送單使用同一個 requestId；網路中斷重送時，伺服器不會重複建立訂單
+  if (!state.requestId) state.requestId = makeRequestId();
+
+  const opt = currentDelivery();
+  const payload = {
+    action: 'createOrder',
+    requestId: state.requestId,
+    // 只傳商品ID與數量；價格與金額一律由伺服器重新計算
+    items: t.lines.map((l) => ({ productId: l.p.id, quantity: l.qty })),
+    customer: {
+      name: values.name,
+      lineName: values.lineName,
+      phone: values.phone,
+      email: values.email,
+      note: values.note,
+    },
+    delivery: {
+      method: opt.id,
+      recipientName: opt.requiresAddress ? values.recipientName : '',
+      recipientPhone: opt.requiresAddress ? values.recipientPhone : '',
+      storeInfo: opt.requiresAddress ? values.storeInfo : '',
+    },
+  };
+
+  setSubmitting(true);
+
+  let res;
+  try {
+    res = await apiPost(payload);
+  } catch (err) {
+    console.error(err);
+    setSubmitting(false);
+    showFormError(MESSAGES.NETWORK);   // 保留 requestId，重送不會重複下單
+    return;
+  }
+
+  if (res && res.success) {
+    state.requestId = null;
+    showSuccess(res);
+    return;
+  }
+
+  setSubmitting(false);
+  state.requestId = null;
+  await handleOrderError(res || {});
+}
+
+async function handleOrderError(res) {
+  const message = res.message || MESSAGES.GENERIC;
+
+  switch (res.code) {
+    case 'OUT_OF_STOCK':
+    case 'PRODUCT_UNAVAILABLE':
+    case 'PRODUCT_NOT_FOUND':
+    case 'BELOW_MIN_QTY':
+    case 'OVER_MAX_QTY': {
+      const text = res.code === 'OUT_OF_STOCK' ? MESSAGES.OUT_OF_STOCK : message;
+      await refreshProducts(res.products);   // 重新抓取最新庫存
+      showSummaryNotice(text);
+      showFormError(text);
+      scrollToEl($('summary'));
+      break;
+    }
+    case 'ORDER_CLOSED':
+      showClosed(message);
+      break;
+    case 'VALIDATION_ERROR':
+      if (res.field && FIELD_IDS[res.field]) {
+        setFieldError(res.field, message);
+        focusField(res.field);
+      }
+      showFormError(message);
+      break;
+    default:
+      showFormError(message);
+  }
+}
+
+async function refreshProducts(list) {
+  try {
+    if (!Array.isArray(list)) {
+      const data = await apiGet('products');
+      if (!data || !data.success) {
+        if (data && data.code === 'ORDER_CLOSED') showClosed(data.message);
+        return;
+      }
+      list = data.products;
+    }
+    state.products = list;
+    state.lastLoadedAt = Date.now();
+    clampCart();
+    renderProducts();
+    updateAll();
+  } catch (err) {
+    console.warn('更新庫存失敗', err);
+  }
+}
+
+/* ---------- 成功畫面 ---------- */
+function showSuccess(res) {
+  $('successNumber').textContent = res.orderNumber || '';
+
+  const ul = $('successItems');
+  ul.innerHTML = '';
+  (res.items || []).forEach((it) => {
+    const li = el('li', 'success__item');
+    const left = el('span');
+    if (it.spec) left.append(el('span', 'success__item-name', it.name));
+    left.append(document.createTextNode(`${it.spec || it.name} × ${it.quantity}`));
+    li.append(left, el('span', '', dollar(it.subtotal)));
+    ul.appendChild(li);
+  });
+
+  $('successSubtotal').textContent = money(res.subtotal);
+  $('successShipping').textContent = money(res.shipping);
+  $('successTotal').textContent = money(res.total);
+  $('successDelivery').textContent = res.deliveryLabel || '';
+
+  const pay = res.paymentText || '';
+  $('paymentText').textContent = pay;
+  $('paymentCard').hidden = !pay;
+
+  setSubmitting(false);
+  setView('success');
+  window.scrollTo(0, 0);
+}
+
+/* ---------- 事件綁定 ---------- */
+function bindEvents() {
+  $('orderForm').addEventListener('submit', onSubmit);
+  $('retryLoad').addEventListener('click', loadInitData);
+  $('stickyBtn').addEventListener('click', () => scrollToEl($('summary')));
+
+  // 使用者開始修改欄位時，清除該欄位的錯誤提示
+  Object.keys(FIELD_IDS).forEach((key) => {
+    const node = $(FIELD_IDS[key]);
+    if (node && key !== 'delivery') {
+      node.addEventListener('input', () => setFieldError(key, ''));
+    }
+  });
+
+  // 客人切回頁面時，自動更新庫存
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    if (state.view !== 'order' || state.isSubmitting) return;
+    if (Date.now() - state.lastLoadedAt > CONFIG.AUTO_REFRESH_MS) refreshProducts();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
