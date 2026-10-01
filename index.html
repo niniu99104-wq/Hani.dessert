@@ -50,7 +50,13 @@
   --font-brand: "Cormorant Garamond", "Noto Serif TC", Georgia, serif;
 
   --page-max: 560px;
-  --sticky-h: 60px;
+
+  /* 統一高度：主要按鈕／次要按鈕／輸入框（數量按鈕也用 --h-input） */
+  --h-primary: 56px;
+  --h-secondary: 48px;
+  --h-input: 52px;
+  --h-option: 78px;   /* 配送、付款選項同高（容得下兩行文字） */
+  --sticky-h: var(--h-primary);
   color-scheme: light;
 }
 
@@ -145,6 +151,7 @@ a { color: inherit; }
   animation: pulse 1.2s ease-in-out infinite;
 }
 .status-block--error p { margin-bottom: 16px; color: var(--danger); }
+.status-block--error .error-detail { margin-top: -8px; color: var(--muted); font-size: 12px; word-break: break-all; }
 
 .closed {
   margin: 48px 0; padding: 40px 20px; text-align: center;
@@ -163,7 +170,8 @@ a { color: inherit; }
   margin-bottom: 18px;
   border-bottom: 1px solid var(--line);
 }
-#orderForm .section__title:not(:first-child) { margin-top: 44px; }
+#orderForm .section__title:not(:first-child),
+#summary { margin-top: 44px; }
 
 .panel {
   background: var(--surface);
@@ -175,8 +183,10 @@ a { color: inherit; }
 .panel__title { font-family: var(--font-serif); font-size: 16px; letter-spacing: 0.06em; margin-bottom: 12px; }
 
 /* ---------- 商品卡 ---------- */
-.product-list { display: grid; gap: 28px; }
+.product-list { display: grid; gap: 28px; grid-auto-rows: 1fr; }  /* 每張商品卡高度相同 */
 .product {
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -184,19 +194,19 @@ a { color: inherit; }
   transition: border-color 0.2s ease;
 }
 .product.is-selected { border-color: var(--accent); }
-.product__media { aspect-ratio: 1 / 1; background: var(--surface-soft); }
+.product__media { aspect-ratio: 1 / 1; background: var(--surface-soft); flex: none; }
 .product__media img { width: 100%; height: 100%; object-fit: cover; }
 .product.is-soldout .product__media img { filter: grayscale(0.6); opacity: 0.7; }
-.product__body { padding: 20px 20px 22px; }
+.product__body { padding: 20px 20px 22px; flex: 1; display: flex; flex-direction: column; }
 .product__name { font-family: var(--font-serif); font-size: 18px; line-height: 1.55; letter-spacing: 0.04em; word-break: break-word; }
 .product__price { margin-top: 6px; font-size: 17px; font-weight: 500; }
 .product__price-unit { color: var(--text-sub); font-size: 15px; font-weight: 400; }
 .product__desc { margin-top: 10px; color: var(--text-sub); font-size: 15px; white-space: pre-line; }
 .product__soldout { margin-top: 8px; font-size: 14px; color: var(--danger); font-weight: 500; }
-.product__action { margin-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.product__action { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .product__line-total { color: var(--text-sub); font-size: 15px; }
 .product__note {
-  margin-top: 14px; padding-top: 12px;
+  margin-top: 12px; padding-top: 12px;
   border-top: 1px dashed var(--line);
   color: var(--text-sub); font-size: 14px;
 }
@@ -207,7 +217,7 @@ a { color: inherit; }
   border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff;
 }
 .stepper__btn {
-  width: 52px; height: 52px; border: 0; background: transparent;
+  width: var(--h-input); height: var(--h-input); border: 0; background: transparent;
   font-size: 22px; line-height: 1; cursor: pointer;
   touch-action: manipulation; border-radius: var(--radius-sm);
 }
@@ -252,8 +262,8 @@ a { color: inherit; }
 .field textarea,
 .field select {
   width: 100%;
-  min-height: 50px;
-  padding: 12px 14px;
+  height: var(--h-input);
+  padding: 0 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: #fff;
@@ -269,7 +279,7 @@ a { color: inherit; }
   background-position: right 16px center;
 }
 .field select:disabled { background-color: var(--surface-soft); color: var(--muted); }
-.field textarea { resize: vertical; min-height: 92px; }
+.field textarea { height: auto; min-height: 96px; padding: 12px 14px; resize: vertical; }
 .field input::placeholder, .field textarea::placeholder { color: #BDB4A9; }
 .field input:focus, .field textarea:focus, .field select:focus {
   outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
@@ -283,15 +293,16 @@ a { color: inherit; }
 
 .check-row {
   display: flex; align-items: center; gap: 10px;
-  min-height: 44px; cursor: pointer; font-size: 15px; color: var(--text-sub);
+  min-height: var(--h-secondary); cursor: pointer; font-size: 15px; color: var(--text-sub);
 }
 .check-row input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
 
 /* ---------- 選項卡（配送／付款） ---------- */
 .choice-list { display: grid; gap: 10px; }
-.option {
+.choice-list .option {
   display: flex; align-items: center; gap: 14px;
-  min-height: 60px; padding: 14px 16px;
+  min-height: var(--h-option); margin: 0; padding: 12px 16px;
+  font-weight: 400;
   border: 1px solid var(--line); border-radius: var(--radius-sm);
   background: var(--surface); cursor: pointer;
 }
@@ -316,7 +327,7 @@ a { color: inherit; }
 
 .btn-sub {
   display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; margin-top: 12px; padding: 0 18px;
+  min-height: var(--h-secondary); margin-top: 12px; padding: 0 18px;
   border: 1px solid var(--accent); border-radius: var(--radius-sm);
   color: var(--accent); text-decoration: none; font-size: 15px; font-weight: 500;
 }
@@ -336,7 +347,7 @@ a { color: inherit; }
 /* ---------- 按鈕 ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  min-height: 50px; padding: 0 22px;
+  min-height: var(--h-secondary); padding: 0 22px;
   border-radius: var(--radius-sm); border: 1px solid transparent;
   font-size: 16px; font-weight: 500; letter-spacing: 0.08em;
   cursor: pointer; touch-action: manipulation; text-decoration: none;
@@ -346,7 +357,8 @@ a { color: inherit; }
 .btn--primary:disabled { opacity: 0.55; cursor: not-allowed; }
 .btn--ghost { background: transparent; border-color: var(--accent); color: var(--accent); }
 .btn--line { background: var(--line-green); color: #fff; }
-.btn--block { width: 100%; min-height: 56px; margin-top: 28px; }
+.btn--block { width: 100%; min-height: var(--h-primary); margin-top: 28px; }
+#lookupBtn { min-height: var(--h-primary); }
 .btn.is-loading::before {
   content: ""; width: 16px; height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.35); border-top-color: #fff; border-radius: 50%;
@@ -374,7 +386,7 @@ a { color: inherit; }
   letter-spacing: 0.06em; font-variant-numeric: tabular-nums; word-break: break-all;
 }
 .copy-btn {
-  min-height: 40px; padding: 0 16px;
+  min-height: var(--h-secondary); padding: 0 16px;
   border: 1px solid var(--accent); border-radius: var(--radius-sm);
   background: #fff; color: var(--accent); font-size: 14px; font-weight: 500; cursor: pointer;
 }
@@ -396,7 +408,7 @@ a { color: inherit; }
 .panel--payment { border-color: var(--accent); }
 .pay-hint { margin-top: 8px; padding: 12px 14px; border-left: 2px solid var(--accent); background: #fff; font-size: 15px; white-space: pre-line; }
 .pay-actions { display: grid; gap: 10px; margin-top: 16px; }
-.pay-actions .btn { width: 100%; min-height: 54px; }
+.pay-actions .btn { width: 100%; min-height: var(--h-primary); }
 .success__note { margin-top: 18px; color: var(--muted); font-size: 13px; text-align: center; white-space: pre-line; }
 
 /* ---------- 訂單查詢入口 ---------- */
@@ -410,7 +422,7 @@ a { color: inherit; }
 }
 .lookup-entry__link {
   flex: none;
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  display: inline-flex; align-items: center; justify-content: center; min-height: var(--h-secondary); padding: 0 16px;
   border: 1px solid var(--accent); border-radius: var(--radius-sm);
   color: var(--accent); font-weight: 500; text-decoration: none;
 }
@@ -420,7 +432,7 @@ a { color: inherit; }
 .lookup__title { font-family: var(--font-serif); font-size: 26px; letter-spacing: 0.1em; text-align: center; }
 .lookup__lead { margin: 10px 0 24px; text-align: center; color: var(--text-sub); font-size: 15px; }
 .back-link {
-  display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 12px;
+  display: inline-flex; align-items: center; min-height: var(--h-secondary); margin-bottom: 12px;
   color: var(--text-sub); font-size: 15px; text-decoration: none;
 }
 .lookup-results { margin-top: 32px; display: grid; gap: 20px; }
@@ -448,7 +460,7 @@ a { color: inherit; }
 .ship-notice__estimate { margin-top: 8px; font-weight: 500; }
 .cal-pending { margin-top: 12px; color: var(--text-sub); font-size: 14px; }
 .cal-actions { display: grid; gap: 10px; margin-top: 14px; }
-.cal-actions .btn { width: 100%; min-height: 48px; font-size: 15px; letter-spacing: 0.04em; }
+.cal-actions .btn { width: 100%; min-height: var(--h-secondary); font-size: 15px; letter-spacing: 0.04em; }
 .cal-hint { color: var(--muted); font-size: 12px; }
 
 /* ---------- 頁尾 ---------- */
@@ -526,6 +538,7 @@ a { color: inherit; }
 
     <div class="status-block status-block--error" id="errorBlock" hidden>
       <p id="errorText">目前無法載入商品資料，請稍後重新整理頁面。</p>
+      <p class="error-detail" id="errorDetail" hidden></p>
       <button type="button" class="btn btn--ghost" id="retryLoad">重新載入</button>
     </div>
 
@@ -659,7 +672,6 @@ a { color: inherit; }
           </div>
         </div>
 
-        <p></p>
         <!-- 訂購內容與金額（底部訂單列「查看訂單」會捲到這裡） -->
         <div id="summary">
           <h2 class="section__title" id="summaryHeading">訂購內容與金額</h2>
@@ -852,6 +864,19 @@ const FIELD_IDS = {
 
 /* ---------- 小工具 ---------- */
 const $ = (id) => document.getElementById(id);
+
+/* 錯誤轉成文字。
+ * 部分環境（iPhone 內建預覽、LINE 內建瀏覽器、某些預覽工具）會攔截 console，
+ * 直接記錄錯誤物件會出現「DataCloneError: The object can not be cloned」並蓋掉真正的錯誤，
+ * 所以一律先轉成文字。 */
+function errorText(err) {
+  if (!err) return '未知錯誤';
+  if (err.name === 'AbortError') return '連線逾時（超過 ' + Math.round(CONFIG.TIMEOUT_MS / 1000) + ' 秒沒有回應）';
+  return String(err.message || err);
+}
+function logError(label, err) {
+  try { console.error(label + '：' + errorText(err)); } catch (e) { /* 連記錄都失敗時忽略 */ }
+}
 function formatNumber(n) { return Math.round(Number(n) || 0).toLocaleString('en-US'); }
 function money(n) { return 'NT$' + formatNumber(n); }
 function dollar(n) { return '$' + formatNumber(n); }
@@ -928,7 +953,12 @@ function renderRoute() {
   $('lookupEntry').hidden = view === 'success' || view === 'lookup' || view === 'closed';
   updateStickyBar();
 }
-function showLoadError(message) { $('errorText').textContent = message || MESSAGES.LOAD_FAIL; setView('error'); }
+function showLoadError(message, detail) {
+  $('errorText').textContent = message || MESSAGES.LOAD_FAIL;
+  $('errorDetail').textContent = detail ? '錯誤原因：' + detail : '';
+  $('errorDetail').hidden = !detail;
+  setView('error');
+}
 function showClosed(message) { $('closedText').textContent = message || '本次訂購已結束'; setView('closed'); }
 
 /* ---------- 啟動 ---------- */
@@ -960,8 +990,8 @@ async function loadInitData() {
     setView('order');
     updateAll();
   } catch (err) {
-    console.error(err);
-    showLoadError(MESSAGES.LOAD_FAIL);
+    logError('載入商品資料失敗', err);
+    showLoadError(MESSAGES.LOAD_FAIL, errorText(err));
   }
 }
 
@@ -1059,8 +1089,9 @@ function buildProductCard(p, index) {
   minus.addEventListener('click', () => changeQty(p.id, -1));
   plus.addEventListener('click', () => changeQty(p.id, +1));
 
-  body.append(el('h3', 'product__name', productTitle(p)), price, desc, soldout, action);
+  body.append(el('h3', 'product__name', productTitle(p)), price, desc, soldout);
   if (p.minQty > 1) body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量；單顆獨立包裝。`));
+  body.append(action);   // 數量列放最後，所有商品卡的數量列都對齊在卡片底部
 
   card.append(media, body);
   cardRefs[p.id] = { card, minus, plus, qty, desc, soldout, lineTotal };
@@ -1508,7 +1539,7 @@ async function onSubmit(e) {
   try {
     res = await apiPost(payload);
   } catch (err) {
-    console.error(err);
+    logError('送出訂單失敗', err);
     setSubmitting(false);
     showFormError(MESSAGES.NETWORK);   // 保留 requestId，重送不會重複下單
     return;
@@ -1571,7 +1602,7 @@ async function refreshProducts(list) {
     renderProducts();
     updateAll();
   } catch (err) {
-    console.warn('更新庫存失敗', err);
+    logError('更新庫存失敗', err);
   }
 }
 
@@ -1830,7 +1861,7 @@ async function onLookup(e) {
   try {
     res = await apiPost({ action: 'lookupOrder', name, phone });
   } catch (err) {
-    console.error(err);
+    logError('訂單查詢失敗', err);
     setLookupBusy(false);
     showLookupError(MESSAGES.LOOKUP_FAIL);
     return;
