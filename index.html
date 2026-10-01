@@ -208,7 +208,7 @@ a { color: inherit; }
 .product__note {
   margin-top: 12px; padding-top: 12px;
   border-top: 1px dashed var(--line);
-  color: var(--text-sub); font-size: 14px;
+  color: var(--text-sub); font-size: 14px; white-space: pre-line;
 }
 
 /* ---------- 數量選擇器 ---------- */
@@ -1069,7 +1069,7 @@ function buildProductCard(p, index) {
   const body = el('div', 'product__body');
   const price = el('p', 'product__price');
   price.append(el('span', '', money(p.price)), el('span', 'product__price-unit', '／' + p.unit));
-  const desc = el('p', 'product__desc');
+  const desc = el('p', 'product__note');   // 商品說明（Google Sheets「商品設定」→「商品說明」）
   const soldout = el('p', 'product__soldout');
 
   const action = el('div', 'product__action');
@@ -1090,7 +1090,6 @@ function buildProductCard(p, index) {
   plus.addEventListener('click', () => changeQty(p.id, +1));
 
   body.append(el('h3', 'product__name', productTitle(p)), price, desc, soldout);
-  if (p.minQty > 1) body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量；單顆獨立包裝。`));
   body.append(action);   // 數量列放最後，所有商品卡的數量列都對齊在卡片底部
 
   card.append(media, body);
@@ -1107,9 +1106,13 @@ function updateProductCard(p) {
   r.qty.textContent = q;
   r.lineTotal.textContent = q > 0 ? `小計 ${dollar(p.price * q)}` : '';
 
-  // 商品說明：在 Google Sheets 寫 {stock}，會自動換成目前剩餘數量
+  /* 商品說明：顯示在價格正下方，文字來自 Google Sheets「商品設定」→「商品說明」
+   *   - 可寫 {stock}，會自動換成目前剩餘數量
+   *   - 儲存格內按 Alt+Enter（Mac：Option+Enter）可以換行
+   *   - 沒填說明、但有起訂量的商品，會自動顯示「○○ 6 顆起訂，可自由增加數量。」 */
   const hasStockTag = /\{stock\}/.test(p.description || '');
-  const text = (p.description || '').replace(/\{stock\}/g, limited ? String(p.stock) : '');
+  const fallback = p.minQty > 1 ? `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。` : '';
+  const text = (p.description || '').replace(/\{stock\}/g, limited ? String(p.stock) : '') || fallback;
   r.desc.textContent = text;
   r.desc.hidden = !text || (p.soldOut && hasStockTag);
 
