@@ -206,10 +206,23 @@ a { color: inherit; }
 .product__action { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .product__line-total { color: var(--text-sub); font-size: 15px; }
 .product__note {
-  margin-top: 12px; padding-top: 12px;
+  margin-top: 14px; padding-top: 14px;
   border-top: 1px dashed var(--line);
-  color: var(--text-sub); font-size: 14px; white-space: pre-line;
+  color: var(--text-sub);
+  font-size: 15px;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  text-wrap: pretty;            /* 避免最後一行只剩一兩個字 */
+  line-break: strict;           /* 標點符號不放在行首 */
 }
+.product__note p + p,
+.product__note p + ul,
+.product__note ul + p { margin-top: 6px; }
+.product__note ul { margin: 0; padding: 0; list-style: none; }
+.product__note li { position: relative; padding-left: 1.1em; }
+.product__note li + li { margin-top: 2px; }
+.product__note li::before { content: "・"; position: absolute; left: 0; color: var(--muted); }
+.product__note .nowrap { white-space: nowrap; }
 
 /* ---------- 數量選擇器 ---------- */
 .stepper {
@@ -1097,6 +1110,29 @@ function buildProductCard(p, index) {
   return card;
 }
 
+/* 把 Google Sheets 的說明文字整理後放進商品卡：
+ *   - 去掉每行前後多餘空白、連續空行
+ *   - 以「・」「-」「•」「*」開頭的行，排成整齊的條列（換行後會縮排對齊）
+ *   - 每一行最後 4 個字（含句尾標點）不拆開，避免最後一行只剩「裝。」這種情況 */
+function renderNote(node, text) {
+  node.innerHTML = '';
+  const lines = String(text || '').replace(/\r/g, '').split('\n').map((l) => l.replace(/[ \u3000\t]+/g, ' ').trim());
+  let list = null;
+  lines.forEach((line) => {
+    if (!line) { list = null; return; }
+    const bullet = line.match(/^[・•\-*●]\s*(.+)$/);
+    const target = bullet ? (list || (list = node.appendChild(el('ul')))) : node;
+    if (!bullet) list = null;
+    const content = bullet ? bullet[1] : line;
+    const item = el(bullet ? 'li' : 'p');
+    const chars = Array.from(content);
+    const tailLen = chars.length > 8 ? 4 : 0;
+    item.append(document.createTextNode(chars.slice(0, chars.length - tailLen).join('')));
+    if (tailLen) item.appendChild(el('span', 'nowrap', chars.slice(-tailLen).join('')));
+    target.appendChild(item);
+  });
+}
+
 function updateProductCard(p) {
   const r = cardRefs[p.id];
   if (!r) return;
@@ -1113,8 +1149,8 @@ function updateProductCard(p) {
   const hasStockTag = /\{stock\}/.test(p.description || '');
   const fallback = p.minQty > 1 ? `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。` : '';
   const text = (p.description || '').replace(/\{stock\}/g, limited ? String(p.stock) : '') || fallback;
-  r.desc.textContent = text;
-  r.desc.hidden = !text || (p.soldOut && hasStockTag);
+  renderNote(r.desc, text);
+  r.desc.hidden = !text.trim() || (p.soldOut && hasStockTag);
 
   r.soldout.textContent = p.soldOut ? `${p.spec || p.name}已售完` : '';
   r.soldout.hidden = !p.soldOut;
