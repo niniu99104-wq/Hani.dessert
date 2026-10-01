@@ -506,6 +506,12 @@ a { color: inherit; }
       <p class="announcement" id="announcement" hidden></p>
     </section>
 
+    <!-- 訂單查詢入口：放在訂購區外面，商品還在載入或載入失敗時也看得到 -->
+    <div class="lookup-entry" id="lookupEntry">
+      <span>已經訂購過了嗎？</span>
+      <a class="lookup-entry__link" href="#lookup">訂單查詢</a>
+    </div>
+
     <div class="status-block" id="loadingBlock" role="status">
       <span class="status-block__dot" aria-hidden="true"></span>
       商品資料載入中…
@@ -524,12 +530,6 @@ a { color: inherit; }
 
     <!-- ===== 訂購區 ===== -->
     <main id="orderArea" hidden>
-
-      <!-- 訂單查詢入口 -->
-      <div class="lookup-entry">
-        <span>已經訂購過了嗎？</span>
-        <a class="lookup-entry__link" href="#lookup">訂單查詢</a>
-      </div>
 
       <!-- 商品卡由下方程式依照 Google Sheets「商品設定」自動產生 -->
       <section class="section" aria-labelledby="productsHeading">
@@ -908,6 +908,7 @@ function renderRoute() {
   $('successView').hidden = view !== 'success';
   $('lookupView').hidden = view !== 'lookup';
   $('intro').hidden = view === 'success' || view === 'lookup';
+  $('lookupEntry').hidden = view === 'success' || view === 'lookup' || view === 'closed';
   updateStickyBar();
 }
 function showLoadError(message) { $('errorText').textContent = message || MESSAGES.LOAD_FAIL; setView('error'); }
