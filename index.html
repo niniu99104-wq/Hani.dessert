@@ -1033,6 +1033,7 @@ function buildProductCard(p, index) {
 
   body.append(el('h3', 'product__name', productTitle(p)), price, desc, soldout, action);
   if (p.minQty > 1) body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。`));
+  <BR>單顆獨立包裝。</BR>
 
   card.append(media, body);
   cardRefs[p.id] = { card, minus, plus, qty, desc, soldout, lineTotal };
