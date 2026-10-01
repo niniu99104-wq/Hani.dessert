@@ -440,6 +440,13 @@ a { color: inherit; }
 
 /* ---------- 行事曆與截圖提醒 ---------- */
 .screenshot-tip { margin-top: 14px; color: var(--muted); font-size: 13px; }
+.ship-notice {
+  padding: 16px; border-left: 2px solid var(--accent); background: #fff;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.ship-notice__text { font-size: 15px; white-space: pre-line; }
+.ship-notice__estimate { margin-top: 8px; font-weight: 500; }
+.cal-pending { margin-top: 12px; color: var(--text-sub); font-size: 14px; }
 .cal-actions { display: grid; gap: 10px; margin-top: 14px; }
 .cal-actions .btn { width: 100%; min-height: 48px; font-size: 15px; letter-spacing: 0.04em; }
 .cal-hint { color: var(--muted); font-size: 12px; }
@@ -535,12 +542,6 @@ a { color: inherit; }
       <section class="section" aria-labelledby="productsHeading">
         <h2 class="section__title" id="productsHeading">選擇商品</h2>
         <div class="product-list" id="productList"></div>
-      </section>
-
-      <section class="section" id="summary" aria-labelledby="summaryHeading">
-        <h2 class="section__title" id="summaryHeading">訂購內容</h2>
-        <p class="notice" id="summaryNotice" role="alert" hidden></p>
-        <div class="panel" id="summaryList"><p class="summary__empty">尚未選擇商品</p></div>
         <p class="limit-hint" id="limitHint" hidden></p>
       </section>
 
@@ -590,18 +591,25 @@ a { color: inherit; }
         </div>
 
         <div class="panel panel--form" id="deliveryDetail">
-          <div class="field" data-field="date">
+          <!-- 不開放選日期時顯示（系統設定 DATE_SELECT_ENABLED = FALSE） -->
+          <div class="ship-notice" id="shipNotice" hidden>
+            <p class="ship-notice__text" id="shipNoticeText"></p>
+            <p class="ship-notice__estimate" id="shipEstimateText"></p>
+          </div>
+
+          <div class="field" data-field="date" id="dateField">
             <label for="f-date">取貨／出貨日 <span class="req" aria-hidden="true">*</span></label>
             <select id="f-date" disabled><option value="">請先選擇配送方式</option></select>
-            <p class="field__hint">一張單限一個日期；若要分天取貨，請分開填單。<br>超商&宅配 出貨日不等於到貨日，實際到貨依物流為主。</p>
+            <p class="field__hint">一張單限一個日期；若要分天取貨，請分開填單。<br>出貨日不等於到貨日，實際到貨依物流為主。</p>
             <p class="field__hint" id="dateBlockHint" hidden>宅配已自動排除週六、週日、國定假日、連假與連假前一天。</p>
             <p class="field__error" data-error-for="date"></p>
           </div>
 
           <!-- 來店自取 -->
           <div class="field" data-field="slot" id="slotField" hidden>
-            <label for="f-slot">取貨時段 <span class="req" aria-hidden="true">*</span></label>
+            <label for="f-slot"><span id="slotLabel">取貨時段</span> <span class="req" aria-hidden="true">*</span></label>
             <select id="f-slot"></select>
+            <p class="field__hint" id="slotHint" hidden>實際取貨日期會在排單後以 LINE 通知，這裡先選你方便的時段。</p>
             <p class="field__error" data-error-for="slot"></p>
           </div>
           <div class="pickup-box" id="pickupBox" hidden>
@@ -646,17 +654,24 @@ a { color: inherit; }
           <div class="field" data-field="note">
             <label for="f-note">備註 <span class="opt">選填</span></label>
             <textarea id="f-note" rows="3" maxlength="300" placeholder="有其他需求可以在這裡告訴我們"></textarea>
+            <p class="field__hint" id="noteDateHint" hidden>無法收件的日期也請寫在這裡，例如：10/20–10/22 不在家。</p>
             <p class="field__error" data-error-for="note"></p>
           </div>
         </div>
 
-        <!-- 結帳金額 -->
-        <h2 class="section__title">結帳金額</h2>
-        <dl class="panel totals">
-          <div class="totals__row"><dt>商品小計</dt><dd id="totalSubtotal">NT$0</dd></div>
-          <div class="totals__row"><dt>運費</dt><dd id="totalShipping">請選擇配送方式</dd></div>
-          <div class="totals__row totals__row--grand"><dt>應付金額</dt><dd id="totalAmount">NT$0</dd></div>
-        </dl>
+        <!-- 訂購內容與金額（底部訂單列「查看訂單」會捲到這裡） -->
+        <div id="summary">
+          <h2 class="section__title" id="summaryHeading">訂購內容與金額</h2>
+          <p class="notice" id="summaryNotice" role="alert" hidden></p>
+          <div class="panel">
+            <div id="summaryList"><p class="summary__empty">尚未選擇商品</p></div>
+            <dl class="totals totals--plain">
+              <div class="totals__row"><dt>商品小計</dt><dd id="totalSubtotal">NT$0</dd></div>
+              <div class="totals__row"><dt>運費</dt><dd id="totalShipping">請選擇配送方式</dd></div>
+              <div class="totals__row totals__row--grand"><dt>應付金額</dt><dd id="totalAmount">NT$0</dd></div>
+            </dl>
+          </div>
+        </div>
 
         <p class="form-error" id="formError" role="alert" hidden></p>
 
@@ -711,6 +726,7 @@ a { color: inherit; }
         <dl class="info-list" id="successDelivery"></dl>
         <a class="btn-sub" id="successMap" href="#" target="_blank" rel="noopener" hidden>開啟 Google Map 導航</a>
         <div id="successCalendar"></div>
+        <p class="cal-pending" id="successCalPending" hidden>確定出貨日後會以 LINE 通知，屆時也可以到「訂單查詢」加入行事曆。</p>
         <p class="screenshot-tip">建議截圖保存才不會忘記取貨/出貨日喔！</p>
       </div>
 
@@ -773,7 +789,7 @@ a { color: inherit; }
  * 全部在 Google Sheets 修改，不需要改這裡。
  * ========================================================= */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbyRoHKdM6YjfL_QjkPFVTVGd45pQVltmFxcfD58AO1WVzpTYjrDqK0tqReUSvYo6XoSNQ/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbx3vFFkUM5POwiaq2lMowUpYtnphWRykTKyUh5AQZnlhY8QnqPsztP-hvgbaPleoAo3xw/exec',
   TIMEOUT_MS: 30000,
   AUTO_REFRESH_MS: 60000,
 };
@@ -972,6 +988,17 @@ function applySettings(s) {
 
   const ask = $('lineAsk');
   if (s.lineUrl && s.lineAskText) { ask.href = s.lineUrl; ask.textContent = s.lineAskText; ask.hidden = false; }
+  // 不開放選日期：顯示出貨說明與預計出貨區間
+  const dateOn = s.dateSelectEnabled !== false;
+  $('shipNotice').hidden = dateOn;
+  $('dateField').hidden = !dateOn;
+  $('noteDateHint').hidden = dateOn;
+  $('slotLabel').textContent = dateOn ? '取貨時段' : '偏好取貨時段';
+  $('slotHint').hidden = dateOn;
+  $('shipNoticeText').textContent = s.shipNotice || '';
+  $('shipEstimateText').textContent = !dateOn && s.shipEstimate ? `今天下單，預計出貨：${s.shipEstimate.text}` : '';
+  if (!dateOn) $('f-note').placeholder = '其他需求，或無法收件的日期';
+
   const note = $('footerNote');
   note.textContent = s.footerNote || '';
   note.hidden = !s.footerNote;
@@ -1032,7 +1059,7 @@ function buildProductCard(p, index) {
   plus.addEventListener('click', () => changeQty(p.id, +1));
 
   body.append(el('h3', 'product__name', productTitle(p)), price, desc, soldout, action);
-  if (p.minQty > 1) body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。單顆獨立包裝。`));
+  if (p.minQty > 1) body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。`));
 
   card.append(media, body);
   cardRefs[p.id] = { card, minus, plus, qty, desc, soldout, lineTotal };
@@ -1166,9 +1193,6 @@ function renderSummary() {
     item.append(el('p', 'summary__name', productTitle(l.p)), row);
     box.appendChild(item);
   });
-  const sub = el('div', 'summary__subtotal');
-  sub.append(el('span', '', '商品小計'), el('span', '', money(t.subtotal)));
-  box.appendChild(sub);
 }
 
 function renderLimitHint() {
@@ -1257,6 +1281,8 @@ function updateDeliveryAvailability() {
     r.note.hidden = !over;
   });
 }
+
+function dateSelectOn() { return state.settings.dateSelectEnabled !== false; }
 
 function updateDeliveryUI() {
   const opt = currentDelivery();
@@ -1411,7 +1437,7 @@ function validateForm() {
   if (!opt) {
     errors.push(['delivery', '請選擇配送方式']);
   } else {
-    if (!v.date) errors.push(['date', '請選擇取貨／出貨日']);
+    if (dateSelectOn() && !v.date) errors.push(['date', '請選擇取貨／出貨日']);
     if (opt.need === 'slot' && !v.slot) errors.push(['slot', '請選擇取貨時段']);
     if (opt.need === 'store' && !v.storeInfo) errors.push(['storeInfo', '請填寫超商門市名稱與店號']);
     if (opt.need === 'address' && !v.address) errors.push(['address', '請填寫完整宅配地址']);
@@ -1468,7 +1494,7 @@ async function onSubmit(e) {
     },
     delivery: {
       method: opt.id,
-      date: values.date,
+      date: dateSelectOn() ? values.date : '',
       slot: opt.need === 'slot' ? values.slot : '',
       storeInfo: opt.need === 'store' ? values.storeInfo : '',
       address: opt.need === 'address' ? values.address : '',
@@ -1593,7 +1619,8 @@ function showSuccess(res) {
   const dl = $('successDelivery');
   dl.innerHTML = '';
   addInfo(dl, '配送方式', d.label);
-  addInfo(dl, '取貨／出貨日', d.date ? `${d.date}（${d.weekday}）` : '');
+  addInfo(dl, '取貨／出貨日', d.date ? `${d.date}（${d.weekday}）` : (d.dateText || ''));
+  addInfo(dl, '預計出貨', d.estimate);
   addInfo(dl, '取貨時段', d.slot);
   if (d.id === 'PICKUP') addInfo(dl, '自取地址', d.pickupAddress + (d.pickupAddressNote ? `（${d.pickupAddressNote}）` : ''));
   addInfo(dl, '超商門市', d.storeInfo);
@@ -1607,6 +1634,7 @@ function showSuccess(res) {
   cal.innerHTML = '';
   const ev = buildCalendarEvent(res.orderNumber, d, res.items, res.total);
   if (ev) cal.appendChild(buildCalendarActions(ev));
+  $('successCalPending').hidden = !!ev;
 
   $('successNote').textContent = res.paymentText || '';
 
@@ -1876,7 +1904,8 @@ function buildOrderCard(o) {
   addInfo(dl, '收件人', o.receiverName);
   addInfo(dl, '收件人電話', o.receiverPhone);
   addInfo(dl, '配送方式', d.label);
-  addInfo(dl, '取貨／出貨日', d.date ? `${d.date}（${d.weekday}）` : '');
+  addInfo(dl, '取貨／出貨日', d.date ? `${d.date}（${d.weekday}）` : (d.dateText || ''));
+  addInfo(dl, '預計出貨', d.estimate);
   addInfo(dl, '取貨時段', d.slot);
   if (d.id === 'PICKUP' && d.pickupAddress) addInfo(dl, '自取地址', d.pickupAddress + (d.pickupAddressNote ? `（${d.pickupAddressNote}）` : ''));
   addInfo(dl, '超商門市', d.storeInfo);
@@ -1891,6 +1920,7 @@ function buildOrderCard(o) {
   }
   const ev = buildCalendarEvent(o.orderNumber, d, o.items, o.total);
   if (ev) dSec.appendChild(buildCalendarActions(ev));
+  else dSec.appendChild(el('p', 'cal-pending', '確定出貨日後會以 LINE 通知，屆時這裡會出現「加入行事曆」按鈕。'));
   dSec.appendChild(el('p', 'screenshot-tip', '建議截圖保存才不會忘記取貨/出貨日喔！'));
   card.appendChild(dSec);
 
