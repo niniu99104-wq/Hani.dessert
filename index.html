@@ -726,8 +726,8 @@ a { color: inherit; }
         <dl class="info-list" id="successDelivery"></dl>
         <a class="btn-sub" id="successMap" href="#" target="_blank" rel="noopener" hidden>開啟 Google Map 導航</a>
         <div id="successCalendar"></div>
-        <p class="cal-pending" id="successCalPending" hidden>確定出貨日後會以 LINE 通知，屆時也可以到「訂單查詢」加入行事曆。</p>
-        <p class="screenshot-tip">建議截圖保存才不會忘記取貨/出貨日喔！</p>
+        <p class="cal-pending" id="successCalPending" hidden>可以至「訂單查詢」確認出貨狀況。</p>
+        <p class="screenshot-tip">建議截圖保存才不會忘記喔！</p>
       </div>
 
       <p class="success__note" id="successNote"></p>
@@ -1920,8 +1920,8 @@ function buildOrderCard(o) {
   }
   const ev = buildCalendarEvent(o.orderNumber, d, o.items, o.total);
   if (ev) dSec.appendChild(buildCalendarActions(ev));
-  else dSec.appendChild(el('p', 'cal-pending', '確定出貨日後會以 LINE 通知，屆時這裡會出現「加入行事曆」按鈕。'));
-  dSec.appendChild(el('p', 'screenshot-tip', '建議截圖保存才不會忘記取貨/出貨日喔！'));
+  else dSec.appendChild(el('p', 'cal-pending', '可以至「訂單查詢」確認出貨狀況。'));
+  dSec.appendChild(el('p', 'screenshot-tip', '建議截圖保存才不會忘記喔！'));
   card.appendChild(dSec);
 
   // 付款（尚未付款才顯示付款提示與按鈕）
