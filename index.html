@@ -16,13 +16,9 @@
   <style>
 /* =========================================================
  * HANI DESSERT. 線上訂購｜樣式
- *
- * 想調整顏色：只要修改下方 :root 裡的色票即可，
- * 其他地方都會自動套用。
+ * 想調整顏色：只要修改下方 :root 裡的色票即可
  * ========================================================= */
-
 :root {
-  /* 色票：米白、奶油、暖灰，低飽和 */
   --bg: #F5F1EA;            /* 頁面底色（米白） */
   --surface: #FCFAF6;       /* 區塊底色（奶油白） */
   --surface-soft: #ECE5DA;  /* 圖片預留區、淺底 */
@@ -35,10 +31,11 @@
   --accent-soft: #E8E0D4;
   --danger: #9E5A4C;        /* 錯誤提示（低飽和磚紅） */
   --danger-soft: #F4E8E3;
+  --line-green: #06C755;    /* LINE 按鈕 */
 
-  --radius-lg: 18px;        /* 照片 */
-  --radius: 12px;           /* 區塊 */
-  --radius-sm: 10px;        /* 按鈕、輸入框 */
+  --radius-lg: 18px;
+  --radius: 12px;
+  --radius-sm: 10px;
 
   --font-sans: "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
   --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
@@ -46,18 +43,12 @@
 
   --page-max: 560px;
   --sticky-h: 60px;
-
   color-scheme: light;
 }
 
-/* ---------- 基礎 ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-
-html {
-  -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 20px;
-}
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 20px; }
 
 body {
   margin: 0;
@@ -71,41 +62,26 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
-
-body.has-sticky {
-  padding-bottom: calc(var(--sticky-h) + 24px + env(safe-area-inset-bottom, 0px));
-}
+body.has-sticky { padding-bottom: calc(var(--sticky-h) + 24px + env(safe-area-inset-bottom, 0px)); }
 
 img { display: block; max-width: 100%; }
-button, input, textarea { font: inherit; color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
 p { margin: 0; }
 h1, h2, h3 { margin: 0; font-weight: 500; }
+a { color: inherit; }
 
 .page {
   max-width: var(--page-max);
   margin: 0 auto;
   padding: calc(28px + env(safe-area-inset-top, 0px)) 20px 32px;
 }
-
 .pre-line { white-space: pre-line; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* ---------- 頁首 ---------- */
+/* ---------- 頁首與主視覺 ---------- */
 .site-header { text-align: center; margin-bottom: 36px; }
+.brand { font-family: var(--font-brand); font-size: 20px; font-weight: 600; letter-spacing: 0.22em; }
 
-.brand {
-  font-family: var(--font-brand);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  color: var(--text);
-}
-
-/* ---------- 主視覺 ---------- */
 .hero__title {
   font-family: var(--font-serif);
   font-size: clamp(26px, 7.4vw, 34px);
@@ -113,16 +89,13 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   letter-spacing: 0.06em;
   text-align: center;
 }
-
 .hero__subtitle {
   margin-top: 18px;
   text-align: center;
   color: var(--text-sub);
-  font-size: 16px;
   line-height: 1.95;
   white-space: pre-line;
 }
-
 .hero__media {
   margin: 32px 0 0;
   border-radius: var(--radius-lg);
@@ -130,12 +103,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   background: var(--surface-soft);
   aspect-ratio: 4 / 5;
 }
-
-.hero__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.hero__media img { width: 100%; height: 100%; object-fit: cover; }
 
 .media-placeholder {
   width: 100%;
@@ -155,52 +123,30 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   padding: 16px 18px;
   border-left: 2px solid var(--accent);
   background: var(--surface);
-  color: var(--text-sub);
+  color: var(--text);
   font-size: 15px;
+  font-weight: 500;
   white-space: pre-line;
 }
 
 /* ---------- 狀態區塊 ---------- */
-.status-block {
-  margin: 40px 0;
-  padding: 28px 20px;
-  text-align: center;
-  color: var(--text-sub);
-  font-size: 15px;
-}
-
+.status-block { margin: 40px 0; padding: 28px 20px; text-align: center; color: var(--text-sub); font-size: 15px; }
 .status-block__dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
-  border-radius: 50%;
-  background: var(--muted);
-  vertical-align: middle;
+  display: inline-block; width: 8px; height: 8px; margin-right: 8px;
+  border-radius: 50%; background: var(--muted); vertical-align: middle;
   animation: pulse 1.2s ease-in-out infinite;
 }
-
 .status-block--error p { margin-bottom: 16px; color: var(--danger); }
 
 .closed {
-  margin: 48px 0;
-  padding: 40px 20px;
-  text-align: center;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  margin: 48px 0; padding: 40px 20px; text-align: center;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
 }
-
-.closed__title {
-  font-family: var(--font-serif);
-  font-size: 22px;
-  letter-spacing: 0.08em;
-}
-
+.closed__title { font-family: var(--font-serif); font-size: 22px; letter-spacing: 0.08em; }
 .closed__sub { margin-top: 10px; color: var(--text-sub); font-size: 15px; }
 
 /* ---------- 區段 ---------- */
 .section { margin-top: 56px; }
-
 .section__title {
   font-family: var(--font-serif);
   font-size: 19px;
@@ -209,8 +155,6 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   margin-bottom: 18px;
   border-bottom: 1px solid var(--line);
 }
-
-/* 表單裡有多個標題，彼此之間要留距離 */
 #orderForm .section__title:not(:first-child) { margin-top: 44px; }
 
 .panel {
@@ -219,19 +163,11 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   border-radius: var(--radius);
   padding: 20px;
 }
-
 .panel + .panel { margin-top: 14px; }
-
-.panel__title {
-  font-family: var(--font-serif);
-  font-size: 16px;
-  letter-spacing: 0.06em;
-  margin-bottom: 12px;
-}
+.panel__title { font-family: var(--font-serif); font-size: 16px; letter-spacing: 0.06em; margin-bottom: 12px; }
 
 /* ---------- 商品卡 ---------- */
 .product-list { display: grid; gap: 28px; }
-
 .product {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -239,424 +175,253 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   overflow: hidden;
   transition: border-color 0.2s ease;
 }
-
 .product.is-selected { border-color: var(--accent); }
-
-.product__media {
-  aspect-ratio: 1 / 1;
-  background: var(--surface-soft);
-}
-
-.product__media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
+.product__media { aspect-ratio: 1 / 1; background: var(--surface-soft); }
+.product__media img { width: 100%; height: 100%; object-fit: cover; }
 .product.is-soldout .product__media img { filter: grayscale(0.6); opacity: 0.7; }
-
 .product__body { padding: 20px 20px 22px; }
-
-.product__name {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 1.55;
-  letter-spacing: 0.04em;
-  word-break: break-word;
-}
-
-.product__price {
-  margin-top: 6px;
-  font-size: 17px;
-  font-weight: 500;
-}
-
+.product__name { font-family: var(--font-serif); font-size: 18px; line-height: 1.55; letter-spacing: 0.04em; word-break: break-word; }
+.product__price { margin-top: 6px; font-size: 17px; font-weight: 500; }
 .product__price-unit { color: var(--text-sub); font-size: 15px; font-weight: 400; }
-
-.product__desc {
-  margin-top: 10px;
-  color: var(--text-sub);
-  font-size: 15px;
-  white-space: pre-line;
-}
-
-.product__stock {
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--text-sub);
-}
-
-.product__stock.is-soldout { color: var(--danger); font-weight: 500; }
-
-.product__action {
-  margin-top: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
+.product__desc { margin-top: 10px; color: var(--text-sub); font-size: 15px; white-space: pre-line; }
+.product__soldout { margin-top: 8px; font-size: 14px; color: var(--danger); font-weight: 500; }
+.product__action { margin-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .product__line-total { color: var(--text-sub); font-size: 15px; }
-
 .product__note {
-  margin-top: 14px;
-  padding-top: 12px;
+  margin-top: 14px; padding-top: 12px;
   border-top: 1px dashed var(--line);
-  color: var(--text-sub);
-  font-size: 14px;
+  color: var(--text-sub); font-size: 14px;
 }
 
 /* ---------- 數量選擇器 ---------- */
 .stepper {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: #fff;
+  display: inline-flex; align-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff;
 }
-
 .stepper__btn {
-  width: 52px;
-  height: 52px;
-  border: 0;
-  background: transparent;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-  touch-action: manipulation;
-  border-radius: var(--radius-sm);
+  width: 52px; height: 52px; border: 0; background: transparent;
+  font-size: 22px; line-height: 1; cursor: pointer;
+  touch-action: manipulation; border-radius: var(--radius-sm);
 }
-
 .stepper__btn:active:not(:disabled) { background: var(--accent-soft); }
 .stepper__btn:disabled { color: var(--line); cursor: not-allowed; }
-
-.stepper__qty {
-  min-width: 48px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
+.stepper__qty { min-width: 48px; text-align: center; font-size: 18px; font-weight: 500; font-variant-numeric: tabular-nums; }
 
 /* ---------- 訂購內容 ---------- */
 .summary__empty { color: var(--muted); font-size: 15px; text-align: center; padding: 6px 0; }
-
-.summary__item + .summary__item {
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-}
-
+.summary__item + .summary__item { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
 .summary__name { font-size: 15px; font-weight: 500; }
-
 .summary__row {
-  margin-top: 2px;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  color: var(--text-sub);
-  font-size: 15px;
-  font-variant-numeric: tabular-nums;
+  margin-top: 2px; display: flex; justify-content: space-between; gap: 12px;
+  color: var(--text-sub); font-size: 15px; font-variant-numeric: tabular-nums;
 }
-
 .summary__row span:last-child { color: var(--text); }
-
 .summary__subtotal {
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid var(--text);
-  display: flex;
-  justify-content: space-between;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
+  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--text);
+  display: flex; justify-content: space-between; font-weight: 500; font-variant-numeric: tabular-nums;
 }
+.limit-hint { margin-top: 12px; color: var(--muted); font-size: 13px; }
+.limit-hint.is-warn { color: var(--danger); }
 
 .notice {
-  margin-bottom: 14px;
-  padding: 14px 16px;
-  border-radius: var(--radius-sm);
-  background: var(--danger-soft);
-  color: var(--danger);
-  font-size: 15px;
+  margin-bottom: 14px; padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--danger-soft); color: var(--danger); font-size: 15px;
 }
 
 /* ---------- 表單 ---------- */
 .panel--form { display: grid; gap: 20px; }
-.panel--form + .totals, #shippingFields { margin-top: 14px; }
+.panel--form + .panel--form,
+.field--group + .panel--form { margin-top: 14px; }
 
-.field label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 15px;
-  font-weight: 500;
+.field label, .field__label {
+  display: block; margin-bottom: 6px; font-size: 15px; font-weight: 500;
 }
-
 .req { color: var(--danger); margin-left: 2px; }
 .opt { color: var(--muted); font-size: 13px; font-weight: 400; margin-left: 4px; }
 
-.field input,
-.field textarea {
+.field input[type="text"],
+.field input[type="tel"],
+.field textarea,
+.field select {
   width: 100%;
   min-height: 50px;
   padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: #fff;
-  font-size: 16px;            /* 16px 以上，iPhone 點擊時才不會自動放大 */
+  font-size: 16px;          /* 16px 以上，iPhone 點擊時才不會自動放大 */
   line-height: 1.5;
   -webkit-appearance: none;
   appearance: none;
 }
-
+.field select {
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%235B524A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+.field select:disabled { background-color: var(--surface-soft); color: var(--muted); }
 .field textarea { resize: vertical; min-height: 92px; }
-
-.field input::placeholder,
-.field textarea::placeholder { color: #BDB4A9; }
-
-.field input:focus,
-.field textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+.field input::placeholder, .field textarea::placeholder { color: #BDB4A9; }
+.field input:focus, .field textarea:focus, .field select:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
 }
-
-.field.is-invalid input,
-.field.is-invalid textarea { border-color: var(--danger); }
-
+.field input[readonly] { background: var(--surface-soft); color: var(--text-sub); }
+.field.is-invalid input, .field.is-invalid textarea, .field.is-invalid select { border-color: var(--danger); }
 .field__hint { margin-top: 6px; color: var(--muted); font-size: 13px; }
-
-.field__error {
-  margin-top: 6px;
-  color: var(--danger);
-  font-size: 14px;
-}
-
+.field__hint a { color: var(--text-sub); }
+.field__error { margin-top: 6px; color: var(--danger); font-size: 14px; }
 .field__error:empty { display: none; }
 
-/* ---------- 取貨方式 ---------- */
-.delivery-options { display: grid; gap: 10px; }
+.check-row {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 44px; cursor: pointer; font-size: 15px; color: var(--text-sub);
+}
+.check-row input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
 
+/* ---------- 選項卡（配送／付款） ---------- */
+.choice-list { display: grid; gap: 10px; }
 .option {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-height: 60px;
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  min-height: 60px; padding: 14px 16px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); cursor: pointer;
 }
-
 .option.is-checked { border-color: var(--accent); background: #fff; }
-
-.option input {
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  flex: none;
-  accent-color: var(--accent);
-}
-
-.option__text {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
+.option.is-disabled { opacity: 0.5; cursor: not-allowed; }
+.option input { width: 20px; height: 20px; margin: 0; flex: none; accent-color: var(--accent); }
+.option__text { flex: 1; display: flex; flex-direction: column; }
 .option__name { font-weight: 500; }
-.option__fee { color: var(--text-sub); font-size: 15px; }
-
+.option__fee { color: var(--text-sub); font-size: 14px; }
+.option__note { color: var(--danger); font-size: 13px; }
 .field--group.is-invalid .option { border-color: var(--danger); }
 
-.delivery-info {
-  margin-top: 12px;
-  color: var(--text-sub);
-  font-size: 14px;
-  white-space: pre-line;
+.delivery-info { margin-top: 12px; color: var(--text-sub); font-size: 14px; white-space: pre-line; }
+
+.pickup-box {
+  padding: 16px; border: 1px dashed var(--line); border-radius: var(--radius-sm);
+  background: #fff;
+}
+.pickup-box__label { font-size: 14px; color: var(--text-sub); }
+.pickup-box__address { margin-top: 2px; font-weight: 500; }
+.pickup-box__note { color: var(--muted); font-size: 13px; }
+
+.btn-sub {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; margin-top: 12px; padding: 0 18px;
+  border: 1px solid var(--accent); border-radius: var(--radius-sm);
+  color: var(--accent); text-decoration: none; font-size: 15px; font-weight: 500;
 }
 
 /* ---------- 金額 ---------- */
 .totals { margin: 0; }
-
-.totals__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 4px 0;
-  font-variant-numeric: tabular-nums;
-}
-
+.totals__row { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-variant-numeric: tabular-nums; }
 .totals__row dt { color: var(--text-sub); }
 .totals__row dd { margin: 0; text-align: right; }
-
 .totals__row--grand {
-  margin-top: 10px;
-  padding-top: 14px;
-  border-top: 1px solid var(--text);
-  font-size: 19px;
-  font-weight: 700;
+  margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--text);
+  font-size: 19px; font-weight: 700;
 }
-
 .totals__row--grand dt { color: var(--text); font-weight: 500; font-size: 16px; align-self: center; }
-
 .totals--plain { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
 
 /* ---------- 按鈕 ---------- */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 50px;
-  padding: 0 22px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  touch-action: manipulation;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 50px; padding: 0 22px;
+  border-radius: var(--radius-sm); border: 1px solid transparent;
+  font-size: 16px; font-weight: 500; letter-spacing: 0.08em;
+  cursor: pointer; touch-action: manipulation; text-decoration: none;
 }
-
 .btn--primary { background: var(--accent); color: #fff; }
 .btn--primary:active:not(:disabled) { background: var(--accent-press); }
 .btn--primary:disabled { opacity: 0.55; cursor: not-allowed; }
-
 .btn--ghost { background: transparent; border-color: var(--accent); color: var(--accent); }
-
+.btn--line { background: var(--line-green); color: #fff; }
 .btn--block { width: 100%; min-height: 56px; margin-top: 28px; }
-
 .btn.is-loading::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #fff;
-  border-radius: 50%;
+  content: ""; width: 16px; height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.35); border-top-color: #fff; border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-
 .submit-hint { margin-top: 12px; text-align: center; color: var(--muted); font-size: 13px; }
-
 .form-error {
-  margin-top: 20px;
-  padding: 14px 16px;
-  border-radius: var(--radius-sm);
-  background: var(--danger-soft);
-  color: var(--danger);
-  font-size: 15px;
+  margin-top: 20px; padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--danger-soft); color: var(--danger); font-size: 15px;
 }
 
-/* 送單中：鎖住整個訂購區，避免客人在送出時又改數量 */
 #orderArea.is-busy .product,
 #orderArea.is-busy .panel--form,
-#orderArea.is-busy .delivery-options { pointer-events: none; opacity: 0.6; }
+#orderArea.is-busy .choice-list { pointer-events: none; opacity: 0.6; }
 
 /* ---------- 成功畫面 ---------- */
 .success { margin-top: 8px; }
-
-.success__title {
-  font-family: var(--font-serif);
-  font-size: 28px;
-  letter-spacing: 0.1em;
-  text-align: center;
-}
-
+.success__title { font-family: var(--font-serif); font-size: 28px; letter-spacing: 0.1em; text-align: center; }
 .success__lead { margin: 10px 0 28px; text-align: center; color: var(--text-sub); }
-
 .success__number-box { text-align: center; padding: 26px 20px; }
-
 .success__label { color: var(--text-sub); font-size: 14px; }
-
+.success__number-row { margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
 .success__number {
-  margin-top: 6px;
-  font-family: var(--font-brand);
-  font-size: 32px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-  word-break: break-all;
+  font-family: var(--font-brand); font-size: 30px; font-weight: 600;
+  letter-spacing: 0.06em; font-variant-numeric: tabular-nums; word-break: break-all;
 }
-
-.success__remind {
-  margin-top: 12px;
-  color: var(--danger);
-  font-size: 14px;
+.copy-btn {
+  min-height: 40px; padding: 0 16px;
+  border: 1px solid var(--accent); border-radius: var(--radius-sm);
+  background: #fff; color: var(--accent); font-size: 14px; font-weight: 500; cursor: pointer;
 }
+.copy-btn.is-copied { background: var(--accent); color: #fff; }
+.success__remind { margin-top: 12px; color: var(--danger); font-size: 14px; }
+.success__amount { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.success__amount strong { display: block; font-size: 28px; font-variant-numeric: tabular-nums; }
 
 .success__items { list-style: none; margin: 0; padding: 0; }
-
-.success__item {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 6px 0;
-  font-variant-numeric: tabular-nums;
-}
-
+.success__item { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-variant-numeric: tabular-nums; }
 .success__item-name { display: block; color: var(--muted); font-size: 13px; }
 .success__text { color: var(--text-sub); font-size: 15px; }
 
+.info-list { margin: 0; display: grid; gap: 8px; }
+.info-list div { display: grid; grid-template-columns: 6.5em 1fr; gap: 8px; font-size: 15px; }
+.info-list dt { color: var(--text-sub); }
+.info-list dd { margin: 0; word-break: break-word; }
+
 .panel--payment { border-color: var(--accent); }
+.pay-hint { margin-top: 8px; padding: 12px 14px; border-left: 2px solid var(--accent); background: #fff; font-size: 15px; white-space: pre-line; }
+.pay-actions { display: grid; gap: 10px; margin-top: 16px; }
+.pay-actions .btn { width: 100%; min-height: 54px; }
+.success__note { margin-top: 18px; color: var(--muted); font-size: 13px; text-align: center; white-space: pre-line; }
 
 /* ---------- 頁尾 ---------- */
-.site-footer {
-  margin-top: 64px;
-  text-align: center;
-  font-family: var(--font-brand);
-  letter-spacing: 0.2em;
-  color: var(--muted);
-  font-size: 14px;
+.site-footer { margin-top: 64px; text-align: center; }
+.site-footer__ask {
+  display: inline-block; color: var(--text-sub); font-size: 15px; font-weight: 500;
+  text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px;
 }
+.site-footer__note { margin-top: 18px; color: var(--muted); font-size: 12px; }
+.site-footer__brand { margin-top: 18px; font-family: var(--font-brand); letter-spacing: 0.2em; color: var(--muted); font-size: 14px; }
 
 /* ---------- 手機底部訂單列 ---------- */
 .sticky-bar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 20;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
   background: rgba(252, 250, 246, 0.96);
   border-top: 1px solid var(--line);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
 }
-
 .sticky-bar__btn {
-  width: 100%;
-  max-width: calc(var(--page-max) - 40px);
-  min-height: var(--sticky-h);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 20px;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: var(--accent);
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  touch-action: manipulation;
-  font-variant-numeric: tabular-nums;
+  width: 100%; max-width: calc(var(--page-max) - 40px); min-height: var(--sticky-h);
+  margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 20px; border: 0; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff; font-size: 16px; cursor: pointer;
+  touch-action: manipulation; font-variant-numeric: tabular-nums;
 }
-
 .sticky-bar__cta { font-weight: 500; letter-spacing: 0.08em; white-space: nowrap; }
 
-/* ---------- 動畫（僅 loading 使用） ---------- */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pulse { 50% { opacity: 0.3; } }
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
-
-/* ---------- 較寬螢幕 ---------- */
 @media (min-width: 640px) {
   .page { padding-top: 48px; }
   .hero__media { aspect-ratio: 1 / 1; }
@@ -666,7 +431,6 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 <body>
   <div class="page">
 
-    <!-- ===== 頁首（文字會被 Google Sheets「系統設定」覆蓋） ===== -->
     <header class="site-header">
       <p class="brand" id="storeName">HANI DESSERT.</p>
     </header>
@@ -684,22 +448,20 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
              onerror="this.parentNode.innerHTML='&lt;div class=&quot;media-placeholder&quot;&gt;商品主視覺&lt;/div&gt;'">
       </figure>
 
+      <!-- 公告：由「系統設定」ANNOUNCEMENT 控制 -->
       <p class="announcement" id="announcement" hidden></p>
     </section>
 
-    <!-- ===== 載入中 ===== -->
     <div class="status-block" id="loadingBlock" role="status">
       <span class="status-block__dot" aria-hidden="true"></span>
       商品資料載入中…
     </div>
 
-    <!-- ===== 載入失敗 ===== -->
     <div class="status-block status-block--error" id="errorBlock" hidden>
       <p id="errorText">目前無法載入商品資料，請稍後重新整理頁面。</p>
       <button type="button" class="btn btn--ghost" id="retryLoad">重新載入</button>
     </div>
 
-    <!-- ===== 訂購結束（ORDER_OPEN = FALSE 時顯示） ===== -->
     <section class="closed" id="closedBlock" hidden>
       <p class="closed__title" id="closedText">本次訂購已結束</p>
       <p class="closed__sub">謝謝大家的支持，下次開放訂購時再見。</p>
@@ -708,85 +470,121 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
     <!-- ===== 訂購區 ===== -->
     <main id="orderArea" hidden>
 
-      <!-- 商品卡會由下方程式依照 Google Sheets「商品設定」自動產生 -->
+      <!-- 商品卡由下方程式依照 Google Sheets「商品設定」自動產生 -->
       <section class="section" aria-labelledby="productsHeading">
         <h2 class="section__title" id="productsHeading">選擇商品</h2>
         <div class="product-list" id="productList"></div>
       </section>
 
-      <!-- 訂購內容 -->
       <section class="section" id="summary" aria-labelledby="summaryHeading">
         <h2 class="section__title" id="summaryHeading">訂購內容</h2>
         <p class="notice" id="summaryNotice" role="alert" hidden></p>
-        <div class="panel" id="summaryList">
-          <p class="summary__empty">尚未選擇商品</p>
-        </div>
+        <div class="panel" id="summaryList"><p class="summary__empty">尚未選擇商品</p></div>
+        <p class="limit-hint" id="limitHint" hidden></p>
       </section>
 
       <form class="section" id="orderForm" novalidate>
 
-        <!-- 訂購人資料 -->
-        <h2 class="section__title">訂購人資料</h2>
+        <!-- 訂購人 -->
+        <h2 class="section__title">訂購人</h2>
         <div class="panel panel--form">
           <div class="field" data-field="name">
-            <label for="f-name">姓名 <span class="req" aria-hidden="true">*</span></label>
+            <label for="f-name">訂購人姓名 <span class="req" aria-hidden="true">*</span></label>
             <input id="f-name" type="text" autocomplete="name" maxlength="30" required>
             <p class="field__error" data-error-for="name"></p>
           </div>
-
-          <div class="field" data-field="lineName">
-            <label for="f-line">LINE 顯示名稱 <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-line" type="text" autocomplete="off" maxlength="40" required>
-            <p class="field__hint">方便我們在 LINE 上找到你</p>
-            <p class="field__error" data-error-for="lineName"></p>
-          </div>
-
           <div class="field" data-field="phone">
-            <label for="f-phone">手機號碼 <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="12" placeholder="0912345678" required>
+            <label for="f-phone">訂購人電話 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="12" placeholder="09xxxxxxxx" required>
             <p class="field__error" data-error-for="phone"></p>
-          </div>
-
-          <div class="field" data-field="email">
-            <label for="f-email">Email <span class="opt">選填</span></label>
-            <input id="f-email" type="email" inputmode="email" autocomplete="email" maxlength="100">
-            <p class="field__error" data-error-for="email"></p>
-          </div>
-
-          <div class="field" data-field="note">
-            <label for="f-note">備註 <span class="opt">選填</span></label>
-            <textarea id="f-note" rows="3" maxlength="300" placeholder="例：希望取貨日期、其他需求"></textarea>
-            <p class="field__error" data-error-for="note"></p>
           </div>
         </div>
 
-        <!-- 取貨方式（選項由 Google Sheets「系統設定」控制） -->
-        <h2 class="section__title">取貨方式</h2>
+        <!-- 收件人 -->
+        <h2 class="section__title">收件人</h2>
+        <div class="panel panel--form">
+          <label class="check-row">
+            <input type="checkbox" id="f-same">
+            <span>收件人同訂購人資訊</span>
+          </label>
+          <div class="field" data-field="receiverName">
+            <label for="f-rname">收件人姓名 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-rname" type="text" autocomplete="off" maxlength="30">
+            <p class="field__hint">超商取件需與證件姓名相同</p>
+            <p class="field__error" data-error-for="receiverName"></p>
+          </div>
+          <div class="field" data-field="receiverPhone">
+            <label for="f-rphone">收件人電話 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-rphone" type="tel" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="09xxxxxxxx">
+            <p class="field__error" data-error-for="receiverPhone"></p>
+          </div>
+        </div>
+
+        <!-- 配送方式（選項由「系統設定」控制） -->
+        <h2 class="section__title">配送方式</h2>
         <div class="field field--group" data-field="delivery">
-          <div class="delivery-options" id="deliveryOptions" role="radiogroup" aria-label="取貨方式"></div>
+          <div class="choice-list" id="deliveryOptions" role="radiogroup" aria-label="配送方式"></div>
           <p class="field__error" data-error-for="delivery"></p>
           <p class="delivery-info" id="deliveryInfo" hidden></p>
         </div>
 
-        <!-- 選擇「超商寄送」才會出現 -->
-        <div class="panel panel--form" id="shippingFields" hidden>
-          <div class="field" data-field="recipientName">
-            <label for="f-recipient">收件人姓名 <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-recipient" type="text" autocomplete="off" maxlength="30">
-            <p class="field__hint">需與證件姓名相同，才能順利取件</p>
-            <p class="field__error" data-error-for="recipientName"></p>
+        <div class="panel panel--form" id="deliveryDetail">
+          <div class="field" data-field="date">
+            <label for="f-date">取貨／出貨日 <span class="req" aria-hidden="true">*</span></label>
+            <select id="f-date" disabled><option value="">請先選擇配送方式</option></select>
+            <p class="field__hint">一張單限一個日期；若要分天取貨，請分開填單。<br>出貨日不等於到貨日，實際到貨依物流為主。</p>
+            <p class="field__error" data-error-for="date"></p>
           </div>
 
-          <div class="field" data-field="recipientPhone">
-            <label for="f-recipient-phone">收件人手機 <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-recipient-phone" type="tel" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="0912345678">
-            <p class="field__error" data-error-for="recipientPhone"></p>
+          <!-- 來店自取 -->
+          <div class="field" data-field="slot" id="slotField" hidden>
+            <label for="f-slot">取貨時段 <span class="req" aria-hidden="true">*</span></label>
+            <select id="f-slot"></select>
+            <p class="field__error" data-error-for="slot"></p>
+          </div>
+          <div class="pickup-box" id="pickupBox" hidden>
+            <p class="pickup-box__label">自取地址</p>
+            <p class="pickup-box__address" id="pickupAddress"></p>
+            <p class="pickup-box__note" id="pickupAddressNote"></p>
+            <a class="btn-sub" id="pickupMap" href="#" target="_blank" rel="noopener">開啟 Google Map 導航</a>
           </div>
 
-          <div class="field" data-field="storeInfo">
-            <label for="f-store">超商／門市資訊 <span class="req" aria-hidden="true">*</span></label>
-            <input id="f-store" type="text" autocomplete="off" maxlength="100" placeholder="例：7-11 中華門市（店號 123456）">
+          <!-- 超商店到店 -->
+          <div class="field" data-field="storeInfo" id="storeField" hidden>
+            <label for="f-store">超商門市名稱＋店號 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-store" type="text" autocomplete="off" maxlength="100" placeholder="例：7-11 大智門市（123456）">
+            <p class="field__hint">查門市店號：<a href="https://emap.pcsc.com.tw/" target="_blank" rel="noopener">7-11</a>｜<a href="https://www.family.com.tw/marketing/inquiry.aspx" target="_blank" rel="noopener">全家</a></p>
             <p class="field__error" data-error-for="storeInfo"></p>
+          </div>
+
+          <!-- 宅配 -->
+          <div class="field" data-field="address" id="addressField" hidden>
+            <label for="f-address">宅配地址 <span class="req" aria-hidden="true">*</span></label>
+            <input id="f-address" type="text" autocomplete="street-address" maxlength="150" placeholder="請填完整收件地址（含縣市、郵遞區號）">
+            <p class="field__error" data-error-for="address"></p>
+          </div>
+        </div>
+
+        <!-- 付款方式（選項由「系統設定」控制） -->
+        <h2 class="section__title">付款方式</h2>
+        <div class="field field--group" data-field="payment">
+          <div class="choice-list" id="paymentOptions" role="radiogroup" aria-label="付款方式"></div>
+          <p class="field__error" data-error-for="payment"></p>
+        </div>
+
+        <!-- 其他 -->
+        <h2 class="section__title">其他</h2>
+        <div class="panel panel--form">
+          <div class="field" data-field="social">
+            <label for="f-social">LINE 名字或 Instagram 帳號 <span class="opt">選填</span></label>
+            <input id="f-social" type="text" autocomplete="off" maxlength="60" placeholder="例：土豆寶寶 / @_hani.iiii_">
+            <p class="field__hint">新朋友要加入群組記得填唷！土豆爸會核對。</p>
+            <p class="field__error" data-error-for="social"></p>
+          </div>
+          <div class="field" data-field="note">
+            <label for="f-note">備註 <span class="opt">選填</span></label>
+            <textarea id="f-note" rows="3" maxlength="300" placeholder="有其他需求可以在這裡告訴我們"></textarea>
+            <p class="field__error" data-error-for="note"></p>
           </div>
         </div>
 
@@ -794,8 +592,8 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
         <h2 class="section__title">結帳金額</h2>
         <dl class="panel totals">
           <div class="totals__row"><dt>商品小計</dt><dd id="totalSubtotal">NT$0</dd></div>
-          <div class="totals__row"><dt>運費</dt><dd id="totalShipping">請選擇取貨方式</dd></div>
-          <div class="totals__row totals__row--grand"><dt>訂單總額</dt><dd id="totalAmount">NT$0</dd></div>
+          <div class="totals__row"><dt>運費</dt><dd id="totalShipping">請選擇配送方式</dd></div>
+          <div class="totals__row totals__row--grand"><dt>應付金額</dt><dd id="totalAmount">NT$0</dd></div>
         </dl>
 
         <p class="form-error" id="formError" role="alert" hidden></p>
@@ -803,7 +601,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
         <button type="submit" class="btn btn--primary btn--block" id="submitBtn">
           <span class="btn__label" id="submitLabel">確認送出訂單</span>
         </button>
-        <p class="submit-hint">送出前請再次確認數量與聯絡資料</p>
+        <p class="submit-hint">送出前請再次確認數量、日期與聯絡資料</p>
       </form>
     </main>
 
@@ -814,8 +612,26 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 
       <div class="panel success__number-box">
         <p class="success__label">訂單編號</p>
-        <p class="success__number" id="successNumber"></p>
+        <div class="success__number-row">
+          <span class="success__number" id="successNumber"></span>
+          <button type="button" class="copy-btn" id="copyBtn">複製</button>
+        </div>
         <p class="success__remind">請記得截圖或記下訂單編號。</p>
+        <div class="success__amount">
+          <p class="success__label">應付金額</p>
+          <strong id="successAmount"></strong>
+        </div>
+      </div>
+
+      <!-- 付款：依付款方式顯示 PAYUNi 或 LINE 按鈕 -->
+      <div class="panel panel--payment">
+        <h3 class="panel__title">付款方式｜<span id="successPayLabel"></span></h3>
+        <p class="success__text">須先完成付款，收到款項才會安排製作、出貨。</p>
+        <p class="pay-hint" id="successPayHint" hidden></p>
+        <div class="pay-actions">
+          <a class="btn btn--primary" id="payuniBtn" href="#" target="_blank" rel="noopener" hidden>前往 PAYUNi 付款</a>
+          <a class="btn btn--line" id="lineBtn" href="#" target="_blank" rel="noopener" hidden>LINE 私訊土豆媽（附上訂單編號）</a>
+        </div>
       </div>
 
       <div class="panel">
@@ -824,31 +640,29 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
         <dl class="totals totals--plain">
           <div class="totals__row"><dt>商品小計</dt><dd id="successSubtotal"></dd></div>
           <div class="totals__row"><dt>運費</dt><dd id="successShipping"></dd></div>
-          <div class="totals__row totals__row--grand"><dt>訂單總額</dt><dd id="successTotal"></dd></div>
+          <div class="totals__row totals__row--grand"><dt>應付金額</dt><dd id="successTotal"></dd></div>
         </dl>
       </div>
 
       <div class="panel">
-        <h3 class="panel__title">取貨方式</h3>
-        <p class="success__text" id="successDelivery"></p>
+        <h3 class="panel__title">取貨資訊</h3>
+        <dl class="info-list" id="successDelivery"></dl>
+        <a class="btn-sub" id="successMap" href="#" target="_blank" rel="noopener" hidden>開啟 Google Map 導航</a>
       </div>
 
-      <!-- 付款資訊：由 Google Sheets「系統設定」的 PAYMENT_TEXT 讀取 -->
-      <div class="panel panel--payment" id="paymentCard" hidden>
-        <h3 class="panel__title">付款資訊</h3>
-        <p class="success__text pre-line" id="paymentText"></p>
-      </div>
+      <p class="success__note" id="successNote"></p>
     </section>
 
     <footer class="site-footer">
-      <p id="footerName">HANI DESSERT.</p>
+      <a class="site-footer__ask" id="lineAsk" href="#" target="_blank" rel="noopener" hidden></a>
+      <p class="site-footer__note" id="footerNote" hidden></p>
+      <p class="site-footer__brand" id="footerName">HANI DESSERT.</p>
     </footer>
   </div>
 
-  <!-- ===== 手機底部訂單列 ===== -->
   <div class="sticky-bar" id="stickyBar" hidden>
     <button type="button" class="sticky-bar__btn" id="stickyBtn">
-      <span class="sticky-bar__info">共 <span id="stickyCount">0</span> 件｜<span id="stickyTotal">NT$0</span></span>
+      <span>共 <span id="stickyCount">0</span> 件｜<span id="stickyTotal">NT$0</span></span>
       <span class="sticky-bar__cta">查看訂單</span>
     </button>
   </div>
@@ -861,16 +675,15 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
  * HANI DESSERT. 線上訂購系統｜前端程式
  *
  * ★ 你唯一「必須」修改的地方：下面的 API_URL
- *   把 Google Apps Script 部署後拿到的「網頁應用程式網址」貼進來
- *   （網址結尾是 /exec）。
+ *   貼上 Google Apps Script 部署後的「網頁應用程式網址」（結尾 /exec）。
  *
- * 商品、價格、庫存、運費、取貨方式、付款資訊，全部在 Google Sheets 修改，
- * 不需要改這個檔案。
+ * 商品、價格、庫存、配送方式、運費、日期、付款方式，
+ * 全部在 Google Sheets 修改，不需要改這裡。
  * ========================================================= */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbw907cQSdSmowSMNgAng6FKNSPsXKGdKaPwW2_4j9wec5cnQWmF0yvstkW0FIKYjg3_/exec',
-  TIMEOUT_MS: 30000,       // 等待伺服器回應的最長時間（毫秒）
-  AUTO_REFRESH_MS: 60000,  // 客人切回此頁面時，若距離上次讀取超過此時間，自動更新庫存
+  API_URL: 'https://script.google.com/macros/s/AKfycbwloqDvYsY_M7uWxqch-amzQmP8-bqRY02CEpIgL4YA_lZ1g4Djv28GGScpOLg_a7AIUQ/exec',
+  TIMEOUT_MS: 30000,
+  AUTO_REFRESH_MS: 60000,
 };
 
 /* 給客人看的訊息，可以自行修改文字 */
@@ -882,6 +695,7 @@ const MESSAGES = {
   EMPTY_CART: '請至少選擇一項商品。',
   CHECK_FIELDS: '還有欄位需要確認，請查看標示紅字的地方。',
   GENERIC: '訂單送出失敗，請稍後再試，或透過 LINE 與我們聯繫。',
+  NO_DATES: '目前沒有可選的日期',
 };
 
 /* =========================================================
@@ -892,35 +706,37 @@ const state = {
   settings: {},
   products: [],
   deliveryOptions: [],
-  cart: {},             // { 商品ID: 數量 }
+  dates: [],
+  paymentOptions: [],
+  cart: {},
   deliveryMethod: '',
+  paymentMethod: '',
   isSubmitting: false,
-  requestId: null,      // 防止重複送單的請求編號
+  requestId: null,
   lastLoadedAt: 0,
-  view: 'loading',      // loading | error | closed | order | success
+  view: 'loading',
 };
 
-const cardRefs = {};    // 每張商品卡的元素參照
+const cardRefs = {};
 
-/* 表單欄位對照：程式用名稱 → HTML id */
 const FIELD_IDS = {
   name: 'f-name',
-  lineName: 'f-line',
   phone: 'f-phone',
-  email: 'f-email',
-  note: 'f-note',
-  recipientName: 'f-recipient',
-  recipientPhone: 'f-recipient-phone',
-  storeInfo: 'f-store',
+  receiverName: 'f-rname',
+  receiverPhone: 'f-rphone',
   delivery: 'deliveryOptions',
+  date: 'f-date',
+  slot: 'f-slot',
+  storeInfo: 'f-store',
+  address: 'f-address',
+  payment: 'paymentOptions',
+  social: 'f-social',
+  note: 'f-note',
 };
 
 /* ---------- 小工具 ---------- */
 const $ = (id) => document.getElementById(id);
-
-function formatNumber(n) {
-  return Math.round(Number(n) || 0).toLocaleString('en-US');
-}
+function formatNumber(n) { return Math.round(Number(n) || 0).toLocaleString('en-US'); }
 function money(n) { return 'NT$' + formatNumber(n); }
 function dollar(n) { return '$' + formatNumber(n); }
 
@@ -930,38 +746,25 @@ function el(tag, className, text) {
   if (text !== undefined && text !== null) node.textContent = String(text);
   return node;
 }
-
-function placeholder(text) {
-  return el('div', 'media-placeholder', text);
-}
-
-function productTitle(p) {
-  return p.spec ? `${p.name}｜${p.spec}` : p.name;
-}
-
-function toHalfWidth(s) {
-  return String(s || '').replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
-}
-function normalizePhone(s) {
-  return toHalfWidth(s).replace(/[\s\-()]/g, '');
-}
+function placeholder(text) { return el('div', 'media-placeholder', text); }
+function productTitle(p) { return p.spec ? `${p.name}｜${p.spec}` : p.name; }
+function toHalfWidth(s) { return String(s || '').replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0)); }
+function normalizePhone(s) { return toHalfWidth(s).replace(/[\s\-()]/g, ''); }
 function isValidPhone(s) { return /^09\d{8}$/.test(s); }
-function isValidEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
-
 function makeRequestId() {
-  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
-    return window.crypto.randomUUID();
-  }
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
   return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
 }
-
-function prefersReducedMotion() {
-  return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
+function prefersReducedMotion() { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
 function scrollToEl(node, block) {
-  if (!node) return;
-  node.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: block || 'start' });
+  if (node) node.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: block || 'start' });
+}
+function addOption(select, value, text, opts) {
+  const o = el('option', '', text);
+  o.value = value;
+  if (opts && opts.disabled) o.disabled = true;
+  if (opts && opts.selected) o.selected = true;
+  select.appendChild(o);
 }
 
 /* ---------- 與 Google Apps Script 溝通 ---------- */
@@ -976,12 +779,9 @@ async function fetchJSON(url, options) {
     clearTimeout(timer);
   }
 }
-
 function apiGet(action) {
-  const url = `${CONFIG.API_URL}?action=${encodeURIComponent(action)}&_=${Date.now()}`;
-  return fetchJSON(url, { method: 'GET' });
+  return fetchJSON(`${CONFIG.API_URL}?action=${encodeURIComponent(action)}&_=${Date.now()}`, { method: 'GET' });
 }
-
 function apiPost(payload) {
   // 使用 text/plain 是為了避開瀏覽器的 CORS 預檢，GAS 才能正常接收
   return fetchJSON(CONFIG.API_URL, {
@@ -1002,24 +802,13 @@ function setView(view) {
   $('intro').hidden = view === 'success';
   updateStickyBar();
 }
-
-function showLoadError(message) {
-  $('errorText').textContent = message || MESSAGES.LOAD_FAIL;
-  setView('error');
-}
-
-function showClosed(message) {
-  $('closedText').textContent = message || '本次訂購已結束';
-  setView('closed');
-}
+function showLoadError(message) { $('errorText').textContent = message || MESSAGES.LOAD_FAIL; setView('error'); }
+function showClosed(message) { $('closedText').textContent = message || '本次訂購已結束'; setView('closed'); }
 
 /* ---------- 啟動 ---------- */
 async function init() {
   bindEvents();
-  if (!CONFIG.API_URL || CONFIG.API_URL.indexOf('PASTE_YOUR') === 0) {
-    showLoadError(MESSAGES.NO_API);
-    return;
-  }
+  if (!CONFIG.API_URL || CONFIG.API_URL.indexOf('PASTE_YOUR') === 0) { showLoadError(MESSAGES.NO_API); return; }
   await loadInitData();
 }
 
@@ -1030,19 +819,18 @@ async function loadInitData() {
     if (!data || !data.success) throw new Error((data && data.message) || 'init failed');
 
     applySettings(data.settings || {});
-
-    if (!data.settings.orderOpen) {
-      showClosed(data.settings.closedMessage);
-      return;
-    }
+    if (!data.settings.orderOpen) { showClosed(data.settings.closedMessage); return; }
 
     state.products = Array.isArray(data.products) ? data.products : [];
     state.deliveryOptions = Array.isArray(data.deliveryOptions) ? data.deliveryOptions : [];
+    state.dates = Array.isArray(data.dates) ? data.dates : [];
+    state.paymentOptions = Array.isArray(data.paymentOptions) ? data.paymentOptions : [];
     state.lastLoadedAt = Date.now();
 
     clampCart();
     renderProducts();
     renderDeliveryOptions();
+    renderPaymentOptions();
     setView('order');
     updateAll();
   } catch (err) {
@@ -1053,11 +841,7 @@ async function loadInitData() {
 
 function applySettings(s) {
   state.settings = s;
-
-  if (s.storeName) {
-    $('storeName').textContent = s.storeName;
-    $('footerName').textContent = s.storeName;
-  }
+  if (s.storeName) { $('storeName').textContent = s.storeName; $('footerName').textContent = s.storeName; }
   if (s.pageTitle) $('pageTitle').textContent = s.pageTitle;
   if (s.pageSubtitle) $('pageSubtitle').textContent = s.pageSubtitle;
   document.title = `${s.storeName || 'HANI DESSERT.'}｜${s.pageTitle || '線上訂購'}`;
@@ -1076,6 +860,12 @@ function applySettings(s) {
   const ann = $('announcement');
   ann.textContent = s.announcement || '';
   ann.hidden = !s.announcement;
+
+  const ask = $('lineAsk');
+  if (s.lineUrl && s.lineAskText) { ask.href = s.lineUrl; ask.textContent = s.lineAskText; ask.hidden = false; }
+  const note = $('footerNote');
+  note.textContent = s.footerNote || '';
+  note.hidden = !s.footerNote;
 }
 
 /* ---------- 商品卡 ---------- */
@@ -1083,11 +873,7 @@ function renderProducts() {
   const list = $('productList');
   list.innerHTML = '';
   Object.keys(cardRefs).forEach((k) => delete cardRefs[k]);
-
-  if (!state.products.length) {
-    list.appendChild(el('p', 'summary__empty', '目前沒有開放訂購的商品。'));
-    return;
-  }
+  if (!state.products.length) { list.appendChild(el('p', 'summary__empty', '目前沒有開放訂購的商品。')); return; }
   state.products.forEach((p) => {
     if (!(p.id in state.cart)) state.cart[p.id] = 0;
     list.appendChild(buildProductCard(p));
@@ -1098,7 +884,6 @@ function buildProductCard(p) {
   const card = el('article', 'product');
   card.dataset.id = p.id;
 
-  // 商品照片
   const media = el('div', 'product__media');
   if (p.image) {
     const img = el('img');
@@ -1112,17 +897,12 @@ function buildProductCard(p) {
     media.appendChild(placeholder('商品照片'));
   }
 
-  // 文字
   const body = el('div', 'product__body');
-  const name = el('h3', 'product__name', productTitle(p));
-
   const price = el('p', 'product__price');
   price.append(el('span', '', money(p.price)), el('span', 'product__price-unit', '／' + p.unit));
-
   const desc = el('p', 'product__desc');
-  const stock = el('p', 'product__stock');
+  const soldout = el('p', 'product__soldout');
 
-  // 數量選擇器
   const action = el('div', 'product__action');
   const stepper = el('div', 'stepper');
   const minus = el('button', 'stepper__btn', '－');
@@ -1134,22 +914,17 @@ function buildProductCard(p) {
   plus.type = 'button';
   plus.setAttribute('aria-label', `增加「${productTitle(p)}」數量`);
   stepper.append(minus, qty, plus);
-
   const lineTotal = el('span', 'product__line-total');
   action.append(stepper, lineTotal);
 
   minus.addEventListener('click', () => changeQty(p.id, -1));
   plus.addEventListener('click', () => changeQty(p.id, +1));
 
-  body.append(name, price, desc, stock, action);
-
-  // 最低訂購量提示（例：無盒裝 6 顆起訂，可自由增加數量。）
-  if (p.minQty > 1) {
-    body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。`));
-  }
+  body.append(el('h3', 'product__name', productTitle(p)), price, desc, soldout, action);
+  if (p.minQty > 1) body.append(el('p', 'product__note', `${p.spec || p.name} ${p.minQty} ${p.unit}起訂，可自由增加數量。`));
 
   card.append(media, body);
-  cardRefs[p.id] = { card, minus, plus, qty, desc, stock, lineTotal };
+  cardRefs[p.id] = { card, minus, plus, qty, desc, soldout, lineTotal };
   return card;
 }
 
@@ -1162,20 +937,14 @@ function updateProductCard(p) {
   r.qty.textContent = q;
   r.lineTotal.textContent = q > 0 ? `小計 ${dollar(p.price * q)}` : '';
 
-  // 商品說明：可在 Google Sheets 寫 {stock}，會自動換成目前庫存數字
+  // 商品說明：在 Google Sheets 寫 {stock}，會自動換成目前剩餘數量
   const hasStockTag = /\{stock\}/.test(p.description || '');
-  const descText = (p.description || '').replace(/\{stock\}/g, limited ? String(p.stock) : '');
-  r.desc.textContent = descText;
-  r.desc.hidden = !descText || (p.soldOut && hasStockTag);
+  const text = (p.description || '').replace(/\{stock\}/g, limited ? String(p.stock) : '');
+  r.desc.textContent = text;
+  r.desc.hidden = !text || (p.soldOut && hasStockTag);
 
-  // 庫存提示
-  if (limited) {
-    r.stock.hidden = false;
-    r.stock.textContent = p.soldOut ? `${p.spec || p.name}已售完` : `目前剩 ${p.stock} ${p.unit}`;
-    r.stock.classList.toggle('is-soldout', p.soldOut);
-  } else {
-    r.stock.hidden = true;
-  }
+  r.soldout.textContent = p.soldOut ? `${p.spec || p.name}已售完` : '';
+  r.soldout.hidden = !p.soldOut;
 
   r.card.classList.toggle('is-soldout', p.soldOut);
   r.card.classList.toggle('is-selected', q > 0);
@@ -1183,17 +952,39 @@ function updateProductCard(p) {
   r.plus.disabled = p.soldOut || stepUp(p, q) === q;
 }
 
+/* ---------- 盒數（依「材積單位」換算） ---------- */
+function boxesOf(cart) {
+  let sum = 0;
+  state.products.forEach((p) => {
+    const q = cart[p.id] || 0;
+    if (q > 0) sum += q / (p.boxUnit || 1);
+  });
+  return Math.ceil(sum - 1e-9);
+}
+
+function boxLimit() {
+  let lim = state.settings.maxBoxes > 0 ? state.settings.maxBoxes : Infinity;
+  const opt = currentDelivery();
+  if (opt && opt.maxBoxes > 0) lim = Math.min(lim, opt.maxBoxes);
+  return lim;
+}
+
+function withinBoxLimit(id, q) {
+  const next = Object.assign({}, state.cart);
+  next[id] = q;
+  return boxesOf(next) <= boxLimit();
+}
+
 /* ---------- 數量規則 ----------
- * 加：0 → 最低訂購量（例如 6），之後每次 +1，不可超過可訂購上限
+ * 加：0 → 最低訂購量，之後每次 +1；不可超過庫存與盒數上限
  * 減：大於最低量時每次 -1；等於最低量時直接回到 0
- * 所以無盒裝永遠不會出現 1～5 顆
  */
 function stepUp(p, q) {
   if (p.soldOut || p.maxQty < p.minQty) return q;
   const next = q === 0 ? p.minQty : q + 1;
-  return next > p.maxQty ? q : next;
+  if (next > p.maxQty || !withinBoxLimit(p.id, next)) return q;
+  return next;
 }
-
 function stepDown(p, q) {
   if (q <= 0) return 0;
   return q <= p.minQty ? 0 : q - 1;
@@ -1209,7 +1000,6 @@ function changeQty(id, dir) {
   updateAll();
 }
 
-/* 依照最新庫存修正購物車數量 */
 function clampCart() {
   Object.keys(state.cart).forEach((id) => {
     const p = state.products.find((x) => x.id === id);
@@ -1221,9 +1011,15 @@ function clampCart() {
   });
 }
 
-/* ---------- 金額計算（僅供顯示，實際金額以伺服器計算為準） ---------- */
-function currentDelivery() {
-  return state.deliveryOptions.find((o) => o.id === state.deliveryMethod) || null;
+/* ---------- 金額（僅供顯示，實際金額以伺服器計算為準） ---------- */
+function currentDelivery() { return state.deliveryOptions.find((o) => o.id === state.deliveryMethod) || null; }
+function feeFor(opt, boxes) { return opt.largeFrom > 0 && boxes >= opt.largeFrom ? opt.largeFee : opt.fee; }
+function feeText(opt) {
+  if (opt.largeFrom > 1) {
+    const small = opt.largeFrom - 1 > 1 ? `1–${opt.largeFrom - 1}` : '1';
+    return `${small} 盒 ${money(opt.fee)}｜${opt.largeFrom} 盒以上 ${money(opt.largeFee)}`;
+  }
+  return opt.fee > 0 ? `運費 ${money(opt.fee)}` : '免運費';
 }
 
 function calcTotals() {
@@ -1232,14 +1028,17 @@ function calcTotals() {
     .map((p) => ({ p, qty: state.cart[p.id], sub: p.price * state.cart[p.id] }));
   const subtotal = lines.reduce((s, l) => s + l.sub, 0);
   const count = lines.reduce((s, l) => s + l.qty, 0);
+  const boxes = boxesOf(state.cart);
   const opt = currentDelivery();
-  const shipping = opt && lines.length ? opt.fee : 0;
-  return { lines, subtotal, count, opt, shipping, total: subtotal + shipping };
+  const shipping = opt && lines.length ? feeFor(opt, boxes) : 0;
+  return { lines, subtotal, count, boxes, opt, shipping, total: subtotal + shipping };
 }
 
 function updateAll() {
   state.products.forEach(updateProductCard);
+  updateDeliveryAvailability();
   renderSummary();
+  renderLimitHint();
   renderTotals();
   updateStickyBar();
 }
@@ -1248,64 +1047,68 @@ function renderSummary() {
   const box = $('summaryList');
   const t = calcTotals();
   box.innerHTML = '';
-
-  if (!t.lines.length) {
-    box.appendChild(el('p', 'summary__empty', '尚未選擇商品'));
-    return;
-  }
-
+  if (!t.lines.length) { box.appendChild(el('p', 'summary__empty', '尚未選擇商品')); return; }
   t.lines.forEach((l) => {
     const item = el('div', 'summary__item');
     const row = el('div', 'summary__row');
-    row.append(
-      el('span', '', `${l.qty} ${l.p.unit} × ${dollar(l.p.price)}`),
-      el('span', '', dollar(l.sub))
-    );
+    row.append(el('span', '', `${l.qty} ${l.p.unit} × ${dollar(l.p.price)}`), el('span', '', dollar(l.sub)));
     item.append(el('p', 'summary__name', productTitle(l.p)), row);
     box.appendChild(item);
   });
-
   const sub = el('div', 'summary__subtotal');
   sub.append(el('span', '', '商品小計'), el('span', '', money(t.subtotal)));
   box.appendChild(sub);
 }
 
+function renderLimitHint() {
+  const hint = $('limitHint');
+  const opt = currentDelivery();
+  const s = state.settings;
+  const boxes = boxesOf(state.cart);
+  let text = '';
+  let warn = false;
+  if (opt && opt.maxBoxes > 0) {
+    text = `${opt.label}最多 ${opt.maxBoxes} 盒（材積限制）；超過請選其他配送方式或分開訂購。`;
+    warn = boxes >= opt.maxBoxes;
+  } else if (s.maxBoxes > 0) {
+    text = `單筆最多 ${s.maxBoxes} 盒。${s.maxBoxesMessage || ''}`;
+    warn = boxes >= s.maxBoxes;
+  }
+  hint.textContent = text;
+  hint.hidden = !text;
+  hint.classList.toggle('is-warn', warn);
+}
+
 function renderTotals() {
   const t = calcTotals();
   $('totalSubtotal').textContent = money(t.subtotal);
-  $('totalShipping').textContent = t.opt ? money(t.shipping) : '請選擇取貨方式';
+  $('totalShipping').textContent = t.opt ? money(t.shipping) : '請選擇配送方式';
   $('totalAmount').textContent = money(t.total);
 }
 
 function updateStickyBar() {
-  const bar = $('stickyBar');
   const t = state.view === 'order' ? calcTotals() : null;
   const show = !!(t && t.count > 0);
-  bar.hidden = !show;
+  $('stickyBar').hidden = !show;
   document.body.classList.toggle('has-sticky', show);
-  if (show) {
-    $('stickyCount').textContent = t.count;
-    $('stickyTotal').textContent = money(t.total);
-  }
+  if (show) { $('stickyCount').textContent = t.count; $('stickyTotal').textContent = money(t.total); }
 }
 
-/* ---------- 取貨方式 ---------- */
+/* ---------- 配送方式 ---------- */
+const deliveryRefs = {};
+
 function renderDeliveryOptions() {
   const wrap = $('deliveryOptions');
   wrap.innerHTML = '';
-  const opts = state.deliveryOptions;
+  Object.keys(deliveryRefs).forEach((k) => delete deliveryRefs[k]);
 
-  if (!opts.length) {
-    wrap.appendChild(el('p', 'summary__empty', '目前尚未開放取貨方式，請透過 LINE 與我們聯繫。'));
-    $('submitBtn').disabled = true;
+  if (!state.deliveryOptions.length) {
+    wrap.appendChild(el('p', 'summary__empty', '目前尚未開放配送方式，請透過 LINE 與我們聯繫。'));
     return;
   }
+  if (!currentDelivery()) state.deliveryMethod = state.deliveryOptions.length === 1 ? state.deliveryOptions[0].id : '';
 
-  if (!opts.some((o) => o.id === state.deliveryMethod)) {
-    state.deliveryMethod = opts.length === 1 ? opts[0].id : '';
-  }
-
-  opts.forEach((o) => {
+  state.deliveryOptions.forEach((o) => {
     const label = el('label', 'option');
     const input = el('input');
     input.type = 'radio';
@@ -1318,32 +1121,126 @@ function renderDeliveryOptions() {
       updateDeliveryUI();
       updateAll();
     });
-
-    let feeText = '';
-    if (o.fee > 0) feeText = `運費 ${money(o.fee)}`;
-    else if (o.requiresAddress) feeText = '免運費';
-
     const text = el('span', 'option__text');
-    text.append(el('span', 'option__name', o.label), el('span', 'option__fee', feeText));
+    const note = el('span', 'option__note');
+    note.hidden = true;
+    text.append(el('span', 'option__name', o.label), el('span', 'option__fee', feeText(o)), note);
     label.append(input, text);
     wrap.appendChild(label);
+    deliveryRefs[o.id] = { label, input, note };
   });
-
   updateDeliveryUI();
+}
+
+/* 盒數超過某配送方式的上限時（例如超商 6 盒），該選項不能選 */
+function updateDeliveryAvailability() {
+  const boxes = boxesOf(state.cart);
+  state.deliveryOptions.forEach((o) => {
+    const r = deliveryRefs[o.id];
+    if (!r) return;
+    const over = o.maxBoxes > 0 && boxes > o.maxBoxes && o.id !== state.deliveryMethod;
+    r.input.disabled = over;
+    r.label.classList.toggle('is-disabled', over);
+    r.label.classList.toggle('is-checked', r.input.checked);
+    r.note.textContent = over ? `超過 ${o.maxBoxes} 盒無法選擇` : '';
+    r.note.hidden = !over;
+  });
 }
 
 function updateDeliveryUI() {
   const opt = currentDelivery();
-  $('shippingFields').hidden = !(opt && opt.requiresAddress);
+  const need = opt ? opt.need : '';
 
   const info = $('deliveryInfo');
   info.textContent = (opt && opt.info) || '';
   info.hidden = !info.textContent;
 
-  document.querySelectorAll('#deliveryOptions .option').forEach((label) => {
-    const input = label.querySelector('input');
-    label.classList.toggle('is-checked', !!(input && input.checked));
+  $('slotField').hidden = need !== 'slot';
+  $('pickupBox').hidden = !(need === 'slot' && opt.address);
+  $('storeField').hidden = need !== 'store';
+  $('addressField').hidden = need !== 'address';
+
+  if (need === 'slot') {
+    renderSlotOptions(opt);
+    $('pickupAddress').textContent = opt.address || '';
+    $('pickupAddressNote').textContent = opt.addressNote ? `（${opt.addressNote}）` : '';
+    const map = $('pickupMap');
+    map.hidden = !opt.mapUrl;
+    if (opt.mapUrl) map.href = opt.mapUrl;
+  }
+  renderDateOptions();
+  Object.values(deliveryRefs).forEach((r) => r.label.classList.toggle('is-checked', r.input.checked));
+}
+
+/* 日期：新竹物流等設定「不能選週末」的配送方式，會自動隱藏週六、週日 */
+function renderDateOptions() {
+  const sel = $('f-date');
+  const opt = currentDelivery();
+  const prev = sel.value;
+  sel.innerHTML = '';
+
+  if (!opt) {
+    addOption(sel, '', '請先選擇配送方式', { selected: true });
+    sel.disabled = true;
+    return;
+  }
+  const list = state.dates.filter((d) => !(opt.noWeekend && d.weekend));
+  sel.disabled = !list.length;
+  addOption(sel, '', list.length ? '請選擇日期' : MESSAGES.NO_DATES, { disabled: true, selected: true });
+  list.forEach((d) => addOption(sel, d.date, `${d.date}（${d.weekday}）`));
+  sel.value = list.some((d) => d.date === prev) ? prev : '';
+}
+
+function renderSlotOptions(opt) {
+  const sel = $('f-slot');
+  const prev = sel.value;
+  sel.innerHTML = '';
+  addOption(sel, '', '請選擇時段', { disabled: true, selected: true });
+  (opt.slots || []).forEach((s) => addOption(sel, s, s));
+  sel.value = (opt.slots || []).indexOf(prev) >= 0 ? prev : '';
+}
+
+/* ---------- 付款方式 ---------- */
+function renderPaymentOptions() {
+  const wrap = $('paymentOptions');
+  wrap.innerHTML = '';
+  if (!state.paymentOptions.length) {
+    wrap.appendChild(el('p', 'summary__empty', '目前尚未開放付款方式，請透過 LINE 與我們聯繫。'));
+    return;
+  }
+  if (!state.paymentOptions.some((o) => o.id === state.paymentMethod)) {
+    state.paymentMethod = state.paymentOptions.length === 1 ? state.paymentOptions[0].id : '';
+  }
+  state.paymentOptions.forEach((o) => {
+    const label = el('label', 'option');
+    const input = el('input');
+    input.type = 'radio';
+    input.name = 'payment';
+    input.value = o.id;
+    input.checked = o.id === state.paymentMethod;
+    input.addEventListener('change', () => {
+      state.paymentMethod = o.id;
+      setFieldError('payment', '');
+      wrap.querySelectorAll('.option').forEach((l) => l.classList.toggle('is-checked', l.querySelector('input').checked));
+    });
+    const text = el('span', 'option__text');
+    text.append(el('span', 'option__name', o.label));
+    label.append(input, text);
+    label.classList.toggle('is-checked', input.checked);
+    wrap.appendChild(label);
   });
+}
+
+/* ---------- 收件人同訂購人 ---------- */
+function syncReceiver() {
+  const same = $('f-same').checked;
+  ['f-rname', 'f-rphone'].forEach((id) => { $(id).readOnly = same; });
+  if (same) {
+    $('f-rname').value = $('f-name').value;
+    $('f-rphone').value = $('f-phone').value;
+    setFieldError('receiverName', '');
+    setFieldError('receiverPhone', '');
+  }
 }
 
 /* ---------- 表單驗證 ---------- */
@@ -1351,13 +1248,15 @@ function getFormValues() {
   const v = (id) => ($(id).value || '').trim();
   return {
     name: v('f-name'),
-    lineName: v('f-line'),
     phone: normalizePhone(v('f-phone')),
-    email: v('f-email'),
-    note: v('f-note'),
-    recipientName: v('f-recipient'),
-    recipientPhone: normalizePhone(v('f-recipient-phone')),
+    receiverName: v('f-rname'),
+    receiverPhone: normalizePhone(v('f-rphone')),
+    date: v('f-date'),
+    slot: v('f-slot'),
     storeInfo: v('f-store'),
+    address: v('f-address'),
+    social: v('f-social'),
+    note: v('f-note'),
   };
 }
 
@@ -1372,15 +1271,11 @@ function setFieldError(key, message) {
     else input.removeAttribute('aria-invalid');
   }
 }
-
-function clearFieldErrors() {
-  Object.keys(FIELD_IDS).forEach((k) => setFieldError(k, ''));
-}
+function clearFieldErrors() { Object.keys(FIELD_IDS).forEach((k) => setFieldError(k, '')); }
 
 function focusField(key) {
-  const node = key === 'delivery'
-    ? document.querySelector('#deliveryOptions input')
-    : $(FIELD_IDS[key]);
+  let node = $(FIELD_IDS[key]);
+  if (node && node.tagName === 'DIV') node = node.querySelector('input') || node;
   if (!node) return;
   scrollToEl(node, 'center');
   try { node.focus({ preventScroll: true }); } catch (e) { node.focus(); }
@@ -1389,22 +1284,25 @@ function focusField(key) {
 function validateForm() {
   const v = getFormValues();
   const errors = [];
+  const phoneMsg = '請輸入 09 開頭的 10 碼手機號碼';
 
-  if (!v.name) errors.push(['name', '請填寫姓名']);
-  if (!v.lineName) errors.push(['lineName', '請填寫 LINE 顯示名稱']);
-  if (!v.phone) errors.push(['phone', '請填寫手機號碼']);
-  else if (!isValidPhone(v.phone)) errors.push(['phone', '請輸入 09 開頭的 10 碼手機號碼']);
-  if (v.email && !isValidEmail(v.email)) errors.push(['email', 'Email 格式不正確']);
+  if (!v.name) errors.push(['name', '請填寫訂購人姓名']);
+  if (!v.phone) errors.push(['phone', '請填寫訂購人電話']);
+  else if (!isValidPhone(v.phone)) errors.push(['phone', phoneMsg]);
+  if (!v.receiverName) errors.push(['receiverName', '請填寫收件人姓名']);
+  if (!v.receiverPhone) errors.push(['receiverPhone', '請填寫收件人電話']);
+  else if (!isValidPhone(v.receiverPhone)) errors.push(['receiverPhone', phoneMsg]);
 
   const opt = currentDelivery();
   if (!opt) {
-    errors.push(['delivery', '請選擇取貨方式']);
-  } else if (opt.requiresAddress) {
-    if (!v.recipientName) errors.push(['recipientName', '請填寫收件人姓名']);
-    if (!v.recipientPhone) errors.push(['recipientPhone', '請填寫收件人手機']);
-    else if (!isValidPhone(v.recipientPhone)) errors.push(['recipientPhone', '請輸入 09 開頭的 10 碼手機號碼']);
-    if (!v.storeInfo) errors.push(['storeInfo', '請填寫超商／門市資訊']);
+    errors.push(['delivery', '請選擇配送方式']);
+  } else {
+    if (!v.date) errors.push(['date', '請選擇取貨／出貨日']);
+    if (opt.need === 'slot' && !v.slot) errors.push(['slot', '請選擇取貨時段']);
+    if (opt.need === 'store' && !v.storeInfo) errors.push(['storeInfo', '請填寫超商門市名稱與店號']);
+    if (opt.need === 'address' && !v.address) errors.push(['address', '請填寫完整宅配地址']);
   }
+  if (!state.paymentMethod) errors.push(['payment', '請選擇付款方式']);
 
   clearFieldErrors();
   errors.forEach(([k, m]) => setFieldError(k, m));
@@ -1412,22 +1310,9 @@ function validateForm() {
 }
 
 /* ---------- 錯誤提示 ---------- */
-function showFormError(message) {
-  const box = $('formError');
-  box.textContent = message;
-  box.hidden = !message;
-}
-
-function showSummaryNotice(message) {
-  const box = $('summaryNotice');
-  box.textContent = message;
-  box.hidden = !message;
-}
-
-function hideNotices() {
-  showFormError('');
-  showSummaryNotice('');
-}
+function showFormError(message) { const b = $('formError'); b.textContent = message; b.hidden = !message; }
+function showSummaryNotice(message) { const b = $('summaryNotice'); b.textContent = message; b.hidden = !message; }
+function hideNotices() { showFormError(''); showSummaryNotice(''); }
 
 /* ---------- 送出訂單 ---------- */
 function setSubmitting(on) {
@@ -1442,49 +1327,42 @@ function setSubmitting(on) {
 
 async function onSubmit(e) {
   e.preventDefault();
-  if (state.isSubmitting) return;   // 防止連點
+  if (state.isSubmitting) return;
   hideNotices();
 
   const t = calcTotals();
-  if (!t.lines.length) {
-    showSummaryNotice(MESSAGES.EMPTY_CART);
-    scrollToEl($('summary'));
-    return;
-  }
+  if (!t.lines.length) { showSummaryNotice(MESSAGES.EMPTY_CART); scrollToEl($('summary')); return; }
 
   const { values, errors } = validateForm();
-  if (errors.length) {
-    showFormError(MESSAGES.CHECK_FIELDS);
-    focusField(errors[0][0]);
-    return;
-  }
+  if (errors.length) { showFormError(MESSAGES.CHECK_FIELDS); focusField(errors[0][0]); return; }
 
-  // 同一次送單使用同一個 requestId；網路中斷重送時，伺服器不會重複建立訂單
   if (!state.requestId) state.requestId = makeRequestId();
-
   const opt = currentDelivery();
+
+  // 只傳商品ID與數量；價格、盒數、運費、總額一律由伺服器重新計算
   const payload = {
     action: 'createOrder',
     requestId: state.requestId,
-    // 只傳商品ID與數量；價格與金額一律由伺服器重新計算
     items: t.lines.map((l) => ({ productId: l.p.id, quantity: l.qty })),
     customer: {
       name: values.name,
-      lineName: values.lineName,
       phone: values.phone,
-      email: values.email,
+      receiverName: values.receiverName,
+      receiverPhone: values.receiverPhone,
+      social: values.social,
       note: values.note,
     },
     delivery: {
       method: opt.id,
-      recipientName: opt.requiresAddress ? values.recipientName : '',
-      recipientPhone: opt.requiresAddress ? values.recipientPhone : '',
-      storeInfo: opt.requiresAddress ? values.storeInfo : '',
+      date: values.date,
+      slot: opt.need === 'slot' ? values.slot : '',
+      storeInfo: opt.need === 'store' ? values.storeInfo : '',
+      address: opt.need === 'address' ? values.address : '',
     },
+    payment: { method: state.paymentMethod },
   };
 
   setSubmitting(true);
-
   let res;
   try {
     res = await apiPost(payload);
@@ -1495,12 +1373,7 @@ async function onSubmit(e) {
     return;
   }
 
-  if (res && res.success) {
-    state.requestId = null;
-    showSuccess(res);
-    return;
-  }
-
+  if (res && res.success) { state.requestId = null; showSuccess(res); return; }
   setSubmitting(false);
   state.requestId = null;
   await handleOrderError(res || {});
@@ -1508,7 +1381,6 @@ async function onSubmit(e) {
 
 async function handleOrderError(res) {
   const message = res.message || MESSAGES.GENERIC;
-
   switch (res.code) {
     case 'OUT_OF_STOCK':
     case 'PRODUCT_UNAVAILABLE':
@@ -1516,20 +1388,28 @@ async function handleOrderError(res) {
     case 'BELOW_MIN_QTY':
     case 'OVER_MAX_QTY': {
       const text = res.code === 'OUT_OF_STOCK' ? MESSAGES.OUT_OF_STOCK : message;
-      await refreshProducts(res.products);   // 重新抓取最新庫存
+      await refreshProducts(res.products);
       showSummaryNotice(text);
       showFormError(text);
       scrollToEl($('summary'));
       break;
     }
+    case 'OVER_MAX_BOXES':
+      showSummaryNotice(message);
+      showFormError(message);
+      scrollToEl($('summary'));
+      break;
+    case 'DATE_UNAVAILABLE':
+      if (Array.isArray(res.dates)) { state.dates = res.dates; renderDateOptions(); }
+      setFieldError('date', message);
+      showFormError(message);
+      focusField('date');
+      break;
     case 'ORDER_CLOSED':
       showClosed(message);
       break;
     case 'VALIDATION_ERROR':
-      if (res.field && FIELD_IDS[res.field]) {
-        setFieldError(res.field, message);
-        focusField(res.field);
-      }
+      if (res.field && FIELD_IDS[res.field]) { setFieldError(res.field, message); focusField(res.field); }
       showFormError(message);
       break;
     default:
@@ -1541,10 +1421,7 @@ async function refreshProducts(list) {
   try {
     if (!Array.isArray(list)) {
       const data = await apiGet('products');
-      if (!data || !data.success) {
-        if (data && data.code === 'ORDER_CLOSED') showClosed(data.message);
-        return;
-      }
+      if (!data || !data.success) { if (data && data.code === 'ORDER_CLOSED') showClosed(data.message); return; }
       list = data.products;
     }
     state.products = list;
@@ -1558,9 +1435,31 @@ async function refreshProducts(list) {
 }
 
 /* ---------- 成功畫面 ---------- */
+function addInfo(dl, label, value) {
+  if (!value) return;
+  const row = el('div');
+  row.append(el('dt', '', label), el('dd', '', value));
+  dl.appendChild(row);
+}
+
 function showSuccess(res) {
   $('successNumber').textContent = res.orderNumber || '';
+  $('successAmount').textContent = money(res.total);
 
+  // 付款
+  const pay = res.payment || {};
+  $('successPayLabel').textContent = pay.label || '';
+  const hint = $('successPayHint');
+  hint.textContent = pay.hint || '';
+  hint.hidden = !pay.hint;
+  const payuni = $('payuniBtn');
+  payuni.hidden = !(pay.id === 'PAYUNI' && pay.url);
+  if (!payuni.hidden) payuni.href = pay.url;
+  const line = $('lineBtn');
+  line.hidden = !(pay.id === 'LINEPAY' && res.lineUrl);
+  if (!line.hidden) line.href = res.lineUrl;
+
+  // 訂購內容
   const ul = $('successItems');
   ul.innerHTML = '';
   (res.items || []).forEach((it) => {
@@ -1571,19 +1470,54 @@ function showSuccess(res) {
     li.append(left, el('span', '', dollar(it.subtotal)));
     ul.appendChild(li);
   });
-
   $('successSubtotal').textContent = money(res.subtotal);
   $('successShipping').textContent = money(res.shipping);
   $('successTotal').textContent = money(res.total);
-  $('successDelivery').textContent = res.deliveryLabel || '';
 
-  const pay = res.paymentText || '';
-  $('paymentText').textContent = pay;
-  $('paymentCard').hidden = !pay;
+  // 取貨資訊
+  const d = res.delivery || {};
+  const dl = $('successDelivery');
+  dl.innerHTML = '';
+  addInfo(dl, '配送方式', d.label);
+  addInfo(dl, '取貨／出貨日', d.date ? `${d.date}（${d.weekday}）` : '');
+  addInfo(dl, '取貨時段', d.slot);
+  if (d.id === 'PICKUP') addInfo(dl, '自取地址', d.pickupAddress + (d.pickupAddressNote ? `（${d.pickupAddressNote}）` : ''));
+  addInfo(dl, '超商門市', d.storeInfo);
+  addInfo(dl, '宅配地址', d.address);
+  addInfo(dl, '收件人', res.receiverName);
+  const map = $('successMap');
+  map.hidden = !(d.id === 'PICKUP' && d.mapUrl);
+  if (!map.hidden) map.href = d.mapUrl;
+
+  $('successNote').textContent = res.paymentText || '';
 
   setSubmitting(false);
   setView('success');
   window.scrollTo(0, 0);
+}
+
+function copyOrderNumber() {
+  const no = $('successNumber').textContent;
+  const btn = $('copyBtn');
+  const done = () => {
+    btn.textContent = '已複製';
+    btn.classList.add('is-copied');
+    setTimeout(() => { btn.textContent = '複製'; btn.classList.remove('is-copied'); }, 1800);
+  };
+  const fallback = () => {
+    const t = document.createElement('textarea');
+    t.value = no;
+    t.setAttribute('readonly', '');
+    t.style.position = 'fixed';
+    t.style.opacity = '0';
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand('copy'); } catch (e) { /* 無法複製時忽略 */ }
+    document.body.removeChild(t);
+    done();
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(no).then(done).catch(fallback);
+  else fallback();
 }
 
 /* ---------- 事件綁定 ---------- */
@@ -1591,13 +1525,16 @@ function bindEvents() {
   $('orderForm').addEventListener('submit', onSubmit);
   $('retryLoad').addEventListener('click', loadInitData);
   $('stickyBtn').addEventListener('click', () => scrollToEl($('summary')));
+  $('copyBtn').addEventListener('click', copyOrderNumber);
 
-  // 使用者開始修改欄位時，清除該欄位的錯誤提示
+  $('f-same').addEventListener('change', syncReceiver);
+  $('f-name').addEventListener('input', () => { if ($('f-same').checked) $('f-rname').value = $('f-name').value; });
+  $('f-phone').addEventListener('input', () => { if ($('f-same').checked) $('f-rphone').value = $('f-phone').value; });
+
   Object.keys(FIELD_IDS).forEach((key) => {
     const node = $(FIELD_IDS[key]);
-    if (node && key !== 'delivery') {
-      node.addEventListener('input', () => setFieldError(key, ''));
-    }
+    if (!node || node.tagName === 'DIV') return;
+    node.addEventListener(node.tagName === 'SELECT' ? 'change' : 'input', () => setFieldError(key, ''));
   });
 
   // 客人切回頁面時，自動更新庫存
