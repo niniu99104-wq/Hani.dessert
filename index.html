@@ -1308,7 +1308,7 @@ function updateSoldOutState() {
     setPhraseText($('soldOutText'), s.soldOutMessage || '本次已全數完售，謝謝大家的支持！');
     const btn = $('soldOutLine');
     btn.hidden = !s.groupUrl;
-    if (s.groupUrl) { btn.href = s.groupUrl; btn.textContent = s.groupButtonText || '加入群組，下次開團不錯過'; }
+    if (s.groupUrl) { btn.href = s.groupUrl; btn.textContent = s.groupButtonText || '訂單問題請私訊土豆媽詢問。'; }
   }
   // 完售期間每分鐘檢查一次庫存，有人取消、庫存退回就自動恢復可訂購
   if (soldOut && !state.soldOutTimer) {
