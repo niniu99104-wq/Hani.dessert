@@ -429,9 +429,27 @@ a { color: inherit; }
 
 .panel--payment { border-color: var(--accent); }
 .pay-hint { margin-top: 8px; padding: 12px 14px; border-left: 2px solid var(--accent); background: #fff; font-size: 15px; white-space: pre-line; }
+.pay-deadline { margin-top: 8px; color: var(--danger); font-size: 15px; font-weight: 500; line-break: strict; }
 .pay-actions { display: grid; gap: 10px; margin-top: 16px; }
 .pay-actions .btn { width: 100%; min-height: var(--h-primary); }
 .success__note { margin-top: 18px; color: var(--muted); font-size: 13px; text-align: center; white-space: pre-line; }
+
+/* ---------- 全部完售 ---------- */
+.soldout {
+  margin-top: 40px;
+  padding: 28px 20px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.soldout__tag {
+  display: inline-block; padding: 2px 12px; margin-bottom: 12px;
+  border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 13px; letter-spacing: 0.2em;
+}
+.soldout__title { font-family: var(--font-serif); font-size: 19px; line-height: 1.7; letter-spacing: 0.06em; }
+.soldout .btn { width: 100%; min-height: var(--h-primary); margin-top: 20px; }
 
 /* ---------- 訂單查詢入口 ---------- */
 .lookup-entry {
@@ -573,6 +591,13 @@ a { color: inherit; }
     <!-- ===== 訂購區 ===== -->
     <main id="orderArea" hidden>
 
+      <!-- 全部完售時顯示（文字在「系統設定」SOLD_OUT_MESSAGE；有人取消、庫存退回會自動恢復可訂購） -->
+      <section class="soldout" id="soldOutBlock" hidden aria-live="polite">
+        <span class="soldout__tag">完售</span>
+        <p class="soldout__title" id="soldOutText">本次已全數完售，謝謝大家的支持！</p>
+        <a class="btn btn--line" id="soldOutLine" href="#" target="_blank" rel="noopener" hidden>加入群組，下次開團不錯過</a>
+      </section>
+
       <!-- 商品卡由下方程式依照 Google Sheets「商品設定」自動產生 -->
       <section class="section" aria-labelledby="productsHeading">
         <h2 class="section__title" id="productsHeading">選擇商品</h2>
@@ -635,7 +660,7 @@ a { color: inherit; }
           <div class="field" data-field="date" id="dateField">
             <label for="f-date">取貨／出貨日 <span class="req" aria-hidden="true">*</span></label>
             <select id="f-date" disabled><option value="">請先選擇配送方式</option></select>
-            <p class="field__hint">一張單限一個日期；若要分天取貨，請分開填單。<br>超商&宅配 出貨日不等於到貨日，實際到貨依物流為主。</p>
+            <p class="field__hint">一張單限一個日期；若要分天取貨，請分開填單。<br>超商&amp;宅配 出貨日不等於到貨日，實際到貨依物流為主。</p>
             <p class="field__hint" id="dateBlockHint" hidden>宅配已自動排除週六、週日、國定假日、連假與連假前一天。</p>
             <p class="field__error" data-error-for="date"></p>
           </div>
@@ -739,6 +764,7 @@ a { color: inherit; }
       <div class="panel panel--payment">
         <h3 class="panel__title">付款方式｜<span id="successPayLabel"></span></h3>
         <p class="success__text">須先完成付款，收到款項才會安排製作、出貨。</p>
+        <p class="pay-deadline" id="successDeadline" hidden></p>
         <p class="pay-hint" id="successPayHint" hidden></p>
         <div class="pay-actions">
           <a class="btn btn--primary" id="payuniBtn" href="#" target="_blank" rel="noopener" hidden>前往 PAYUNi 付款</a>
@@ -824,7 +850,7 @@ a { color: inherit; }
  * 全部在 Google Sheets 修改，不需要改這裡。
  * ========================================================= */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbx3vFFkUM5POwiaq2lMowUpYtnphWRykTKyUh5AQZnlhY8QnqPsztP-hvgbaPleoAo3xw/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbxoVCkuOKcwLWWm-YRnQcLFc94jazh1dhBhSoXnQhhH8zSi7mOV-b9RFhmS4IRGSFHFnA/exec',
   TIMEOUT_MS: 30000,
   AUTO_REFRESH_MS: 60000,
 };
@@ -1267,12 +1293,41 @@ function calcTotals() {
   return { lines, subtotal, count, boxes, opt, shipping, total: subtotal + shipping };
 }
 
+/* 全部完售：所有上架商品都賣完時，隱藏訂購表單，顯示完售說明與加入群組按鈕 */
+function isAllSoldOut() {
+  return state.products.length > 0 && state.products.every((p) => p.soldOut);
+}
+
+function updateSoldOutState() {
+  const s = state.settings;
+  const soldOut = isAllSoldOut();
+  $('soldOutBlock').hidden = !soldOut;
+  $('orderForm').hidden = soldOut;
+  if (soldOut) {
+    $('limitHint').hidden = true;
+    setPhraseText($('soldOutText'), s.soldOutMessage || '本次已全數完售，謝謝大家的支持！');
+    const btn = $('soldOutLine');
+    btn.hidden = !s.groupUrl;
+    if (s.groupUrl) { btn.href = s.groupUrl; btn.textContent = s.groupButtonText || '加入群組，下次開團不錯過'; }
+  }
+  // 完售期間每分鐘檢查一次庫存，有人取消、庫存退回就自動恢復可訂購
+  if (soldOut && !state.soldOutTimer) {
+    state.soldOutTimer = setInterval(() => {
+      if (document.visibilityState === 'visible' && state.view === 'order') refreshProducts();
+    }, CONFIG.AUTO_REFRESH_MS);
+  } else if (!soldOut && state.soldOutTimer) {
+    clearInterval(state.soldOutTimer);
+    state.soldOutTimer = null;
+  }
+}
+
 function updateAll() {
   state.products.forEach(updateProductCard);
   updateDeliveryAvailability();
   renderSummary();
   renderLimitHint();
   renderTotals();
+  updateSoldOutState();
   updateStickyBar();
 }
 
@@ -1318,7 +1373,7 @@ function renderTotals() {
 
 function updateStickyBar() {
   const t = state.view === 'order' ? calcTotals() : null;
-  const show = !!(t && t.count > 0);
+  const show = !!(t && t.count > 0) && !isAllSoldOut();
   $('stickyBar').hidden = !show;
   document.body.classList.toggle('has-sticky', show);
   if (show) { $('stickyCount').textContent = t.count; $('stickyTotal').textContent = money(t.total); }
@@ -1686,6 +1741,8 @@ function showSuccess(res) {
   $('successPayLabel').textContent = pay.label || '';
   const hint = $('successPayHint');
   setPhraseText(hint, pay.hint || '');
+  setPhraseText($('successDeadline'), res.paymentDeadline || '');
+  $('successDeadline').hidden = !res.paymentDeadline;
   hint.hidden = !pay.hint;
   const payuni = $('payuniBtn');
   payuni.hidden = !(pay.id === 'PAYUNI' && pay.url);
@@ -2026,6 +2083,7 @@ function buildOrderCard(o) {
   const pSec = el('div', 'order-card__section');
   pSec.appendChild(el('p', 'order-card__label', `付款方式｜${pay.label || ''}`));
   if (pay.unpaid) {
+    if (pay.deadline) { const dl2 = el('p', 'pay-deadline'); setPhraseText(dl2, pay.deadline); pSec.appendChild(dl2); }
     if (pay.hint) { const ph = el('p', 'pay-hint'); setPhraseText(ph, pay.hint); pSec.appendChild(ph); }
     const actions = el('div', 'pay-actions');
     if (pay.id === 'PAYUNI' && pay.url) {
