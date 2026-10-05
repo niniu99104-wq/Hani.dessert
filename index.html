@@ -449,7 +449,6 @@ a { color: inherit; }
   font-size: 13px; letter-spacing: 0.2em;
 }
 .soldout__title { font-family: var(--font-serif); font-size: 19px; line-height: 1.7; letter-spacing: 0.06em; }
-.soldout .btn { width: 100%; min-height: var(--h-primary); margin-top: 20px; }
 
 /* ---------- 訂單查詢入口 ---------- */
 .lookup-entry {
@@ -489,6 +488,15 @@ a { color: inherit; }
   background: var(--accent-soft); color: var(--text); font-size: 13px;
 }
 .chip.is-warn { background: var(--danger-soft); color: var(--danger); }
+
+/* 已取消的訂單：只顯示訂單編號與取消原因（刪除線＋淡灰色） */
+.order-card--cancelled { background: #F0EEEB; border-color: var(--line); gap: 6px; }
+.order-card--cancelled .order-card__no,
+.order-card--cancelled .order-card__reason {
+  color: #B3ACA4;
+  text-decoration: line-through;
+}
+.order-card__reason { font-size: 15px; }
 
 /* ---------- 行事曆與截圖提醒 ---------- */
 .screenshot-tip { margin-top: 14px; color: var(--muted); font-size: 13px; }
@@ -595,7 +603,6 @@ a { color: inherit; }
       <section class="soldout" id="soldOutBlock" hidden aria-live="polite">
         <span class="soldout__tag">完售</span>
         <p class="soldout__title" id="soldOutText">本次已全數完售，謝謝大家的支持！</p>
-        <a class="btn btn--line" id="soldOutLine" href="#" target="_blank" rel="noopener" hidden>訂單問題請私訊土豆媽詢問。</a>
       </section>
 
       <!-- 商品卡由下方程式依照 Google Sheets「商品設定」自動產生 -->
@@ -850,7 +857,7 @@ a { color: inherit; }
  * 全部在 Google Sheets 修改，不需要改這裡。
  * ========================================================= */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbxGOtb3lpCSy_YGRcPigfgUXS2hsTLPBiLYr0CwrOqHKOYLct6x9AHivuQiDmhkeIzEhA/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzFJAdjoQrSeaPEvVUrbYhMLeUu8a3IdnvCDzwNq3rm0QUPkvi2-sfGMUpPPDoai1FxJg/exec',
   TIMEOUT_MS: 30000,
   AUTO_REFRESH_MS: 60000,
 };
@@ -1293,7 +1300,7 @@ function calcTotals() {
   return { lines, subtotal, count, boxes, opt, shipping, total: subtotal + shipping };
 }
 
-/* 全部完售：所有上架商品都賣完時，隱藏訂購表單，顯示完售說明與加入群組按鈕 */
+/* 全部完售：所有上架商品都賣完時，隱藏訂購表單，顯示完售說明 */
 function isAllSoldOut() {
   return state.products.length > 0 && state.products.every((p) => p.soldOut);
 }
@@ -1306,9 +1313,6 @@ function updateSoldOutState() {
   if (soldOut) {
     $('limitHint').hidden = true;
     setPhraseText($('soldOutText'), s.soldOutMessage || '本次已全數完售，謝謝大家的支持！');
-    const btn = $('soldOutLine');
-    btn.hidden = !s.groupUrl;
-    if (s.groupUrl) { btn.href = s.groupUrl; btn.textContent = s.groupButtonText || '訂單問題請私訊土豆媽詢問。'; }
   }
   // 完售期間每分鐘檢查一次庫存，有人取消、庫存退回就自動恢復可訂購
   if (soldOut && !state.soldOutTimer) {
@@ -2011,6 +2015,13 @@ function renderLookupResults(orders) {
 }
 
 function buildOrderCard(o) {
+  // 已取消：只顯示訂單編號與取消原因
+  if (o.cancelled) {
+    const c = el('article', 'panel order-card order-card--cancelled');
+    c.append(el('span', 'order-card__no', o.orderNumber), el('p', 'order-card__reason', o.cancelReason || '訂單已取消'));
+    return c;
+  }
+
   const card = el('article', 'panel order-card');
 
   const head = el('div', 'order-card__head');
