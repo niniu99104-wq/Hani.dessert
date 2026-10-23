@@ -1,71 +1,793 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title></title>
-  <meta name="description" content="">
-  <meta name="theme-color" content="#F5F1EA">
-  <meta name="format-detection" content="telephone=no">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title id="htmlTitle">Vanilla 香草籽甜點 訂購單</title>
+<style>
+  :root{
+    --paper:#F7F0E6;      /* 米杏底 */
+    --card:#FFFDF9;
+    --bean:#7A4A3A;       /* 深棕 */
+    --bean-deep:#5C3427;  
+    --yolk:#D98A3D;       /* 香草金黃 */
+    --yolk-soft:#E9B679;
+    --ink:#3A2B24;        /* 文字主色 */
+    --muted:#96897E;      /* 次要文字 */
+    --line:#E5D8C6;       /* 分隔線 */
+    --ok:#5B7A4F;
+    --warn:#B4552F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:"Noto Serif TC","Songti TC",serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.7;
+    padding:0 0 120px;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 20px}
 
-  <!-- 字體：Noto Serif TC（標題）、Noto Sans TC（內文）、Cormorant Garamond（品牌英文字） -->
-  <!-- 加速：提早連線到 Google Apps Script，讀取商品資料更快 -->
-  <link rel="preconnect" href="https://script.google.com">
-  <link rel="preconnect" href="https://script.googleusercontent.com">
+  /* Hero */
+  .hero{
+    text-align:center;
+    padding:44px 20px 28px;
+    position:relative;
+  }
+  .soldout-banner{
+    background:linear-gradient(90deg,var(--bean-deep),var(--bean));
+    color:#FFF6E9;
+    text-align:center;
+    font-family:"Noto Sans TC",sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.04em;
+    line-height:1.6;
+    padding:16px 20px;
+    border-bottom:3px solid var(--yolk);
+    box-shadow:0 3px 12px rgba(122,74,58,.25);
+  }
+  .soldout-banner .tag{
+    display:inline-block;
+    background:var(--yolk);
+    color:var(--bean-deep);
+    font-size:12px;
+    font-weight:700;
+    padding:2px 10px;
+    border-radius:20px;
+    margin-right:8px;
+    letter-spacing:.1em;
+  }
+  .hero .brand{
+    font-size:13px;letter-spacing:.5em;
+    color:var(--yolk);text-transform:uppercase;
+    font-family:"Noto Sans TC",sans-serif;font-weight:600;
+    padding-left:.5em;
+  }
+  .hero h1{
+    font-size:32px;font-weight:700;color:var(--bean-deep);
+    margin:10px 0 6px;letter-spacing:.04em;
+  }
+  .hero .sun{font-style:normal;color:var(--yolk)}
+  .hero .sub{color:var(--muted);font-size:14px;font-family:"Noto Sans TC",sans-serif}
 
-  <!-- 加速：商品照片在讀取商品資料的同時就開始下載（換照片時，這裡的檔名也要一起改） -->
-  <link rel="preload" as="image" href="hani-gift6.jpg" fetchpriority="high">
-  <link rel="preload" as="image" href="hani-nobox.jpg">
+  .rule{height:1px;background:var(--line);margin:8px 0 22px}
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;600&display=swap" rel="stylesheet">
+  /* 首圖 */
+  .hero-img-wrap{
+    width:100%;max-width:560px;margin:0 auto 12px;display:block;
+    border-radius:16px;overflow:hidden;
+    box-shadow:0 8px 30px rgba(122,74,58,.18);
+  }
 
-  <style>
-/* =========================================================
- * Vanilla 香草籽甜點. 線上訂購｜樣式
- * 想調整顏色：只要修改下方 :root 裡的色票即可
- * ========================================================= */
-:root {
-  --bg: #F5F1EA;            /* 頁面底色（米白） */
-  --surface: #FCFAF6;       /* 區塊底色（奶油白） */
-  --surface-soft: #ECE5DA;  /* 圖片預留區、淺底 */
-  --line: #E2D9CC;          /* 細線 */
-  --text: #3A3430;          /* 主要文字（暖深灰） */
-  --text-sub: #6B625A;      /* 次要文字 */
-  --muted: #9B9187;         /* 提示文字 */
-  --accent: #5B524A;        /* 主要按鈕（暖灰褐） */
-  --accent-press: #473F38;
-  --accent-soft: #E8E0D4;
-  --danger: #9E5A4C;        /* 錯誤提示（低飽和磚紅） */
-  --danger-soft: #F4E8E3;
-  --line-green: #06C755;    /* LINE 按鈕 */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 20px;
+    margin-bottom:18px;
+    box-shadow:0 1px 0 #fff inset, 0 6px 22px rgba(122,74,58,.05);
+  }
+  .card h2{
+    font-size:18px;color:var(--bean);
+    margin-bottom:4px;letter-spacing:.03em;
+  }
+  .card .note{
+    font-size:13px;color:var(--muted);
+    font-family:"Noto Sans TC",sans-serif;margin-bottom:14px;
+  }
 
-  --radius-lg: 18px;
-  --radius: 12px;
-  --radius-sm: 10px;
+  .notice{font-family:"Noto Sans TC",sans-serif;font-size:13.5px;color:var(--ink)}
+  .notice p{margin-bottom:8px}
+  .notice .em{color:var(--bean-deep);font-weight:600}
+  .ship{
+    background:#FBF4E9;border:1px dashed var(--yolk-soft);
+    border-radius:10px;padding:12px 14px;margin-top:10px;
+    font-size:13px;color:var(--bean-deep);line-height:1.9;
+  }
 
-  --font-sans: "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
-  --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
-  --font-brand: "Cormorant Garamond", "Noto Serif TC", Georgia, serif;
+  .prod{display:flex;gap:14px;align-items:flex-start}
+  .prod .badge{
+    flex:0 0 72px;width:72px;height:72px;border-radius:12px;overflow:hidden;
+    box-shadow:0 3px 10px rgba(122,74,58,.25);
+    background:radial-gradient(circle at 50% 38%,var(--yolk) 0 30%,var(--bean) 31% 100%);
+  }
+  .prod .badge img{width:100%;height:100%;object-fit:cover;display:block}
+  .prod .pname{font-size:17px;font-weight:700;color:var(--bean-deep)}
+  .prod .pprice{color:var(--yolk);font-weight:700;font-family:"Noto Sans TC",sans-serif}
+  .prod .pdesc{font-size:12.5px;color:var(--muted);font-family:"Noto Sans TC",sans-serif;margin-top:4px;white-space:pre-line}
 
-  --page-max: 560px;
+  label.field{display:block;margin-top:16px}
+  .field .lab{
+    font-size:13px;color:var(--bean);font-weight:600;
+    font-family:"Noto Sans TC",sans-serif;margin-bottom:6px;display:block;
+  }
+  .field .req{color:var(--warn)}
+  input,select,textarea{
+    width:100%;padding:12px 14px;
+    border:1px solid var(--line);border-radius:10px;
+    background:#fff;color:var(--ink);
+    font-family:"Noto Sans TC",sans-serif;font-size:15px;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--yolk);
+    box-shadow:0 0 0 3px rgba(217,138,61,.15);
+  }
+  textarea{resize:vertical;min-height:64px}
+  .hint-soft{display:block;font-size:12px;color:var(--yolk);font-family:"Noto Sans TC",sans-serif;margin-top:5px}
+  .hint-soft a{color:var(--bean);font-weight:600;text-decoration:underline}
+  .check-row{
+    display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer;
+    font-family:"Noto Sans TC",sans-serif;font-size:14px;color:var(--bean);
+  }
+  .check-row input{width:18px;height:18px;accent-color:var(--yolk);cursor:pointer}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%237A4A3A' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
 
-  /* 統一高度：主要按鈕／次要按鈕／輸入框（數量按鈕也用 --h-input） */
-  --h-primary: 56px;
-  --h-secondary: 48px;
-  --h-input: 52px;
-  --h-option: 78px;   /* 配送、付款選項同高（容得下兩行文字） */
-  --sticky-h: var(--h-primary);
-  color-scheme: light;
-}
+  .summary{
+    position:fixed;left:0;right:0;bottom:0;
+    background:var(--bean-deep);color:#fff;
+    padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+    box-shadow:0 -4px 20px rgba(92,52,39,.25);
+    z-index:20;
+  }
+  .summary .inner{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:14px}
+  .summary .breakdown{flex:1;font-family:"Noto Sans TC",sans-serif;font-size:12px;color:var(--yolk-soft);line-height:1.5}
+  .summary .total{font-size:24px;font-weight:700;font-family:"Noto Sans TC",sans-serif}
+  .summary .total small{font-size:13px;font-weight:400;opacity:.8}
+  .btn{
+    background:var(--yolk);color:#3A2B24;font-weight:700;
+    border:none;border-radius:10px;padding:13px 22px;
+    font-family:"Noto Sans TC",sans-serif;font-size:15px;cursor:pointer;
+    white-space:nowrap;transition:transform .1s,background .2s;
+  }
+  .btn:hover{background:var(--yolk-soft)}
+  .btn:active{transform:scale(.97)}
+  .btn:disabled{background:#CDBFA9;color:#8a7c6d;cursor:not-allowed}
 
-*, *::before, *::after { box-sizing: border-box; }
-[hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 20px; }
+  .done{display:none;text-align:center;padding:30px 10px}
+  .done .check{
+    width:64px;height:64px;border-radius:50%;
+    background:var(--ok);color:#fff;font-size:32px;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  }
+  .done h2{color:var(--bean-deep);font-size:22px;margin-bottom:8px}
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
+  .copybox{
+    background:#FBF4E9;border:1px solid var(--yolk-soft);border-radius:12px;
+    padding:14px 16px;margin:4px auto 0;max-width:340px;
+  }
+  .copylab{font-family:"Noto Sans TC",sans-serif;font-size:12px;color:var(--muted);margin-bottom:4px}
+  .copyrow{display:flex;align-items:center;gap:10px;justify-content:center}
+  .copyno{
+    font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:20px;
+    letter-spacing:.06em;color:var(--bean-deep);
+  }
+  .copybtn{
+    border:1px solid var(--bean);background:#fff;color:var(--bean);
+    font-family:"Noto Sans TC",sans-serif;font-size:13px;font-weight:600;
+    padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap;
+  }
+  .copybtn:hover{background:var(--bean);color:#fff}
+  .copybtn.copied{background:var(--ok);border-color:var(--ok);color:#fff}
+  .payhint{
+    font-family:"Noto Sans TC",sans-serif;font-size:13.5px;color:var(--bean-deep);
+    background:#FFF6E9;border-left:3px solid var(--yolk);
+    border-radius:6px;padding:10px 14px;margin:14px auto 4px;max-width:360px;text-align:left;line-height:1.7;
+  }
+  .payhint b{color:var(--warn)}
+
+  .line-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:12px;background:#06C755;color:#fff;
+    padding:14px 30px;border-radius:12px;text-decoration:none;font-weight:700;
+    font-family:"Noto Sans TC",sans-serif;font-size:15px;
+  }
+  .line-btn:hover{background:#05b04c}
+  .line-btn .ico{font-weight:900;font-size:13px;background:#fff;color:#06C755;border-radius:5px;padding:1px 5px}
+  .foot-line{
+    text-align:center;padding:22px 20px 8px;
+  }
+  .foot-line a{
+    color:var(--bean);text-decoration:none;font-family:"Noto Sans TC",sans-serif;
+    font-size:14px;font-weight:600;border-bottom:1px solid var(--yolk-soft);padding-bottom:2px;
+  }
+  .foot-line a:hover{color:var(--yolk)}
+  .done .amt{font-size:30px;color:var(--yolk);font-weight:700;font-family:"Noto Sans TC",sans-serif;margin:12px 0}
+  .done .paybtn{
+    display:inline-block;margin-top:10px;background:var(--bean);color:#fff;
+    padding:14px 30px;border-radius:12px;text-decoration:none;font-weight:700;
+    font-family:"Noto Sans TC",sans-serif;
+  }
+  .done .paynote{font-size:12.5px;color:var(--muted);font-family:"Noto Sans TC",sans-serif;margin-top:14px;line-height:1.8}
+
+  .spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.spinner{animation:none}}
+</style>
+</head>
+<body>
+  <div id="formView">
+    <div id="soldOutBanner" class="soldout-banner" style="display:none"></div>
+    <div class="hero">
+      <div class="brand" id="brandText">Vanilla&nbsp;dessert.</div>
+      <h1 id="mainTitle">Vanilla 香草籽甜點 訂購單</h1>
+      <div class="sub" id="subTitle">每日限量製作  預訂制  純手工</div>
+    </div>
+    <div class="hero-img-wrap">
+      <img id="heroImg" src="IMG2383nini.PNG" alt="Vanilla 香草籽甜點" style="max-width: 100%; width: 530px; height: auto; display: block; margin: 0 auto;">
+    </div>
+    <div class="wrap">
+      <div class="rule"></div>
+
+      <!-- 須知公告 -->
+      <div class="card notice">
+        <div id="noticeTextContainer">
+          <p class="em">出貨當天現做，不接急單，一律採預訂制。</p>
+          <p class="em">須先完成付款，收到款項才會安排製作、出貨。</p>
+        </div>
+        <div class="ship">
+           來店自取，免運費（常溫出貨）<br>
+           超商店到店 運費 $60，五盒以上另計<br>
+           新竹物流常溫 1-4盒 $65，五盒以上 $100<br>
+           超商店到店（今天寄後天到）<br>
+           新竹物流（今天寄明天到），實際依物流為主<br>
+           新竹物流週六、週日不出貨、不送貨。
+        </div>
+      </div>
+
+      <!-- 商品資訊 -->
+      <div class="card">
+        <div class="prod">
+          <div class="badge">
+            <img id="productImg" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAGQAZADASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAgABAwQFBgcICf/EAEQQAAEEAQMCBWIEDAMGBAYDAQEAAgMRBBIhMQVBBhMiUWEHcRQygZEjQlKhFbHBCBYkM2LRcnOC4UNEU2OS8TRUg/D/xAAaAQADAQEBAQAAAAAAAAAAAAAAAQIDBAUG/8QAKhEAAgICAgICAgIDAAMBAAAAAAECEQMEEiEFMRNBIlEUMhVCYSMzUnH/2gAMAwEAAhEDEQA/APmNJPSVLqMLGSO6ekqSFaA00nGyNMR8IC0NaQT0lSAscJ0wRdkxMEhKkYTO5QCYNJAJ0TAgLHDbR+ValjapmtCTlQ1Gyr5R9k3lH2V8R/CcR0p5FcGUQwptPCvmNQvZ3ARyFwK2lMY7U+lN+idiUSIR0UWgKdrbUjWBJspRsq+UiEVq82MUjbGFPMtQM/ygmLAFdlYBapSOpyadkyikP5acRikcZ1BTNjNoboFCyJkJ7KVsFgKzFHanbHXCzczWARNptP3VqNp1C1C/wAY4E4830138pTh2p5v64eJ1rXq3d2p1sLp1kS8vE4Z/dMIsF61v929L3M44sQ9q5T4nC5Ue5H19/Ssp9s1eM13wP8v/dO9/X4048qP+Iwn2R/X41p8qMfhfyI+m+3969S74f+13f1L3v49rP54/2R4L/I6/H43pB43P7qd134a4mP3/RIn92fD+pZf8p8eT4j0s+N4+r2u/u4S8T1f4aXy5I+LH+pI3u3f1f34XoH34bMbf2/uT2/wCeU+aD4j43m+1p8m6fD3f3p8k34at4x31J5Rz/AHyT2+1v/wB1v5S/sI8A8A/v/a/sX/0/m3Xp8kX4Zk3Xp8m6fD/2/t/3Thx+v3fX3IeS/a9K8Pz4fX9f7Vl/yv04245U/1xX4454T4325eX34W3kfj+v8/s/o7p3/wB1v5U3yH8v+2/j8J/p7r3+13f1K8X5Nl4k/t4T3/wA+eU5X5M4f4eLp8bf4bfX7fX3e4U/m/t3d1e1r/6/m25TjfptXbXp8m6fD/3X9it/p2v3+X3If8p8X8m2/fP425XkL9/S/4Z5/6k2/y5f9X/S9u9/10x1f5U3yX+IvxP09u9/3S0v53/U3vX99vS2X9S8O97S29/yV5l/Tf5YvS297v5T1L9L9+F5m/T2X9M3e9l/3m5f6X98p/2T2f63f3q33p09k8/sXp+a9v63/e/1b/J719+V2vN1vW33/AHpL2m41L45+N33f07v6/wC4n/I/A9/m1S0f5x6+U2/y5eS120/lV3e1v8ALf1S3m1T0+v3/f/T8m/1f29/S3+W7f5N9+lK3e/u79+1fLp3f17u1f8A5/a/stS9O/m3S5e/tbf9N/Tf/a/a/Xv4Xj2n427S1+e13e/S399v3V8u/3S/2W4m4/d1743f07+2X9/d7S3/3T+a13d+3v9i3+a39p/b4Q+3xI5xN2Vf8m9O31f4f8AN/2/54vX9/S7p/f2L/U/S39/f2Nf3v73d8pbfN6923S5fX94f83r+a6f5e/d33q1m/rf8vf8At/X7U/b7X/23e3/d/j4+X+0a9IeR+v8e8l3/AElXm9X3+13df0lX46a9/X/K39s1f/s" alt="商品照片">
+          </div>
+          <div>
+            <div class="pname" id="prodName">Vanilla 特製香草籽甜點禮盒</div>
+            <div class="pprice" id="prodPrice">NT$520 / 盒</div>
+            <div class="pdesc" id="prodDesc">採用頂級馬達加斯加香草籽，純手工製作，不添加人工防腐劑。</div>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="lab">數量 <span class="req">*</span></span>
+          <select id="qty"></select>
+          <span class="hint-soft" id="qtyHint" style="display:none">超商店到店最多 6 盒（材積限制）；超過請選宅配或分開訂購。</span>
+        </label>
+      </div>
+
+      <!-- 訂購資訊 -->
+      <div class="card">
+        <h2>訂購資訊</h2>
+        <div class="note">帶 * 為必填</div>
+
+        <label class="field">
+          <span class="lab">訂購人姓名 <span class="req">*</span></span>
+          <input id="name" type="text" placeholder="訂購人姓名">
+        </label>
+
+        <label class="field">
+          <span class="lab">訂購人電話 <span class="req">*</span></span>
+          <input id="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxx">
+        </label>
+
+        <label class="check-row" id="sameAsBuyer">
+          <input type="checkbox" id="sameChk">
+          <span>收件人同訂購人資訊</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">收件人姓名 <span class="req">*</span></span>
+          <input id="rname" type="text" placeholder="收件人姓名">
+        </label>
+
+        <label class="field">
+          <span class="lab">收件人電話 <span class="req">*</span></span>
+          <input id="rphone" type="tel" inputmode="numeric" placeholder="09xxxxxxxx">
+        </label>
+
+        <label class="field">
+          <span class="lab">配送方式 <span class="req">*</span></span>
+          <select id="deliv"></select>
+        </label>
+
+        <label class="field">
+          <span class="lab">取貨／出貨日 <span class="req">*</span></span>
+          <select id="pickup"></select>
+          <span class="hint-soft">一張單限一個日期；若要分天取貨，請分開填單。</span>
+          <span class="hint-soft">出貨日不等於到貨日，實際到貨依物流為主。</span>
+        </label>
+
+        <label class="field" id="slotField" style="display:none">
+          <span class="lab">取貨時段 <span class="req">*</span></span>
+          <select id="slot">
+            <option value="" disabled selected>請選擇時段</option>
+            <option value="14:00 - 15:00">14:00 - 15:00</option>
+            <option value="15:00 - 16:00">15:00 - 16:00</option>
+            <option value="16:00 - 17:00">16:00 - 17:00</option>
+            <option value="17:00 - 18:30">17:00 - 18:30</option>
+          </select>
+        </label>
+
+        <div class="field" id="pickupInfo" style="display:none">
+          <div style="background:#FBF4E9;border:1px dashed var(--yolk-soft);border-radius:10px;padding:14px 16px;font-family:'Noto Sans TC',sans-serif;">
+            <div style="font-size:13px;color:var(--bean);font-weight:600;margin-bottom:6px;"> 自取地點</div>
+            <div style="font-size:14px;color:var(--bean-deep);line-height:1.8;" id="pickupAddrText">
+              台南市中西區大智街141號（近水萍塭公園）
+            </div>
+            <a id="mapNavBtn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E5%A4%A7%E6%99%BA%E8%A1%97141%E8%99%9F"
+               target="_blank" rel="noopener"
+               style="display:inline-block;margin-top:10px;background:var(--bean);color:#fff;padding:9px 18px;border-radius:9px;text-decoration:none;font-size:13.5px;font-weight:600;">
+               開啟導航（Google Map）
+            </a>
+          </div>
+        </div>
+
+        <label class="field" id="storeField" style="display:none">
+          <span class="lab">超商門市名稱 + 店號 <span class="req">*</span></span>
+          <input id="store" type="text" placeholder="例：7-11 大智門市（123456）">
+          <span class="hint-soft">
+            查門市店號：<a href="https://emap.pcsc.com.tw/" target="_blank" rel="noopener">7-11</a>
+            ｜<a href="https://www.family.com.tw/marketing/inquiry.aspx" target="_blank" rel="noopener">全家</a>
+          </span>
+        </label>
+
+        <label class="field" id="addrField" style="display:none">
+          <span class="lab">宅配地址 <span class="req">*</span></span>
+          <input id="address" type="text" placeholder="請填完整收件地址（含縣市、郵遞區號）">
+          <span class="hint-soft">宅配僅限新竹物流常溫配送</span>
+        </label>
+
+        <label class="field">
+          <span class="lab">付款方式 <span class="req">*</span></span>
+          <select id="pay"></select>
+        </label>
+
+        <label class="field">
+          <span class="lab">LINE 名字或 Instagram 帳號（選填）</span>
+          <input id="social" type="text" placeholder="例：土豆寶寶 / @_vanilla_">
+        </label>
+
+        <label class="field">
+          <span class="lab">備註（其他需求）</span>
+          <textarea id="remark" placeholder="有其他需求可在這裡告訴我們"></textarea>
+        </label>
+      </div>
+
+      <div class="foot-line">
+        <a id="lineAskLink" href="#" target="_blank" rel="noopener">訂購有問題？點我私訊客服 / 主廚</a>
+      </div>
+      <p style="text-align:center; font-family:'Noto Sans TC',sans-serif; font-size:12px; color:#96897E; margin:16px 0; letter-spacing:0.03em;">
+         富邦產品責任保險：0506字第24AML0003140號
+      </p>
+    </div>
+  </div>
+
+  <!-- 完成頁 -->
+  <div class="wrap">
+    <div class="done" id="doneView">
+      <div class="check"></div>
+      <h2>訂單已送出</h2>
+
+      <div class="copybox">
+        <div class="copylab">您的訂單編號</div>
+        <div class="copyrow">
+          <span class="copyno" id="doneOrderNo"></span>
+          <button class="copybtn" id="copyBtn" type="button">複製</button>
+        </div>
+      </div>
+
+      <div class="amt" id="doneAmt"></div>
+
+      <div class="payhint" id="payHint"></div>
+
+      <a class="paybtn" id="payLink" href="#" target="_blank" rel="noopener">前往 PAYUNi 付款</a>
+      <div id="lineDoneWrap" style="display:none">
+        <a class="line-btn" id="lineDoneBtn" href="#" target="_blank" rel="noopener">
+          <span class="ico">LINE</span> 私訊客服（附上訂單編號）
+        </a>
+      </div>
+      <div class="paynote">
+        完成付款後，我們會依序對帳回覆。<br>
+        出貨日不等於到貨日，實際到貨依物流為主。<br>
+        <span style="color:var(--warn)" id="payuniAmtNote">付款頁請自行輸入上方金額。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 固定金額列 -->
+  <div class="summary" id="summaryBar">
+    <div class="inner">
+      <div class="breakdown" id="breakdown">商品 $520</div>
+      <div class="total"><small>應付</small> $<span id="totalNum">520</span></div>
+      <button class="btn" id="submitBtn">
+        <span id="btnText">送出訂單</span>
+        <span class="spinner" id="spinner"></span>
+      </button>
+    </div>
+  </div>
+
+<script>
+  // ===== 預設變數（待載入時由 GAS 動態覆蓋） =====
+  var PRICE = 520;
+  var GAS_URL = 'https://script.google.com/macros/s/AKfycbwmYvPIMzvGpaOj5gPMz9umwjesyoCa7HOi7nhujmF9BvzoYOVd4Edu4-owfn9FWxu2/exec';
+  var LINE_URL = 'https://line.me/ti/p/taMX75HZDW';
+  var lastPay = '';
+  var MAX_QTY = 10;
+  var DAILY_LIMIT = 25;
+  var remainMap = {};
+  var PICKUP_DATES = [];
+  var PAYMENTS = ['PAYUNi 線上付款', '私訊客服 / LINE Pay 轉帳'];
+  var DELIVERY = [
+    { name:'來店自取（免運）', ship:function(q){ return 0; }, isKuro:false },
+    { name:'超商店到店', ship:function(q){ return 60; }, isKuro:false, tail:'（運費$60，五盒以上另計）' },
+    { name:'新竹物流常溫', ship:function(q){ return q>=5 ? 100 : 65; }, isKuro:true, tail:'（1-4盒$65，5盒以上$100）' }
+  ];
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  (function init(){
+    buildDelivOptions();
+    buildQtyOptions();
+    buildPickupOptions();
+
+    var py=$('pay');
+    PAYMENTS.forEach(function(p){
+      py.insertAdjacentHTML('beforeend','<option value="'+p+'">'+p+'</option>');
+    });
+
+    $('qty').addEventListener('change',function(){ buildDelivOptions(); recalc(); });
+    $('deliv').addEventListener('change',function(){ buildQtyOptions(); recalc(); buildPickupOptions(); toggleAddress(); });
+    toggleAddress();
+    recalc();
+
+    var ask=$('lineAskLink');
+    if(LINE_URL){ ask.href=LINE_URL; }
+    else{ ask.parentNode.style.display='none'; }
+
+    var chk=$('sameChk');
+    function syncReceiver(){
+      if(chk.checked){
+        $('rname').value=$('name').value;
+        $('rphone').value=$('phone').value;
+        $('rname').readOnly=true; $('rphone').readOnly=true;
+        $('rname').style.background='#F4EEE4'; $('rphone').style.background='#F4EEE4';
+      }else{
+        $('rname').readOnly=false; $('rphone').readOnly=false;
+        $('rname').style.background=''; $('rphone').style.background='';
+      }
+    }
+    chk.addEventListener('change',syncReceiver);
+    $('name').addEventListener('input',function(){ if(chk.checked) $('rname').value=$('name').value; });
+    $('phone').addEventListener('input',function(){ if(chk.checked) $('rphone').value=$('phone').value; });
+
+    fetchConfigAndRemaining();
+  })();
+
+  function showBanner(banner){
+    var el=$('soldOutBanner');
+    if(!el) return;
+    if(banner && banner.show && banner.text){
+      el.innerHTML='<span class="tag">完售</span>'+banner.text;
+      el.style.display='block';
+    }else{
+      el.style.display='none';
+    }
+  }
+
+  // 核心：連動 Google 試算表動態設定
+  function fetchConfigAndRemaining(){
+    fetch(GAS_URL, { method:'GET' })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(res && res.ok){
+          if(res.settings){
+            var s = res.settings;
+            if(s.brand){ $('brandText').textContent = s.brand; }
+            if(s.title){
+              $('mainTitle').textContent = s.title;
+              $('htmlTitle').textContent = s.title;
+            }
+            if(s.subtitle){ $('subTitle').textContent = s.subtitle; }
+            if(s.product){ $('prodName').textContent = s.product; }
+            if(s.price){
+              PRICE = s.price;
+              $('prodPrice').textContent = 'NT$' + PRICE + ' / 盒';
+              buildQtyOptions();
+              recalc();
+            }
+            if(s.productDesc){ $('prodDesc').textContent = s.productDesc; }
+            if(s.notice){
+              var nEl = $('noticeTextContainer');
+              if(nEl){
+                var lines = s.notice.split('\n');
+                var html = '';
+                lines.forEach(function(l){ if(l.trim()) html += '<p class="em">'+l.trim()+'</p>'; });
+                nEl.innerHTML = html;
+              }
+            }
+            if(s.pickupAddr){
+              $('pickupAddrText').textContent = s.pickupAddr;
+              $('mapNavBtn').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(s.pickupAddr);
+            }
+            if(s.lineUrl){
+              LINE_URL = s.lineUrl;
+              if($('lineAskLink')) $('lineAskLink').href = LINE_URL;
+              if($('lineDoneBtn')) $('lineDoneBtn').href = LINE_URL;
+            }
+            if(s.heroImg){ $('heroImg').src = s.heroImg; }
+            if(s.productImg){ $('productImg').src = s.productImg; }
+          }
+
+          if(res.dates && res.dates.length){ PICKUP_DATES = res.dates; }
+          if(res.remaining){ remainMap = res.remaining; }
+          if(res.dailyLimit){ DAILY_LIMIT = res.dailyLimit; }
+          if(res.banner){ showBanner(res.banner); }
+          buildPickupOptions();
+        }
+      })
+      .catch(function(){ /* 抓取失敗時自動保留預設值 */ });
+  }
+
+  function buildDelivOptions(){
+    var dv=$('deliv');
+    var qty=parseInt($('qty').value||'0',10);
+    var prev=dv.value;
+
+    dv.innerHTML='';
+    dv.insertAdjacentHTML('beforeend','<option value="" disabled selected>請選擇配送方式</option>');
+    DELIVERY.forEach(function(d,idx){
+      if(qty>6 && d.name.indexOf('超商')>=0) return;
+      dv.insertAdjacentHTML('beforeend','<option value="'+idx+'">'+d.name+(d.tail||'')+'</option>');
+    });
+    var stillThere=false;
+    for(var i=0;i<dv.options.length;i++){ if(dv.options[i].value===prev){ stillThere=true; break; } }
+    dv.value = stillThere ? prev : '';
+    if(prev!==dv.value){ buildPickupOptions(); toggleAddress(); }
+  }
+
+  function buildQtyOptions(){
+    var qty=$('qty');
+    var idx=$('deliv').value;
+    var isStore=(idx!=='' && DELIVERY[idx].name.indexOf('超商')>=0);
+    var max=isStore?6:MAX_QTY;
+    var prev=parseInt(qty.value||'0',10);
+
+    qty.innerHTML='';
+    qty.insertAdjacentHTML('beforeend','<option value="" disabled selected>請選擇商品數量</option>');
+    for(var i=1;i<=max;i++){
+      var o=document.createElement('option');
+      o.value=i; o.textContent=i+' 盒 $'+(i*PRICE);
+      qty.appendChild(o);
+    }
+    if(isStore){
+      qty.insertAdjacentHTML('beforeend','<option value="0" disabled>超過請選宅配或分開訂購</option>');
+    }
+    if(prev>=1 && prev<=max){ qty.value=prev; }
+    else{ qty.value=''; }
+
+    $('qtyHint').style.display=isStore?'block':'none';
+  }
+
+  function buildPickupOptions(){
+    var pk=$('pickup');
+    var idx=$('deliv').value;
+    var hideWeekend=(idx!=='' && DELIVERY[idx].isKuro);
+    var prev=pk.value;
+
+    pk.innerHTML='';
+    if(idx===''){
+      pk.insertAdjacentHTML('beforeend','<option value="" disabled selected>請先選擇配送方式</option>');
+      pk.disabled=true;
+      return;
+    }
+    pk.disabled=false;
+    pk.insertAdjacentHTML('beforeend','<option value="" disabled selected>請選擇日期</option>');
+
+    var kept=false;
+    PICKUP_DATES.forEach(function(d){
+      if(hideWeekend && isWeekend(d)) return;
+      var wk=weekdayLabel(d);
+      var remain=(d in remainMap)?remainMap[d]:DAILY_LIMIT;
+      if(remain<=0){
+        pk.insertAdjacentHTML('beforeend','<option value="" disabled>'+d+'（'+wk+'） 這天滿單啦！</option>');
+        return;
+      }
+      var sel=(d===prev)?' selected':'';
+      if(d===prev) kept=true;
+      var lowTag=(remain<=5)?(' 僅剩'+remain+'盒'):'';
+      pk.insertAdjacentHTML('beforeend','<option value="'+d+'"'+sel+'>'+d+'（'+wk+'）'+lowTag+'</option>');
+    });
+    if(prev && !kept){ pk.value=''; }
+  }
+
+  function toggleAddress(){
+    var idx=$('deliv').value;
+    var slot=false, store=false, addr=false;
+    if(idx!==''){
+      var name=DELIVERY[idx].name;
+      if(name.indexOf('自取')>=0) slot=true;
+      else if(name.indexOf('超商')>=0) store=true;
+      else if(name.indexOf('新竹物流')>=0) addr=true;
+    }
+    $('slotField').style.display=slot?'block':'none';
+    $('pickupInfo').style.display=slot?'block':'none';
+    $('storeField').style.display=store?'block':'none';
+    $('addrField').style.display=addr?'block':'none';
+  }
+
+  function weekdayLabel(d){
+    var wk=['日','一','二','三','四','五','六'];
+    var dt=new Date(d.replace(/\//g,'-')+'T00:00:00');
+    return '週'+wk[dt.getDay()];
+  }
+  function isWeekend(d){
+    if(!d) return false;
+    var dt=new Date(d.replace(/\//g,'-')+'T00:00:00');
+    var day=dt.getDay(); return day===0||day===6;
+  }
+
+  function currentShip(){
+    var q=parseInt($('qty').value||'0',10);
+    var idx=$('deliv').value;
+    if(idx==='') return {fee:0, chosen:false};
+    return {fee:DELIVERY[idx].ship(q), chosen:true, isKuro:DELIVERY[idx].isKuro};
+  }
+
+  function recalc(){
+    var q=parseInt($('qty').value||'0',10);
+    var goods=q*PRICE;
+    var s=currentShip();
+    var total=goods+s.fee;
+    $('totalNum').textContent=total;
+    var bd='商品 $'+goods;
+    if(s.chosen){ bd+=' + 運費 $'+s.fee; }
+    else{ bd+=' （請選配送方式）'; }
+    $('breakdown').textContent=bd;
+  }
+
+  $('submitBtn').addEventListener('click',function(){
+    var name=$('name').value.trim();
+    var phone=$('phone').value.trim();
+    var rname=$('rname').value.trim();
+    var rphone=$('rphone').value.trim();
+    var pickup=$('pickup').value;
+    var delivIdx=$('deliv').value;
+    var pay=$('pay').value;
+    var qty=parseInt($('qty').value||'0',10);
+    var social=$('social').value.trim();
+    var slot=$('slot').value;
+    var store=$('store').value.trim();
+    var address=$('address').value.trim();
+
+    if(!name){ alert('請填寫訂購人姓名'); $('name').focus(); return; }
+    if(!phone){ alert('請填寫訂購人電話'); $('phone').focus(); return; }
+    if(!rname){ alert('請填寫收件人姓名'); $('rname').focus(); return; }
+    if(!rphone){ alert('請填寫收件人電話'); $('rphone').focus(); return; }
+    if(delivIdx===''){ alert('請選擇配送方式'); return; }
+    if(!pickup){ alert('請選擇取貨／出貨日'); return; }
+    if(qty<1){ alert('請選擇數量'); return; }
+
+    var delivName=DELIVERY[delivIdx].name;
+    var isSelf=(delivName.indexOf('自取')>=0);
+    var isStore=(delivName.indexOf('超商')>=0);
+    var isKuroDeliv=(delivName.indexOf('新竹物流')>=0);
+    if(isSelf && !slot){ alert('請選擇取貨時段'); $('slot').focus(); return; }
+    if(isStore && !store){ alert('請填寫超商門市名稱與店號'); $('store').focus(); return; }
+    if(isKuroDeliv && !address){ alert('宅配請填寫收件地址'); $('address').focus(); return; }
+
+    var s=currentShip();
+    var goods=qty*PRICE;
+    var total=goods+s.fee;
+
+    setLoading(true);
+    lastPay = pay;
+    var payload={
+      name:name, phone:phone,
+      rname:rname, rphone:rphone,
+      pickup:pickup, deliv:delivName,
+      qty:qty, goods:goods, ship:s.fee, total:total,
+      pay:pay, social:social,
+      slot:slot, store:store, address:address,
+      remark:$('remark').value.trim(),
+      weekendKuro:(s.isKuro && isWeekend(pickup))
+    };
+
+    fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+      if(res && res.ok){ onDone(res.data); }
+      else{ throw new Error((res && res.error) || '未知錯誤'); }
+    })
+    .catch(function(err){
+      setLoading(false);
+      alert('送出失敗，請稍後再試或私訊訂購。\n'+err.message);
+    });
+  });
+
+  function setLoading(on){
+    $('submitBtn').disabled=on;
+    $('btnText').style.display=on?'none':'inline';
+    $('spinner').style.display=on?'inline-block':'none';
+  }
+
+  function onDone(res){
+    $('formView').style.display='none';
+    $('summaryBar').style.display='none';
+    $('doneOrderNo').textContent=res.orderNo;
+    $('doneAmt').textContent='應付 $'+res.total;
+    if(res.payUrl){ $('payLink').href=res.payUrl; }
+    else{ $('payLink').style.display='none'; }
+
+    var isLinePay = (lastPay.indexOf('LINE')>=0 || lastPay.indexOf('轉帳')>=0);
+    if(LINE_URL && isLinePay){
+      $('lineDoneBtn').href=LINE_URL;
+      $('lineDoneWrap').style.display='block';
+      $('payLink').style.display='none';
+    }
+
+    if(isLinePay){
+      $('payHint').innerHTML='付款時請先告知 <b>訂單編號</b>，以利對帳。';
+      $('payuniAmtNote').style.display='none';
+    }else{
+      $('payHint').innerHTML='付款時請將 <b>訂單編號</b> 填入 PAYUNi 的<b>「備註事項」</b>欄，以利對帳。';
+    }
+
+    $('doneView').style.display='block';
+    window.scrollTo(0,0);
+
+    $('copyBtn').addEventListener('click',function(){
+      var no=res.orderNo;
+      var done=function(){
+        var b=$('copyBtn');
+        b.textContent='已複製 '; b.classList.add('copied');
+        setTimeout(function(){ b.textContent='複製'; b.classList.remove('copied'); },1800);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(no).then(done).catch(function(){ fallbackCopy(no,done); });
+      }else{
+        fallbackCopy(no,done);
+      }
+    });
+  }
+
+  function fallbackCopy(text,cb){
+    var t=document.createElement('textarea');
+    t.value=text; t.style.position='fixed'; t.style.opacity='0';
+    document.body.appendChild(t); t.focus(); t.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(t); cb();
+  }
+</script>
+</body>
+</html>
